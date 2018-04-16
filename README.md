@@ -12,6 +12,8 @@ Notes:
 2. If you place an image such as a jpg, png, or gif labeled "000.itsExtension" in a directory then the viewer will use it as the background for that folder/directory.
 3. The provided folders except "resources" are optional. You can add and remove them as you please.
 4. The media and image pane can be moved by dragging from the transparentish bar that has the close button and other controls.
+5. Edit the resources/php/config.php file and put your own programs there.
+
 
 # TO-DO
 1. Allow for move, copy, delete functionality.
