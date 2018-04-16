@@ -101,8 +101,8 @@
 .movieStyle {
     float: left;
     width: 15em;
+    height: 10em;
     overflow: hidden;
-    height: auto;
     margin: 0.5em;
     padding: 0.5em;
 }
