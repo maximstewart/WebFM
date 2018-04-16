@@ -13,6 +13,15 @@ Notes:
 3. The provided folders except "resources" are optional. You can add and remove them as you please.
 4. The media and image pane can be moved by dragging from the transparentish bar that has the close button and other controls.
 
+# TO-DO
+1. Allow for move, copy, delete functionality.
+2. Allow for creating folders through the web interface.
+3. Fix the ' and & naming issue.
+4. Resolve issue were uploading doesn't always prompt an interface update.
+5. Impliment themes functionality.
+6. Look to refactor code.
+
+
 # Images
 
 ![1 Home](Images/1.png)

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="" charset="utf-8"/>
+    <title>Web File Manager</title>
+    <link type="text/css" rel="stylesheet" href="resources/css/base.css"/>
+    <link type="text/css" rel="stylesheet" href="resources/css/main.css"/>
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+</head>
+<body onload="onloadSetBG(); getDir('/')">
+    <!-- Background -->
+    <img id="bg" />
+
+    <!-- Uploader -->
+    <h2 id="fullPathHeader">
+        <form action="resources/php/upload.php" method="post" enctype="multipart/form-data" target="FormSubmitter">
+            <input type="button" onclick="tgglServerMsgView()" title="Show Server Messages" value="Show Server Messages">
+            <input type="reset" title="Clear" value="Clear">
+            <input type="submit" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
+            <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
+            <input class="ulFile" type="file" title="files To Upload" name="filesToUpload[]" data-multiple-caption="{count} files selected" multiple />
+            <button type="button" onclick="clearDirCookie()">Home Directory</button>
+        </form>
+        <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
+    </h2>
+
+    <!-- Dynamic content targets -->
+    <div id="dynDiv"></div>
+    <div id="imgView" style="display:none;"></div>
+    <div id="fileView" style="display:none;"></div>
+
+    <!-- Uploader processor -->
+    <div id="toggleServerMsg" style="display:none;">
+        <iframe id="FormSubmitter" name="FormSubmitter" frameborder="0" ></iframe>
+    </div>
+
+    <script type="text/javascript" src="resources/js/ajax.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/controlers.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/dragContainer.js" charset="utf-8"></script>
+</body>
+</html>

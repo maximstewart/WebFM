@@ -1,0 +1,158 @@
+/* IDs */
+
+#DIRPATHUL {
+    display: none;
+    width: 1px;
+    height: 1px;
+}
+
+#bg {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: -999;
+}
+#bg img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -999;
+}
+
+#fullPathHeader, #dynDiv,
+.errorStyling, .dirStyle, .movieStyle, .fileStyle {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: auto;
+    padding-bottom: 0.5em;
+    color: #ffffff;
+    text-align: center;
+    font-size: 1.2em;
+    background-color: rgba(0,0,0,0.64);
+}
+
+#fullPathHeader {
+    display: block;
+    position: fixed;
+    top: 0.5em;
+}
+
+#dynDiv {
+    margin-top: 8em;
+}
+
+#imgView, #imgArea, #fileView {
+   width: 800px;
+   height: 600px;
+}
+
+#imgView, #fileView {
+    position: fixed;
+    bottom: 0em;
+    z-index: 100;
+    border-style: solid;
+    border-color: rgb(114,184,199);
+
+   }
+
+#fileView {
+    display: block;
+    overflow: auto;
+}
+
+#fileViewInner {
+    position: sticky;
+    display: inline;
+    width: 100%;
+    height: 500px;
+}
+
+#imgArea {
+    width: 800px;
+    height: 600px;
+    overflow-y: scroll;
+}
+
+#imgView { overflow: hidden; left: 15em; }
+
+
+/* Classes */
+.imgViewImg {
+    width: inherit;
+    height: auto;
+}
+
+
+.dirStyle { background-color: rgba(0, 0, 0, 0.56); }
+.movieStyle, .fileStyle { background-color: rgba(101, 101, 101, 0.56); }
+
+.dirStyle:hover, .movieStyle:hover, .fileStyle:hover {
+    background-color: rgba(0, 141, 166, 0.56);
+    cursor: pointer;
+}
+
+.movieStyle {
+    float: left;
+    width: 15em;
+    overflow: hidden;
+    height: auto;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+.movieTitle {
+    width: 15em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.iconImg {
+    width: 12em;
+    height: 8em;
+    margin: 1em;
+}
+
+.popOutBttn, .closeBttn {
+    float: right;
+    z-index: 2;
+    width: 4em;
+    height: 4em;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 4em;       /* the same as your div height */
+    background-color: rgba(0,0,0, 0.85);
+    color: rgb(255,255,255);
+    border-style:solid;
+    border-color: rgb(255,255,255);
+}
+
+
+/*    Hover events    */
+.closeBttn:hover, .popOutBttn:hover {
+    cursor: pointer;
+}
+
+.closeBttn:hover, .popOutBttn:hover {
+    background-color: rgba(255,255,255, 0.85);
+    color: #000000;
+    border-color: #000000;
+}
+
+.error, .warnning, .success {
+    float: left;
+    clear: both;
+}
+
+.errorStyling { background-color: rgb(255,0,0); }
+
+.error { color: rgb(255, 0, 0); }
+.warnning { color: rgb(255, 168, 0); }
+.success { color: rgb(136, 204, 39); }
