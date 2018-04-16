@@ -1,6 +1,6 @@
 function showImg(imgLoc) {
     var imgView         = document.getElementById("imgView");
-    var toPlayerButton  = "<div class=\"popOutBttn\" onclick=\"openInLocalProg('" + imgLoc + "')\">&#8765;</div>";
+    var toPlayerButton  = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + imgLoc + "')\">&#8765;</div>";
     var popButton       = "<a href=\"" + imgLoc + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
     var CloseBttn       = "<div class=\"closeBttn\" onclick=\"closeImg()\">X</div>";
 
@@ -19,7 +19,7 @@ function showMedia(media) {
             openInLocalProg(media);
     } else {
         var mediaView       = document.getElementById("fileView");
-        var toPlayerButton  = "<div class=\"popOutBttn\" onclick=\"openInLocalProg('" + media + "')\">&#8765;</div>";
+        var toPlayerButton  = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + media + "')\">&#8765;</div>";
         var popButton       = "<a title=\"New Tab\" href=\"" + media + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
         var CloseBttn       = "<div class=\"closeBttn\" title=\"Close\" onclick=\"closeMedia()\">X</div>";
 
