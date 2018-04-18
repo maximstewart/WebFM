@@ -15,8 +15,13 @@ function uploadFiles($targetDir) {
         // Check if file already exists
         $targetFile = $targetDir . $fileName;
         if (file_exists($targetFile)) {
-            unlink($targetFile);
-            echo "<span class='warnning'>Server: [Warnning] --> This file already exists. Overwriting it.</span>";
+            if (is_file($targetFile)) {
+                unlink($targetFile);
+                echo "<span class='warnning'>Server: [Warnning] --> This file already exists. Overwriting it.</span>";
+            } else {
+                echo "<span class='warnning'>Server: [Warnning] --> This file might be a directory. Or, no files were submitted for uploading.</span>";
+                $uploadOk = 0;
+            }
         }
 
         // Check file size
@@ -40,22 +45,19 @@ function uploadFiles($targetDir) {
         //     $uploadOk = 0;
         // }
 
-        // Check if $uploadOk is set to 0 by an error
-        if ($uploadOk == 0) {
-            echo "<span class='error'>Server: [Error] --> Your file " . $fileName . " was not uploaded.</span>";
         // if everything is ok, try to upload file
-        } else {
+        if ($uploadOk !== 0) {
             if (move_uploaded_file($fileTmpName, $targetFile)) {
                 echo "<span class='success'>Server: [Success] --> The file " . $fileName . " has been uploaded.</span>";
-            } else {
-                echo "<span class='error'>Server: [Error] --> File not uploaded for the above reason(s).</span>";
             }
+        } else {
+            echo "<span class='error'>Server: [Error] --> Your file " . $fileName . " was not uploaded.</span>";
         }
     }
     echo "</body></html>";
 
     // Prompt an update clint side when sse checks that there is updateListing.
-    $myfile = fopen("../vars.txt", "w+");
+    $myfile = fopen("resources/vars.txt", "w+");
     $txt = "updateListing";
     fwrite($myfile, $txt);
     fclose($myfile);
@@ -63,7 +65,7 @@ function uploadFiles($targetDir) {
 
 // Check access type.
 chdir("../../");
-if(isset($_POST["UploadFiles"])) {
+if(isset($_POST["UploadFiles"]) && isset($_POST["DIRPATHUL"])) {
     uploadFiles($_POST["DIRPATHUL"]);
 } else {
     echo "<span style='color:rgb(255, 0, 0);'>Server: [Error] --> Incorrect access attempt!</span>";
