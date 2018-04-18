@@ -7,20 +7,22 @@
     <link type="text/css" rel="stylesheet" href="resources/css/main.css"/>
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 </head>
-<body onload="onloadSetBG(); getDir('/')">
+<body onload="onloadSetBG(); getDir('/')" contextmenu="menu">
     <!-- Background -->
     <img id="bg" />
 
     <!-- Uploader -->
     <h2 id="fullPathHeader">
         <form action="resources/php/upload.php" method="post" enctype="multipart/form-data" target="FormSubmitter">
-            <input type="button" onclick="tgglServerMsgView()" title="Show Server Messages" value="Show Server Messages">
-            <input type="reset" title="Clear" value="Clear">
-            <input type="submit" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
-            <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
             <input class="ulFile" type="file" title="files To Upload" name="filesToUpload[]" data-multiple-caption="{count} files selected" multiple />
-            <button type="button" onclick="clearDirCookie()">Home Directory</button>
+            <input type="submit" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
+            <input type="reset" title="Clear" id="CLEARBTTN" value="Clear" style="display:none;">
+            <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
         </form>
+        <br/>
+            <input type="text" id="NewItem" style="text-align: center; background-color: #ffffff; color: #000000;" value="" />
+            <input type="button" value="New Dir" onclick="createDir()">
+            <input type="button" value="New File" onclick="createFile()">
         <br/>
         &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
     </h2>
@@ -35,8 +37,18 @@
         <iframe id="FormSubmitter" name="FormSubmitter" frameborder="0" ></iframe>
     </div>
 
+    <!-- Create the menu -->
+    <menu type="context" id="menu">
+        <menuitem label="Home Directory" onclick="clearDirCookie()"></menuitem>
+        <menuitem label="Show Server Messages" onclick="tgglServerMsgView()"></menuitem>
+        <menuitem label="Clear Upload List" onclick="clearDlList()"></menuitem>
+        <menuitem label="Delete File/Directory" onclick="deleteItem()"></menuitem>
+    </menu>
+
     <script type="text/javascript" src="resources/js/ajax.js" charset="utf-8"></script>
-    <script type="text/javascript" src="resources/js/controlers.js" charset="utf-8"></script>
-    <script type="text/javascript" src="resources/js/dragContainer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/uiEvents.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/uiControls.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/dragContainerEvents.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/fileSystemControls.js" charset="utf-8"></script>
 </body>
 </html>

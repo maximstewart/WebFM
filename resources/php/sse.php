@@ -1,13 +1,10 @@
 <?php
     // Prompt an update clint side when sse checks that there is updateListing.
-    $myfile = fopen("../vars.txt", "wa+");
+    $myfile = fopen("../vars.txt", "r");
     $state =  fgets($myfile);
+    fclose($myfile);
 
-    if ($state == "updateListing") {
-        $txt = "Null";
-        fwrite($myfile, $txt);
-    }
-
+    $myfile = fopen("../vars.txt", "w");
     fclose($myfile);
 
     header('Content-Type: text/event-stream');

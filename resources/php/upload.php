@@ -13,7 +13,7 @@ function uploadFiles($targetDir) {
         $fileTmpName = $_FILES['filesToUpload']['tmp_name'][$i];
 
         // Check if file already exists
-        $targetFile = "../../" . $targetDir . $fileName;
+        $targetFile = $targetDir . $fileName;
         if (file_exists($targetFile)) {
             unlink($targetFile);
             echo "<span class='warnning'>Server: [Warnning] --> This file already exists. Overwriting it.</span>";
@@ -55,13 +55,14 @@ function uploadFiles($targetDir) {
     echo "</body></html>";
 
     // Prompt an update clint side when sse checks that there is updateListing.
-    $myfile = fopen("../vars.txt", "wa+");
+    $myfile = fopen("../vars.txt", "w+");
     $txt = "updateListing";
     fwrite($myfile, $txt);
     fclose($myfile);
 }
 
 // Check access type.
+chdir("../../");
 if(isset($_POST["UploadFiles"])) {
     uploadFiles($_POST["DIRPATHUL"]);
 } else {

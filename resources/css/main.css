@@ -101,17 +101,41 @@
 .movieStyle {
     float: left;
     width: 15em;
-    height: 10em;
+    height: 8.5em;
     overflow: hidden;
     margin: 0.5em;
     padding: 0.5em;
 }
 
-.movieTitle {
-    width: 15em;
+.dirTitle, .fileTitle, .movieTitle {
     white-space: nowrap;
     text-overflow: ellipsis;
+    text-align: center;
     overflow: hidden;
+    border-style: none;
+    font-size: 75%;
+}
+
+.dirTitle, .fileTitle {
+    width: auto;
+    background-color: #00000000;
+    color: #ffffff;
+}
+
+.movieTitle {
+    width: 18em;
+    background-color: #ffffff00;
+    color: #ffffff;
+}
+
+.thumbnail {
+    width: 12em;
+    height: 6.5em;
+}
+
+.systemIcon {
+    width: 2em;
+    height: auto;
 }
 
 .iconImg {
@@ -136,7 +160,10 @@
 
 
 /*    Hover events    */
-.closeBttn:hover, .popOutBttn:hover {
+.dirTitle:hover,
+.iconImg:hover,
+.closeBttn:hover,
+.popOutBttn:hover {
     cursor: pointer;
 }
 
@@ -150,8 +177,6 @@
     float: left;
     clear: both;
 }
-
-.errorStyling { background-color: rgb(255,0,0); }
 
 .error { color: rgb(255, 0, 0); }
 .warnning { color: rgb(255, 168, 0); }
