@@ -5,18 +5,18 @@ function openFile($FILE) {
     $EXTNSN = strtolower(pathinfo($FILE, PATHINFO_EXTENSION));
 
     if (preg_match('(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg)', $EXTNSN) === 1) {
-        shell_exec($MEDIAPLAYER . " \"" . $FILE . "\" &");
+        shell_exec($MEDIAPLAYER . " \"" . $FILE . "\" > /dev/null &");
     } else if (preg_match('(png|jpg|jpeg|gif)', $EXTNSN) === 1) {
-        shell_exec($IMGVIEWER . ' "' . $FILE . '" &');
+        shell_exec($IMGVIEWER . ' "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(psf|mp3|ogg|flac)', $EXTNSN) === 1) {
-        shell_exec($MUSICPLAYER . '  "' . $FILE . '" &');
+        shell_exec($MUSICPLAYER . '  "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(txt)', $EXTNSN) === 1) {
-        shell_exec($TEXTVIEWER . '  "' . $FILE . '" &');
+        shell_exec($TEXTVIEWER . '  "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(pdf)', $EXTNSN) === 1) {
-        shell_exec($PDFVIEWER . ' "' . $FILE . '" &');
-    // Has to be below b/c pdf somehow regesters and an office app.... wtf....
-} else if (preg_match('(odt|doc|docx|rtf)', $EXTNSN) === 1) {
-        shell_exec($OFFICEPROG . '  "' . $FILE . '" &');
+        shell_exec($PDFVIEWER . ' "' . $FILE . '" > /dev/null &');
+    // Has to be below b/c pdf somehow regesters as an office app.... wtf....
+    } else if (preg_match('(odt|doc|docx|rtf)', $EXTNSN) === 1) {
+        shell_exec($OFFICEPROG . '  "' . $FILE . '" > /dev/null &');
     }
 }
 
