@@ -1,5 +1,5 @@
 # WebFM
-WebFM is a media and file viewer.
+WebFM is a media and file viewer aspiring to become a full fledged file manager in the browser.
 
 # Usage
 1. Install php7 and ffmpeg on the system this will be on.
