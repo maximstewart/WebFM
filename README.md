@@ -6,7 +6,7 @@ WebFM is a media and file viewer.
 2. Use php -S 0.0.0.0:yourDesiredPort
 3. Use ufw or gufw to open the port on your computer to the network.
 4. Place files or start uploading some to the folders.
-5. Single clic icons and thumbnails to open files.
+5. Single click icons and thumbnails to open files.
 6. Double click the text name to change the file's or folder's name and press enter to set it.
 7. Right-click to get context menu options.
 
@@ -18,12 +18,10 @@ Notes:
 5. Edit the resources/php/config.php file and put your own programs there.
 
 # TO-DO
-1. Allow for move, copy, delete functionality.
-2. Allow for creating folders through the web interface.
+1. Allow for move and copy.
 3. Fix the ' and & naming issue.
-4. Resolve issue were uploading doesn't always prompt an interface update.
-5. Impliment themes functionality.
-6. Look to refactor code.
+4. Implement themes functionality.
+5. Look to refactor code.
 
 # Images
 ![1 Home](Images/1.png)
