@@ -35,7 +35,7 @@ function getDir(query) {
     // Create path from array of items
     for (pathNode of pathNodes) { path += pathNode; }
 
-    formULPTH.value    = path;                             // Used when upoading a file
+    formULPTH.value    = path;                             // Used when uploading a file
     path               = "dirQuery=" + path;
     process(path);
 }
@@ -48,7 +48,13 @@ function process(path) {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             // Send the returned data to further process
-            updatePage(this.responseXML);
+            if (this.responseXML != null) {
+                updatePage(this.responseXML);
+            } else {
+                document.getElementById('dynDiv').innerHTML =
+                "<p class=\"error\" style=\"width:100%;text-align:center;\"> "
+                + "No content returned. Check the folder path.</p>";
+            }
         }
     };
     xhttp.open("POST", "resources/php/process.php", true); // Open the connection
@@ -57,7 +63,7 @@ function process(path) {
     xhttp.send(path);                                      // Start the process
 
     // Use a cookie for persistence during browser session....
-    document.cookie = path  +"; path=" + document.URL;
+    document.cookie = path  +"; path=" + document.URL + "; expires=Sun, 31 Dec 2034 12:00:00 UTC";
 }
 
 function updatePage(returnData) {
