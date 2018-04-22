@@ -1,21 +1,20 @@
 
 function updateHTMLDirList(returnData) {
-    var dirPath    = returnData.getElementsByTagName('PATH_HEAD')[0];
+    var dirPath    = returnData.getElementsByTagName('PATH_HEAD')[0].innerHTML;
     var dirs       = returnData.getElementsByTagName('DIR');
     var videos     = returnData.getElementsByTagName('VID_FILE');
     var images     = returnData.getElementsByTagName('IMG_FILE');
     var files      = returnData.getElementsByTagName('FILE');
     var insertArea = document.getElementById('dynDiv');
-    var workingDir = dirPath.innerHTML;
     var i          = 0;
     var size       = 0;
 
     // Insert dirs
-    document.getElementById("path").innerHTML = workingDir;
+    document.getElementById("path").innerHTML = dirPath;
     insertArea.innerHTML = "";
 
     // Remove . and ../ if in "root"
-    if (workingDir === "./") {
+    if (dirPath === "./") {
         var i = 2
     }
 
@@ -24,12 +23,13 @@ function updateHTMLDirList(returnData) {
         var dir = dirs[i].innerHTML;
 
         if (dir != "resources/") {
-            insertArea.innerHTML += "<div class=\"dirStyle\"> <img id=\"dirID\""
-                                      +" class=\"systemIcon\" src=\"resources/images/icons/folder.png\" />"
-                                      + "<input type=\"text\" id=\"titleID\" class=\"dirTitle\""
-                                      + " readonly=\"true\" value=\"" + dir + "\" "
-                                      + " onfocusout=\"disableEdits(this)\"/>"
-                                      +"</dir>";
+            insertArea.innerHTML +=
+                "<div class=\"dirStyle\"> <img id=\"dirID\""
+                    +" class=\"systemIcon\" src=\"resources/images/icons/folder.png\" />"
+                    + "<input type=\"text\" id=\"titleID\" class=\"dirTitle\""
+                    + " readonly=\"true\" value=\"" + dir + "\" "
+                    + " onfocusout=\"disableEdits(this)\"/>"
+                +"</dir>";
         }
     }
 
@@ -42,19 +42,20 @@ function updateHTMLDirList(returnData) {
         thumbnail    = videos[i].children[0].innerHTML;
         vidNme       = videos[i].children[1].innerHTML;
 
-        insertArea.innerHTML += "<span class=\"movieStyle\" title=\"" + vidNme + "\" >"
-                                  + "<img id=\"movieID\" class=\"thumbnail\""
-                                  + " src=\"" + thumbnail + "\" alt=\"" + vidNme + "\" />"
-                                  + "<input type=\"text\" id=\"titleID\" class=\"movieTitle\""
-                                  + " readonly=\"true\"" + " value=\"" + vidNme + "\" "
-                                  + " onfocusout=\"disableEdits(this)\"/>"
-                                  + "</span>";
+        insertArea.innerHTML +=
+            "<span class=\"movieStyle\" title=\"" + vidNme + "\" >"
+                + "<img id=\"movieID\" class=\"thumbnail\""
+                    + " src=\"" + thumbnail + "\" alt=\"" + vidNme + "\" />"
+                + "<input type=\"text\" id=\"titleID\" class=\"movieTitle\""
+                    + " readonly=\"true\"" + " value=\"" + vidNme + "\" "
+                    + " onfocusout=\"disableEdits(this)\"/>"
+            + "</span>";
     }
 
     // Insert images
-    var path      = document.getElementById("path").innerHTML;
-    var thumbnail = ""
-    size          = images.length;
+    var path          = document.getElementById("path").innerHTML;
+    var thumbnail     = ""
+    size              = images.length;
 
     for (i = 0; i < size; i++) {
         thumbnail = images[i].children[0].innerHTML;
@@ -67,14 +68,10 @@ function updateHTMLDirList(returnData) {
         }
     }
 
-    if (images[0] != undefined) {
-        var imgText = images[0].children[0].innerHTML;
-
-        if (imgText.match(/000\.(jpg|png|gif)\b/) != null) {
-                updateBG(path + images[0].children[0].innerHTML);
-        } else {
-            updateBG("resources/images/backgrounds/000.jpg");
-        }
+    // Setup background if there is a 000.* in selection
+    var bgImgPth = images[0].children[0].innerHTML;
+    if (bgImgPth.match(/000\.(jpg|png|gif)\b/) != null) {
+        updateBG(path + bgImgPth);
     } else {
         updateBG("resources/images/backgrounds/000.jpg");
     }
@@ -86,12 +83,13 @@ function updateHTMLDirList(returnData) {
         var iconImg = "<img id=\"fileID\"  class=\"systemIcon\""
                         + setFileIconType(fileName);
 
-        insertArea.innerHTML += "<div class=\"fileStyle\">"
-                                  + iconImg
-                                  + "<input type=\"text\" id=\"titleID\" class=\"fileTitle\""
-                                  + " readonly=\"true\"" + " value=\"" + fileName + "\" "
-                                  + " onfocusout=\"disableEdits(this)\"/>"
-                                  + "</dir>";
+        insertArea.innerHTML +=
+            "<div class=\"fileStyle\">"
+                + iconImg
+            + "<input type=\"text\" id=\"titleID\" class=\"fileTitle\""
+                + " readonly=\"true\"" + " value=\"" + fileName + "\" "
+                + " onfocusout=\"disableEdits(this)\"/>"
+            + "</dir>";
     }
 }
 
