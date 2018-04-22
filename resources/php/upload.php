@@ -52,14 +52,13 @@ function uploadFiles($targetDir) {
         if ($uploadOk !== 0) {
             if (move_uploaded_file($fileTmpName, $targetFile)) {
                 echo "<span class='success'>Server: [Success] --> The file " . $fileName . " has been uploaded.</span>";
+                $_SESSION["refreshState"] = "updateListing";
             }
         } else {
             echo "<span class='error'>Server: [Error] --> Your file " . $fileName . " was not uploaded.</span>";
         }
     }
     echo "</body></html>";
-
-     $_SESSION["state"] = "updateListing";
 }
 
 // Check access type.
