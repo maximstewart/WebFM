@@ -1,6 +1,9 @@
 <?php
+session_start();
+
 function renameItem($OLDFILE, $NEWNAME, $PATH) {
     rename($PATH . $OLDFILE, $PATH . $NEWNAME);
+    $_SESSION["refreshState"] = "updateListing";
 }
 
 

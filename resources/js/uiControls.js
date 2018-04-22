@@ -38,7 +38,7 @@ if(typeof(EventSource) !== "undefined") {
     var source = new EventSource("resources/php/sse.php");
     source.onmessage = function(event) {
         if (event.data === "updateListing") {
-            getDirSSE();
+            getDir("./");
         }
     };
 } else {

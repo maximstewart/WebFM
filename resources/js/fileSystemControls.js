@@ -72,33 +72,30 @@ function renameItem(obj) {
     xhttp.open("POST", "resources/php/rename.php", false);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(formData);
-
-    getDirSSE();
 }
 
 function createDir() {
     var path = document.getElementById("path").innerHTML;
-    var newItem = document.getElementById("NewItem").value;
-    var fullPth = path + newItem;
+    var newItem = document.getElementById("NewItem");
+    var fullPth = path + newItem.value;
     var xhttp   = new XMLHttpRequest();
+    newItem.value = "";
 
     xhttp.open("POST", "resources/php/newFileOrDir.php", false);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("item=" + fullPth + "&isDir=dir");
-    getDirSSE();
 }
 
 function createFile() {
     var path = document.getElementById("path").innerHTML;
-    var newItem = document.getElementById("NewItem").value;
-    var fullPth = path + newItem;
-
+    var newItem = document.getElementById("NewItem");
+    var fullPth = path + newItem.value;
     var xhttp   = new XMLHttpRequest();
+    newItem.value = "";
 
     xhttp.open("POST", "resources/php/newFileOrDir.php", false);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("item=" + fullPth + "&isFile=file");
-    getDirSSE();
 }
 
 function startDeleteItem(item) {
@@ -122,7 +119,6 @@ function deleteItem(item) {
 
             console.log("Deleted:  " + fullPth);
             itemObj = null;
-            getDirSSE();
         }
     }
 }

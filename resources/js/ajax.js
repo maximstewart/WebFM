@@ -1,23 +1,5 @@
 var pathNodes = [];
 
-function getDirSSE() {
-    var path = "";
-
-    // Create path from array of items
-    for (pathNode of pathNodes) {
-        path += pathNode;
-    }
-
-    // For some reason, PHPSESSID= gets inserted when in sub dir.
-    // temp work arround is to trim it.
-    if (path.includes("PHPSESSID=")) {
-        path = path.split("; ").pop();
-    }
-
-    path = "dirQuery=" + path;
-    process(path);
-}
-
 function getDir(query) {
     var formULPTH    = document.getElementById("DIRPATHUL");
     var path         = "";

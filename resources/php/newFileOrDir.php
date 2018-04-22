@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 function createItem($FILE, $TYPE) {
     if ($TYPE == "dir"){
@@ -16,6 +17,7 @@ if (isset($_POST["item"])) {
     } else if (isset($_POST["isFile"])) {
         createItem($_POST["item"], $_POST["isFile"]);
     }
+    $_SESSION["refreshState"] = "updateListing";
 }
 
 ?>

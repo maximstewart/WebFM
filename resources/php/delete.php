@@ -1,7 +1,7 @@
 <?php
+session_start();
 
 function deleteItem($FILE) {
-
     if (is_dir($FILE)){
         //GLOB_MARK adds a slash to directories returned
         $files = glob($FILE . '*', GLOB_MARK);
@@ -12,6 +12,7 @@ function deleteItem($FILE) {
     } else if (is_file($FILE)) {
         unlink($FILE);
     }
+    $_SESSION["refreshState"] = "updateListing";
 }
 
 chdir("../../");
