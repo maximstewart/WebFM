@@ -6,17 +6,15 @@ function updateHTMLDirList(returnData) {
     var images     = returnData.getElementsByTagName('IMG_FILE');
     var files      = returnData.getElementsByTagName('FILE');
     var insertArea = document.getElementById('dynDiv');
-    var i          = 0;
     var size       = 0;
+    var i          = 0;
 
     // Insert dirs
     document.getElementById("path").innerHTML = dirPath;
     insertArea.innerHTML = "";
 
     // Remove . and ../ if in "root"
-    if (dirPath === "./") {
-        var i = 2
-    }
+    if (dirPath === "./") { i = 2 }
 
     size = dirs.length;
     for (; i < size; i++) {
