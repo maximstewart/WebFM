@@ -3,16 +3,16 @@
 session_start();
 
 // Retrieve data
-function dirListing($PATH) {
-    if (is_dir($PATH)) {
+function dirListing($NEWPATH) {
+    if (is_dir($NEWPATH)) {
         $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"
-                        . "<PATH_HEAD>" . $PATH . "</PATH_HEAD>";
+                        . "<PATH_HEAD>" . $NEWPATH . "</PATH_HEAD>";
 
-        $dirContents = scandir($PATH);
+        $dirContents = scandir($NEWPATH);
         foreach ($dirContents as $fileName) {
-            $fullPath = $PATH . $fileName;
+            $fullPath = $NEWPATH . $fileName;
 
-            if (is_dir($PATH . $fileName)) {
+            if (is_dir($NEWPATH . $fileName)) {
                $GeneratedXML .= "<DIR>" . $fileName . "/</DIR>";
            } elseif (preg_match('/^.*\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|webm)$/i', strtolower($fileName))) {
                $NAMEHASH = hash('sha256', $fileName);

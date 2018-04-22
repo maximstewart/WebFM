@@ -1,10 +1,17 @@
-var pathNodes = [];  // Path parts  Could store a cookie to keep sessions
+var pathNodes = [];
 
 function getDirSSE() {
     var path = "";
 
     // Create path from array of items
     for (pathNode of pathNodes) { path += pathNode; }
+
+    // For some reason, PHPSESSID= gets inserted when in sub dir.
+    // temp work arround is to trim it.
+    if (path.includes("PHPSESSID=")) {
+        path = path.split("; ").pop();
+    }
+
     path = "dirQuery=" + path;
     process(path);
 }
@@ -35,10 +42,20 @@ function getDir(query) {
     } else    { pathNodes.push(query); }                   // Add path
 
     // Create path from array of items
-    for (pathNode of pathNodes) { path += pathNode; }
+    // for (pathNode of pathNodes) { path += pathNode; console.log(pathNode); }
+    for (var i = 0; i < pathNodes.length; i++) {
+        path += pathNodes[i];
+    }
+
+    // For some reason, PHPSESSID= gets inserted when in sub dir.
+    // temp work arround is to trim it.
+    if (path.includes("PHPSESSID=")) {
+        path = path.split("; ").pop();
+    }
 
     formULPTH.value    = path;                             // Used when uploading a file
     path               = "dirQuery=" + path;
+    console.log("Path  :  " + path);
     process(path);
 }
 
