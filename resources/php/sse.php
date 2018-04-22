@@ -2,7 +2,7 @@
     // Start the session
     session_start();
 
-    if ($_SESSION["state"] != null || $_SESSION["state"] == "undefined") {
+    if (isset($_SESSION["state"])) {
         $state =  $_SESSION["state"];
     }
 
