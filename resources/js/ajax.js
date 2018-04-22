@@ -4,7 +4,9 @@ function getDirSSE() {
     var path = "";
 
     // Create path from array of items
-    for (pathNode of pathNodes) { path += pathNode; }
+    for (pathNode of pathNodes) {
+        path += pathNode;
+    }
 
     // For some reason, PHPSESSID= gets inserted when in sub dir.
     // temp work arround is to trim it.
@@ -19,12 +21,13 @@ function getDirSSE() {
 function getDir(query) {
     var formULPTH    = document.getElementById("DIRPATHUL");
     var path         = "";
+    var temp         = "";
 
     // push or pop to path list
     if (query === "/") {
         // Process path from cookie and set to array/list
         if (document.cookie) {
-            var temp = document.cookie.replace("dirQuery=", "");
+            temp = document.cookie.replace("dirQuery=", "");
             temp = temp.split("/");
             // Subtract one b/c paths end with / and create empty slot
             var size = temp.length - 1;
@@ -32,19 +35,24 @@ function getDir(query) {
             for (var i = 0; i < size; i++) {
                 pathNodes.push(temp[i] + "/");
             }
-        // If no cookie, etup path from root
+        // If no cookie, setup path from root
         } else {
-            pathNodes.push("." + query);                   // If in root of server
+            pathNodes.push("." + query);
         }
     } else if (query === "../") {
-        if (pathNodes.length > 1) { pathNodes.pop(); }     // Only remove while not in root
-    } else if (query === "./") {                           // Do nothing since re-scanning dir
-    } else    { pathNodes.push(query); }                   // Add path
+        // Only remove while not in root
+        if (pathNodes.length > 1) {
+            pathNodes.pop();
+        }
+    } else if (query === "./") {
+        // Do nothing since re-scanning dir
+    } else    {
+        pathNodes.push(query); // Add path
+    }
 
     // Create path from array of items
-    // for (pathNode of pathNodes) { path += pathNode; console.log(pathNode); }
-    for (var i = 0; i < pathNodes.length; i++) {
-        path += pathNodes[i];
+    for (pathNode of pathNodes) {
+        path += pathNode; console.log(pathNode);
     }
 
     // For some reason, PHPSESSID= gets inserted when in sub dir.
@@ -53,7 +61,7 @@ function getDir(query) {
         path = path.split("; ").pop();
     }
 
-    formULPTH.value    = path;                             // Used when uploading a file
+    formULPTH.value    = path; // Setup upload path for form
     path               = "dirQuery=" + path;
     console.log("Path  :  " + path);
     process(path);
