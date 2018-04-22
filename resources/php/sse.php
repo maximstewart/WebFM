@@ -1,14 +1,15 @@
 <?php
-    // Prompt an update clint side when sse checks that there is updateListing.
-    $myfile = fopen("../vars.txt", "r");
-    $state =  fgets($myfile);
-    fclose($myfile);
+    // Start the session
+    session_start();
 
-    $myfile = fopen("../vars.txt", "w");
-    fclose($myfile);
+    if ($_SESSION["state"] != null || $_SESSION["state"] == "undefined") {
+        $state =  $_SESSION["state"];
+    }
 
     header('Content-Type: text/event-stream');
     header('Cache-Control: no-cache');
     echo "data:" . $state . "\n\n";
+
+    $_SESSION["state"] = "none";
     flush();
 ?>

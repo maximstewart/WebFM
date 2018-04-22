@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 function uploadFiles($targetDir) {
     echo "<!DOCTYPE html>"
         . "<head>"
@@ -56,11 +59,7 @@ function uploadFiles($targetDir) {
     }
     echo "</body></html>";
 
-    // Prompt an update clint side when sse checks that there is updateListing.
-    $myfile = fopen("resources/vars.txt", "w+");
-    $txt = "updateListing";
-    fwrite($myfile, $txt);
-    fclose($myfile);
+     $_SESSION["state"] = "updateListing";
 }
 
 // Check access type.

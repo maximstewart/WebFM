@@ -10,13 +10,12 @@ function openFile($FILE) {
         shell_exec($IMGVIEWER . ' "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(psf|mp3|ogg|flac)', $EXTNSN) === 1) {
         shell_exec($MUSICPLAYER . '  "' . $FILE . '" > /dev/null &');
+    } else if (preg_match('(odt|doc|docx|rtf)', $EXTNSN) === 1) {
+        shell_exec($OFFICEPROG . '  "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(txt)', $EXTNSN) === 1) {
         shell_exec($TEXTVIEWER . '  "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(pdf)', $EXTNSN) === 1) {
         shell_exec($PDFVIEWER . ' "' . $FILE . '" > /dev/null &');
-    // Has to be below b/c pdf somehow regesters as an office app.... wtf....
-    } else if (preg_match('(odt|doc|docx|rtf)', $EXTNSN) === 1) {
-        shell_exec($OFFICEPROG . '  "' . $FILE . '" > /dev/null &');
     }
 }
 

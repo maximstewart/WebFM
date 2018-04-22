@@ -1,5 +1,5 @@
 <?php
- // Retrieve data
+// Retrieve data
 function dirListing($PATH) {
     if (is_dir($PATH)) {
         $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"
