@@ -68,7 +68,7 @@ function updateHTMLDirList(returnData) {
     }
 
     // Setup background if there is a 000.* in selection
-    var bgImgPth = images[0].children[0].innerHTML;
+    var bgImgPth = images[0] ? images[0].children[0].innerHTML : "";
     if (bgImgPth.match(/000\.(jpg|png|gif)\b/) != null) {
         updateBG(path + bgImgPth);
     } else {
