@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 // Retrieve data
 function dirListing($PATH) {
     if (is_dir($PATH)) {
