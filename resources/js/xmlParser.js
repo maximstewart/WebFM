@@ -25,11 +25,11 @@ function updateHTMLDirList(returnData) {
         if (dir != "resources/") {
             insertArea.innerHTML +=
                 "<div class=\"dirStyle\"> <img id=\"dirID\""
-                    +" class=\"systemIcon\" src=\"resources/images/icons/folder.png\" />"
+                    + " class=\"systemIcon\" src=\"resources/images/icons/folder.png\" />"
                     + "<input type=\"text\" id=\"titleID\" class=\"dirTitle\""
                     + " readonly=\"true\" value=\"" + dir + "\" "
                     + " onfocusout=\"disableEdits(this)\"/>"
-                +"</dir>";
+                + "</dir>";
         }
     }
 
@@ -62,9 +62,10 @@ function updateHTMLDirList(returnData) {
 
         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
                          !thumbnail.includes("favicon.png")) {
-                insertArea.innerHTML += "<img id=\"imageID\" class=\"iconImg\""
-                                          + " src=\"" + path + thumbnail
-                                          + "\" alt=\"" + thumbnail + "\"/>";
+                insertArea.innerHTML +=
+                    "<img id=\"imageID\" class=\"iconImg\""
+                        + " src=\"" + path + thumbnail
+                        + "\" alt=\"" + thumbnail + "\"/>";
         }
     }
 
@@ -84,8 +85,7 @@ function updateHTMLDirList(returnData) {
                         + setFileIconType(fileName);
 
         insertArea.innerHTML +=
-            "<div class=\"fileStyle\">"
-                + iconImg
+            "<div class=\"fileStyle\">" + iconImg
             + "<input type=\"text\" id=\"titleID\" class=\"fileTitle\""
                 + " readonly=\"true\"" + " value=\"" + fileName + "\" "
                 + " onfocusout=\"disableEdits(this)\"/>"
