@@ -57,6 +57,7 @@ function getDir(query) {
 
 // Get dir info...
 function process(path) {
+    var mergeType    = document.getElementById("MergeType");
     var xhttp = new XMLHttpRequest();                      // Create the xhttp object
 
     // This is actually run after open and send are done
@@ -72,10 +73,10 @@ function process(path) {
             }
         }
     };
-    xhttp.open("POST", "resources/php/getDirList.php", true); // Open the connection
+    xhttp.open("POST", "resources/php/getDirList.php", true);        // Open the connection
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.overrideMimeType('application/xml');             // Force return to be XML
-    xhttp.send(path);                                      // Start the process
+    xhttp.overrideMimeType('application/xml');                       // Force return to be XML
+    xhttp.send(path + "&mergeType=" + mergeType.checked + "Here");   // Start the process
 
     // Use a cookie for persistence during browser session....
     document.cookie = path + "; expires=Sun, 31 Dec 2034 12:00:00 UTC";

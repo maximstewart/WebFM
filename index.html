@@ -24,6 +24,9 @@
             <input type="button" value="New Dir" onclick="createItem('dir')">
             <input type="button" value="New File" onclick="createItem('file')">
         <br/>
+        <label target="MergeType"> <input id="MergeType" type="checkbox">Merge Seasson Folders.</label>
+        <button type="button" name="button" onclick="getDir('./')">Refresh</button>
+        <button type="button" name="button" onclick="getDir('../')">../</button>
         &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
     </h2>
 

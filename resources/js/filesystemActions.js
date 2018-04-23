@@ -8,7 +8,7 @@ function renameItem(obj) {
     console.log("Old name:  " + oldName);
     console.log("New name:  " + newName);
 
-    xhttp.open("POST", "resources/php/filesystemActions.php", false);
+    xhttp.open("POST", "resources/php/filesystemActions.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(formData);
 }
@@ -20,9 +20,9 @@ function createItem(type) {
     var xhttp   = new XMLHttpRequest();
     newItem.value = "";
 
-    xhttp.open("POST", "resources/php/filesystemActions.php", false);
+    xhttp.open("POST", "resources/php/filesystemActions.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("createItem=true&item=" + fullPth + "&type=" + type + "");
+    xhttp.send("createItem=true&item=" + fullPth + "&type=" + type);
 }
 
 function startDeleteItem(item) {
@@ -40,7 +40,7 @@ function deleteItem(item) {
         if (answer == true) {
             var xhttp   = new XMLHttpRequest();
 
-            xhttp.open("POST", "resources/php/filesystemActions.php", false);
+            xhttp.open("POST", "resources/php/filesystemActions.php", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("deleteItem=true&item=" + fullPth);
 
