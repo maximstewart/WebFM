@@ -1,24 +1,37 @@
 var pathNodes = [];
 
+// SSE events if supported
+if(typeof(EventSource) !== "undefined") {
+    var source = new EventSource("resources/php/sse.php");
+    source.onmessage = function(event) {
+        if (event.data === "updateListing") {
+            getDir("./");
+        }
+    };
+} else {
+    console.log("SSE Not Supported In Browser...");
+}
+
 function getDir(query) {
-    var formULPTH    = document.getElementById("DIRPATHUL");
+    var formUlPth    = document.getElementById("DIRPATHUL");
     var path         = "";
-    var temp         = "";
+    var cookies      = "";
+    var dirCookie    = "";
 
     // push or pop to path list
     if (query === "/") {
         // Process path from cookie and set to array/list
-        if (document.cookie) {
-            temp = document.cookie.replace("dirQuery=", "");
-            temp = temp.split("/");
-            // Subtract one b/c paths end with / and create empty slot
-            var size = temp.length - 1;
+        dirCookie = getCookie("dirQuery");
+        if (dirCookie != "" && dirCookie != "./") {
+            dirCookie = dirCookie.split("/");
+            dirCookie.pop(); // account for ending empty slot
 
+            var size = dirCookie.length;
             for (var i = 0; i < size; i++) {
-                pathNodes.push(temp[i] + "/");
+                pathNodes.push(dirCookie[i] + "/");
             }
-        // If no cookie, setup path from root
         } else {
+            pathNodes = [];
             pathNodes.push("." + query);
         }
     } else if (query === "../") {
@@ -34,18 +47,11 @@ function getDir(query) {
 
     // Create path from array of items
     for (pathNode of pathNodes) {
-        path += pathNode; console.log(pathNode);
+        path += pathNode;
     }
 
-    // For some reason, PHPSESSID= gets inserted when in sub dir.
-    // temp work arround is to trim it.
-    if (path.includes("PHPSESSID=")) {
-        path = path.split("; ").pop();
-    }
-
-    formULPTH.value    = path; // Setup upload path for form
+    formUlPth.value    = path; // Setup upload path for form
     path               = "dirQuery=" + path;
-    console.log("Path  :  " + path);
     process(path);
 }
 
@@ -66,7 +72,7 @@ function process(path) {
             }
         }
     };
-    xhttp.open("POST", "resources/php/process.php", true); // Open the connection
+    xhttp.open("POST", "resources/php/getDirList.php", true); // Open the connection
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.overrideMimeType('application/xml');             // Force return to be XML
     xhttp.send(path);                                      // Start the process

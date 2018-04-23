@@ -21,7 +21,7 @@ Notes:
 1. Allow for move and copy.
 3. Fix the ' and & naming issue.
 4. Implement themes functionality.
-5. Look to refactor code.
+
 
 # Images
 ![1 Home](Images/1.png)

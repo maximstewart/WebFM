@@ -1,7 +1,39 @@
 <?php
-
 session_start();
 
+// Create file or folder
+function createItem($FILE, $TYPE) {
+    if ($TYPE == "dir"){
+        mkdir($FILE, 0755);
+    } else if ($TYPE == "file") {
+         $myfile = fopen($FILE, "w");
+         fclose($myfile);
+    }
+    $_SESSION["refreshState"] = "updateListing";
+}
+
+// File or folder delition
+function deleteItem($FILE) {
+    if (is_dir($FILE)){
+        //GLOB_MARK adds a slash to directories returned
+        $files = glob($FILE . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            deleteItem($file);
+        }
+        rmdir($FILE);
+    } else if (is_file($FILE)) {
+        unlink($FILE);
+    }
+    $_SESSION["refreshState"] = "updateListing";
+}
+
+// Rename file or folder
+function renameItem($OLDFILE, $NEWNAME, $PATH) {
+    rename($PATH . $OLDFILE, $PATH . $NEWNAME);
+    $_SESSION["refreshState"] = "updateListing";
+}
+
+// Uploader
 function uploadFiles($targetDir) {
     echo "<!DOCTYPE html>"
         . "<head>"
@@ -61,12 +93,42 @@ function uploadFiles($targetDir) {
     echo "</body></html>";
 }
 
-// Check access type.
+// Local program file access
+function openFile($FILE) {
+    include 'config.php';
+    $EXTNSN = strtolower(pathinfo($FILE, PATHINFO_EXTENSION));
+
+    if (preg_match('(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|webm)', $EXTNSN) === 1) {
+        shell_exec($MEDIAPLAYER . $MPLAYER_WH . "\"" . $FILE . "\" > /dev/null &");
+    } else if (preg_match('(png|jpg|jpeg|gif)', $EXTNSN) === 1) {
+        shell_exec($IMGVIEWER . ' "' . $FILE . '" > /dev/null &');
+    } else if (preg_match('(psf|mp3|ogg|flac)', $EXTNSN) === 1) {
+        shell_exec($MUSICPLAYER . '  "' . $FILE . '" > /dev/null &');
+    } else if (preg_match('(odt|doc|docx|rtf)', $EXTNSN) === 1) {
+        shell_exec($OFFICEPROG . '  "' . $FILE . '" > /dev/null &');
+    } else if (preg_match('(txt)', $EXTNSN) === 1) {
+        shell_exec($TEXTVIEWER . '  "' . $FILE . '" > /dev/null &');
+    } else if (preg_match('(pdf)', $EXTNSN) === 1) {
+        shell_exec($PDFVIEWER . ' "' . $FILE . '" > /dev/null &');
+    }
+}
+
+
 chdir("../../");
-if(isset($_POST["UploadFiles"]) && isset($_POST["DIRPATHUL"])) {
+if (isset($_POST["createItem"]) && isset($_POST["item"]) && isset($_POST["type"])) {
+    createItem($_POST["item"], $_POST["type"]);
+} else if (isset($_POST["deleteItem"]) && isset($_POST["item"])) {
+    deleteItem($_POST["item"]);
+} else if (isset($_POST["renameItem"]) && isset($_POST["oldName"]) && isset($_POST["newName"]) && isset($_POST["path"])) {
+    renameItem($_POST["oldName"], $_POST["newName"], $_POST["path"]);
+} else if(isset($_POST["UploadFiles"]) && isset($_POST["DIRPATHUL"])) {
     uploadFiles($_POST["DIRPATHUL"]);
+} else if (isset($_POST["media"])) {
+    openFile($_POST["media"]);
 } else {
     echo "<span style='color:rgb(255, 0, 0);'>Server: [Error] --> Incorrect access attempt!</span>";
 }
+
+
 
 ?>

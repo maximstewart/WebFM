@@ -20,9 +20,9 @@
             <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
         </form>
         <br/>
-            <input type="text" id="NewItem" style="text-align: center; background-color: #ffffff; color: #000000;" value="" />
-            <input type="button" value="New Dir" onclick="createDir()">
-            <input type="button" value="New File" onclick="createFile()">
+            <input type="text" id="NewItem" value="" />
+            <input type="button" value="New Dir" onclick="createItem('dir')">
+            <input type="button" value="New File" onclick="createItem('file')">
         <br/>
         &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
     </h2>
@@ -46,11 +46,11 @@
     </menu>
 
 
-    <script type="text/javascript" src="resources/js/ajax.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/cookieHandler.js" charset="utf-8"></script>
     <script type="text/javascript" src="resources/js/xmlParser.js" charset="utf-8"></script>
-    <script type="text/javascript" src="resources/js/uiControls.js" charset="utf-8"></script>
-    <script type="text/javascript" src="resources/js/fileSystemControls.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/ajax.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/uiActions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="resources/js/filesystemActions.js" charset="utf-8"></script>
     <script type="text/javascript" src="resources/js/uiEvents.js" charset="utf-8"></script>
-    <script type="text/javascript" src="resources/js/dragContainerEvents.js" charset="utf-8"></script>
 </body>
 </html>
