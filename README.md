@@ -19,7 +19,7 @@ Notes:
 
 # TO-DO
 1. Allow for move and copy.
-3. Fix the ' and & naming issue.
+3. Fixed the ' issue but & remains a problem.
 4. Implement themes functionality.
 
 

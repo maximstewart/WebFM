@@ -11,35 +11,6 @@
     <!-- Background -->
     <img id="bg" />
 
-    <!-- Uploader -->
-    <h2 id="fullPathHeader">
-        <form action="resources/php/filesystemActions.php" method="post" enctype="multipart/form-data" target="FormSubmitter">
-            <input class="ulFile" type="file" title="files To Upload" name="filesToUpload[]" data-multiple-caption="{count} files selected" multiple />
-            <input type="submit" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
-            <input type="reset" title="Clear" id="CLEARBTTN" value="Clear" style="display:none;">
-            <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
-        </form>
-        <br/>
-            <input type="text" id="NewItem" value="" />
-            <input type="button" value="New Dir" onclick="createItem('dir')">
-            <input type="button" value="New File" onclick="createItem('file')">
-        <br/>
-        <label target="MergeType"> <input id="MergeType" type="checkbox">Merge Seasson Folders.</label>
-        <button type="button" name="button" onclick="getDir('./')">Refresh</button>
-        <button type="button" name="button" onclick="getDir('../')">../</button>
-        &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
-    </h2>
-
-    <!-- Dynamic content targets -->
-    <div id="dynDiv"></div>
-    <div id="imgView" style="display:none;"></div>
-    <div id="fileView" style="display:none;"></div>
-
-    <!-- Uploader processor -->
-    <div id="toggleServerMsg" style="display:none;">
-        <iframe id="FormSubmitter" name="FormSubmitter" frameborder="0" ></iframe>
-    </div>
-
     <!-- Create the menu -->
     <menu type="context" id="menu">
         <menuitem label="Home Directory" onclick="clearDirCookie()"></menuitem>
@@ -48,6 +19,45 @@
         <menuitem label="Delete File/Directory" onclick="deleteItem()"></menuitem>
     </menu>
 
+    <!-- Uploader -->
+    <h2 id="fullPathHeader">
+        <button type="button" title="Other Options" name="button" onclick="showOptions()">&#9881;</button>
+        <button type="button" title="Refresh" name="button" onclick="getDir('./')">&#8635;</button>
+        <button type="button" title="Back" name="button" onclick="getDir('../')">&lArr;</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
+    </h2>
+
+    <!-- Dynamic content targets -->
+    <div id="dynDiv"></div>
+    <div id="imgView" style="display:none;"></div>
+    <div id="fileView" style="display:none;"></div>
+
+
+    <div id="popOutControls" style="display:none;">
+        <center>
+        <form action="resources/php/filesystemActions.php" method="post" enctype="multipart/form-data" target="FormSubmitter">
+            <input class="ulFile" type="file" title="files To Upload" name="filesToUpload[]" data-multiple-caption="{count} files selected" multiple />
+            <input type="submit" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
+            <input type="reset" title="Clear" id="CLEARBTTN" value="Clear" style="display:none;">
+            <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
+        </form>
+        <br/>
+            <input type="text" id="NewItem" value=""/>
+            <input type="button" value="New Dir" onclick="createItem('dir')"/>
+            <input type="button" value="New File" onclick="createItem('file')"/>
+            <input type="button" value="Show Server Messages" onclick="tgglServerMsgView()"/>
+        <br/>
+        <label target="MergeType" onclick="getDir('./')">
+            <input id="MergeType" type="checkbox">Show seassons in same list.
+        </label>
+    </center>
+    </div>
+
+
+    <!-- Uploader processor -->
+    <div id="toggleServerMsg" style="display:none;">
+        <iframe id="FormSubmitter" name="FormSubmitter" frameborder="0" ></iframe>
+    </div>
 
     <script type="text/javascript" src="resources/js/cookieHandler.js" charset="utf-8"></script>
     <script type="text/javascript" src="resources/js/xmlParser.js" charset="utf-8"></script>

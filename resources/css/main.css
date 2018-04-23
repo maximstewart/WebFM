@@ -45,7 +45,7 @@
 }
 
 #dynDiv {
-    margin-top: 8em;
+    margin-top: 5em;
 }
 
 #imgView, #imgArea, #fileView {
@@ -85,6 +85,17 @@
 #NewItem {
     background-color: #ffffff;
     color: #000000;
+    text-align: center;
+}
+
+#popOutControls {
+    position: absolute;
+    top: 15%;
+    width: 99%;
+    height: 15em;
+    padding-top: 6em;
+    background-color: rgba(103, 103, 103, 1);
+    color: #ffffff;
     text-align: center;
 }
 
@@ -178,6 +189,7 @@
     border-color: #000000;
 }
 
+/* Messages coloring */
 .error, .warnning, .success {
     float: left;
     clear: both;

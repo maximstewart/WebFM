@@ -1,5 +1,23 @@
 var formerFileName = "";
 
+function showOptions() {
+    var popOutControls = document.getElementById("popOutControls");
+    if (popOutControls.style.display == "none") {
+        popOutControls.style.display = "block";
+    } else {
+        popOutControls.style.display = "none";
+    }
+}
+
+function tgglServerMsgView() {
+    var serverMsgView = document.getElementById("toggleServerMsg");
+    if (serverMsgView.style.display == "none") {
+        serverMsgView.style.display = "block";
+    } else {
+        serverMsgView.style.display = "none";
+    }
+}
+
 function enableEdit(obj) {
     obj.style.backgroundColor   = "#ffffffff";
     obj.style.color             = '#000000ff';
@@ -66,15 +84,6 @@ function clearDirCookie() {
     var expireDate = "Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "dirQuery=; expires=" + expireDate;
     getDir("/");
-}
-
-function tgglServerMsgView() {
-    var serverMsgView = document.getElementById("toggleServerMsg");
-    if (serverMsgView.style.display == "none") {
-        serverMsgView.style.display = "block";
-    } else {
-        serverMsgView.style.display = "none";
-    }
 }
 
 function clearDlList() {
