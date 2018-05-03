@@ -25,11 +25,13 @@ function enableEdit(obj) {
     formerFileName              = obj.value;
 }
 
-function disableEdits(obj) {
-    obj.style.backgroundColor   = "#ffffff00";
-    obj.style.color             = '#ffffff';
-    obj.value                   = formerFileName;
-    obj.readOnly                = "true";
+function disableEdits() {
+    // this references the passed object from
+    // addEventListener than us passing it
+    this.style.backgroundColor   = "#ffffff00";
+    this.style.color             = '#ffffff';
+    this.value                   = formerFileName;
+    this.readOnly                = "true";
 }
 
 function showImg(imgLoc) {

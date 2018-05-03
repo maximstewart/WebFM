@@ -1,3 +1,4 @@
+const insertArea = document.getElementById('dynDiv');
 
 function updateHTMLDirList(returnData) {
     var dirPath    = returnData.getElementsByTagName('PATH_HEAD')[0].innerHTML;
@@ -5,29 +6,21 @@ function updateHTMLDirList(returnData) {
     var videos     = returnData.getElementsByTagName('VID_FILE');
     var images     = returnData.getElementsByTagName('IMG_FILE');
     var files      = returnData.getElementsByTagName('FILE');
-    var insertArea = document.getElementById('dynDiv');
+    var dirImg     = "resources/images/icons/folder.png";
+    var i          = (dirPath === "./") ? i = 2 : i = 0 ;   // RM . and ../ if in "root"
     var size       = 0;
-    var i          = 0;
 
     // Insert dirs
     document.getElementById("path").innerHTML = dirPath;
     insertArea.innerHTML = "";
-
-    // Remove . and ../ if in "root"
-    if (dirPath === "./") { i = 2 }
 
     size = dirs.length;
     for (; i < size; i++) {
         var dir = dirs[i].innerHTML;
 
         if (dir != "resources/") {
-            insertArea.innerHTML +=
-                "<div class=\"dirStyle\"> <img id=\"dirID\""
-                    + " class=\"systemIcon\" src=\"resources/images/icons/folder.png\" />"
-                    + "<input type=\"text\" id=\"titleID\" class=\"dirTitle\""
-                    + " readonly=\"true\" value=\"" + dir + "\" "
-                    + " onfocusout=\"disableEdits(this)\"/>"
-                + "</dir>";
+            createElmBlock("DIV", "dirStyle", "dirID", "systemIcon", dirImg ,
+                                                            "dirTitle", dir);
         }
     }
 
@@ -37,33 +30,28 @@ function updateHTMLDirList(returnData) {
     size             = videos .length;
 
     for (i = 0; i < size; i++) {
-        thumbnail    = videos[i].children[0].innerHTML;
-        vidNme       = videos[i].children[1].innerHTML;
-
-        insertArea.innerHTML +=
-            "<span class=\"movieStyle\" title=\"" + vidNme + "\" >"
-                + "<img id=\"movieID\" class=\"thumbnail\""
-                    + " src=\"" + thumbnail + "\" alt=\"" + vidNme + "\" />"
-                + "<input type=\"text\" id=\"titleID\" class=\"movieTitle\""
-                    + " readonly=\"true\"" + " value=\"" + vidNme + "\" "
-                    + " onfocusout=\"disableEdits(this)\"/>"
-            + "</span>";
+        thumbnail     = videos[i].children[0].innerHTML;
+        vidNme        = videos[i].children[1].innerHTML;
+        createElmBlock("SPAN", "movieStyle", "movieID", "thumbnail", thumbnail,
+                                                         "movieTitle", vidNme);
     }
 
     // Insert images
-    var path          = document.getElementById("path").innerHTML;
-    var thumbnail     = ""
-    size              = images.length;
+    var path       = document.getElementById("path").innerHTML;
+    var thumbnail  = ""
+    size           = images.length;
 
     for (i = 0; i < size; i++) {
         thumbnail = images[i].children[0].innerHTML;
 
         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
-                         !thumbnail.includes("favicon.png")) {
-                insertArea.innerHTML +=
-                    "<img id=\"imageID\" class=\"iconImg\""
-                        + " src=\"" + path + thumbnail
-                        + "\" alt=\"" + thumbnail + "\"/>";
+                             !thumbnail.includes("favicon.png")) {
+            var imgTag       = document.createElement("IMG");
+            imgTag.id        = "imageID";
+            imgTag.className = "iconImg";
+            imgTag.src       = path + thumbnail;
+            imgTag.alt       = thumbnail;
+            insertArea.appendChild(imgTag);
         }
     }
 
@@ -78,35 +66,52 @@ function updateHTMLDirList(returnData) {
     // Insert files
     size = files.length;
     for (i = 0; i < size; i++) {
-        var fileName = files[i].children[0].innerHTML;
-        var iconImg = "<img id=\"fileID\"  class=\"systemIcon\""
-                        + setFileIconType(fileName);
-
-        insertArea.innerHTML +=
-            "<div class=\"fileStyle\">" + iconImg
-            + "<input type=\"text\" id=\"titleID\" class=\"fileTitle\""
-                + " readonly=\"true\"" + " value=\"" + fileName + "\" "
-                + " onfocusout=\"disableEdits(this)\"/>"
-            + "</dir>";
+        var fileName   = files[i].children[0].innerHTML;
+        createElmBlock("DIV", "fileStyle", "fileID", "systemIcon", setFileIconType(fileName),
+                                                                      "fileTitle", fileName);
     }
+}
+
+function createElmBlock(contnrType, contnrClass, imgID, imgClass,
+                                    imgSrc, inputClass, fileName) {
+    var contnrTag  = document.createElement(contnrType);
+    var imgTag     = document.createElement("IMG");
+    var inputTag   = document.createElement("INPUT");
+
+    contnrTag.className  = contnrClass;
+    contnrTag.title      = fileName;
+    imgTag.id            = imgID;
+    imgTag.className     = imgClass ;
+    imgTag.src           = imgSrc;
+    imgTag.alt           = fileName;
+    inputTag.type        = "text";
+    inputTag.id          = "titleID";
+    inputTag.className   = inputClass;
+    inputTag.readOnly    = "true";
+    inputTag.value       = fileName;
+    inputTag.addEventListener("focusout", disableEdits);
+
+    contnrTag.appendChild(imgTag);
+    contnrTag.appendChild(inputTag);
+    insertArea.appendChild(contnrTag);
 }
 
 function setFileIconType(fileName) {
     if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null) {
-        return " src=\"resources/images/icons/doc.png\" />";
+        return "resources/images/icons/doc.png";
     } else if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null) {
-        return " src=\"resources/images/icons/arc.png\" />";
+        return "resources/images/icons/arc.png";
     } else if (fileName.match(/\.(pdf)\b/) != null) {
-        return " src=\"resources/images/icons/pdf.png\" />";
+        return "resources/images/icons/pdf.png";
     } else if (fileName.match(/\.(html)\b/) != null) {
-        return " src=\"resources/images/icons/html.png\" />";
+        return "resources/images/icons/html.png";
     } else if (fileName.match(/\.(txt|conf)\b/) != null) {
-        return " src=\"resources/images/icons/text.png\" />";
+        return "resources/images/icons/text.png";
     } else if (fileName.match(/\.(iso|img)\b/) != null) {
-        return " src=\"resources/images/icons/img.png\" />";
+        return "resources/images/icons/img.png";
     } else if (fileName.match(/\.(sh|batch|exe)\b/) != null) {
-        return " src=\"resources/images/icons/scrip.png\" />";
+        return "resources/images/icons/scrip.png";
     } else {
-        return " src=\"resources/images/icons/bin.png\" />";
+        return "resources/images/icons/bin.png";
     }
 }
