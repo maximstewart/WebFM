@@ -7,7 +7,7 @@ function updateHTMLDirList(returnData) {
     var images     = returnData.getElementsByTagName('IMG_FILE');
     var files      = returnData.getElementsByTagName('FILE');
     var dirImg     = "resources/images/icons/folder.png";
-    var i          = (dirPath === "./") ? i = 2 : i = 0 ;   // RM . and ../ if in "root"
+    var i          = 0;
     var size       = 0;
 
     // Insert dirs
