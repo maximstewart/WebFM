@@ -89,12 +89,13 @@
 }
 
 #popOutControls {
-    position: absolute;
+    position: fixed;
     top: 15%;
     width: 99%;
     height: 15em;
     padding-top: 6em;
-    background-color: rgba(103, 103, 103, 1);
+    opacity: 0.94;
+    background: radial-gradient(circle,#3f3f3f,#000000);
     color: #ffffff;
     text-align: center;
 }
@@ -109,11 +110,6 @@
 .dirStyle { background-color: rgba(0, 0, 0, 0.56); }
 .movieStyle, .fileStyle { background-color: rgba(101, 101, 101, 0.56); }
 
-.dirStyle:hover, .movieStyle:hover, .fileStyle:hover {
-    background-color: rgba(0, 141, 166, 0.56);
-    cursor: pointer;
-}
-
 .movieStyle {
     float: left;
     width: 15em;
@@ -121,6 +117,16 @@
     overflow: hidden;
     margin: 0.5em;
     padding: 0.5em;
+}
+
+.dirStyle:hover, .movieStyle:hover, .fileStyle:hover {
+    background-color: rgba(0, 141, 166, 0.56);
+    cursor: pointer;
+}
+
+
+.movieStyle:focus, .fileStyle:focus, .fileStyle:focus {
+    background-color: rgb(114,184,199);
 }
 
 .dirTitle, .fileTitle, .movieTitle {

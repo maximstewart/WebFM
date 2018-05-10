@@ -80,6 +80,7 @@ function createElmBlock(contnrType, contnrClass, imgID, imgClass,
 
     contnrTag.className  = contnrClass;
     contnrTag.title      = fileName;
+    contnrTag.tabIndex   = "1";
     imgTag.id            = imgID;
     imgTag.className     = imgClass ;
     imgTag.src           = imgSrc;
