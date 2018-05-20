@@ -51,7 +51,7 @@ function getDir(query) {
     }
 
     formUlPth.value    = path; // Setup upload path for form
-    path               = "dirQuery=" + path;
+    path               = "dirQuery=" + encodeURIComponent(path);
     process(path);
 }
 

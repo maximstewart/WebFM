@@ -1,6 +1,6 @@
 const insertArea = document.getElementById('dynDiv');
 
-function updateHTMLDirList(returnData) {
+async function updateHTMLDirList(returnData) {
     var dirPath    = returnData.getElementsByTagName('PATH_HEAD')[0].innerHTML;
     var dirs       = returnData.getElementsByTagName('DIR');
     var videos     = returnData.getElementsByTagName('VID_FILE');

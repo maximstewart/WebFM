@@ -3,6 +3,9 @@ session_start();
 
 // Create file or folder
 function createItem($FILE, $TYPE) {
+    $FILE = preg_replace('/[^.[:alnum:]_-]/','_',trim($FILE));  // converting all on alphanumeric chars to _
+    $FILE = preg_replace('/\.*$/','',$FILE);                    // removing dot . after file extension
+
     if ($TYPE == "dir"){
         mkdir($FILE, 0755);
     } else if ($TYPE == "file") {
