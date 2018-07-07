@@ -1,8 +1,8 @@
 // ondblclick
 document.ondblclick = function (event) {
-    var obj = event.target;
+    var obj       = event.target;
     var callingID = obj.id;
-    var classNM = obj.className;
+    var classNM   = obj.className;
 
     // Left click detect
     if (event.which == 1) {
@@ -50,8 +50,8 @@ document.ondblclick = function (event) {
 
 // Mainly for rename event
 document.onkeydown = function (event) {
-    var obj = event.target;
-    var callingID = event.target.id;
+    var obj        = event.target;
+    var callingID  = event.target.id;
     var keyCodeVal = event.keyCode;
 
     // If keycode == Enter
@@ -65,7 +65,7 @@ document.onkeydown = function (event) {
 //  Drage event for the poped out image and media container
 function dragContainer(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    elmnt.onmousedown = dragMouseDown;
+    elmnt.onmousedown  = dragMouseDown;
 
     function dragMouseDown(e) {
         e = e || window.event;

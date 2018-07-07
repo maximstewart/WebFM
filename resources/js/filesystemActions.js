@@ -5,27 +5,23 @@ function renameItem(obj) {
     var oldName   = encodeURIComponent(formerFileName);
     var newName   = encodeURIComponent(obj.value);
     var formData  = "renameItem=true&oldName=" + oldName + "&newName=" + newName + "&path=" + path;
-    var xhttp     = new XMLHttpRequest();
 
     console.log("Old name:  " + oldName);
     console.log("New name:  " + newName);
 
-    xhttp.open("POST", "resources/php/filesystemActions.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(formData);
+    doFSAction("resources/php/filesystemActions.php",
+               formData);
 }
 
 function createItem(type) {
     var path      = document.getElementById("path").innerHTML;
     var newItem   = document.getElementById("NewItem");
     var fullPth   = path + newItem.value;
-    var xhttp     = new XMLHttpRequest();
     newItem.value = "";
     fullPth       = encodeURIComponent(fullPth);
 
-    xhttp.open("POST", "resources/php/filesystemActions.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("createItem=true&item=" + fullPth + "&type=" + type);
+    doFSAction("resources/php/filesystemActions.php",
+               "createItem=true&item=" + fullPth + "&type=" + type);
 }
 
 function startDeleteItem(item) {
@@ -39,13 +35,10 @@ function deleteItem() {
     if (itemObj != undefined && itemObj != null) {
         var fullPth = path + itemObj;
         fullPth     = encodeURIComponent(fullPth);
-        var answer = confirm("Are you sure you want to delete: " + fullPth);
+        var answer  = confirm("Are you sure you want to delete: " + fullPth);
         if (answer == true) {
-            var xhttp   = new XMLHttpRequest();
-
-            xhttp.open("POST", "resources/php/filesystemActions.php", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("deleteItem=true&item=" + fullPth);
+            doFSAction("resources/php/filesystemActions.php",
+                       "deleteItem=true&item=" + fullPth);
 
             console.log("Deleted:  " + fullPth);
             itemObj = null;
@@ -54,9 +47,13 @@ function deleteItem() {
 }
 
 function openInLocalProg(media) {
-    var xhttp = new XMLHttpRequest();
+    doFSAction("resources/php/filesystemActions.php",
+               "media=" + media);
+}
 
-    xhttp.open("POST", "resources/php/filesystemActions.php", true);
+function doFSAction(actionPath, data) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", actionPath, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("media=" + media);
+    xhttp.send(data);
 }

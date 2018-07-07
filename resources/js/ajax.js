@@ -13,10 +13,10 @@ if(typeof(EventSource) !== "undefined") {
 }
 
 function getDir(query) {
-    var formUlPth    = document.getElementById("DIRPATHUL");
-    var path         = "";
-    var cookies      = "";
-    var dirCookie    = "";
+    var formUlPth  = document.getElementById("DIRPATHUL");
+    var path       = "";
+    var cookies    = "";
+    var dirCookie  = "";
 
     // push or pop to path list
     if (query === "/") {
@@ -50,15 +50,15 @@ function getDir(query) {
         path += pathNode;
     }
 
-    formUlPth.value    = path; // Setup upload path for form
-    path               = "dirQuery=" + encodeURIComponent(path);
+    formUlPth.value = path; // Setup upload path for form
+    path            = "dirQuery=" + encodeURIComponent(path);
     process(path);
 }
 
 // Get dir info...
 function process(path) {
-    var mergeType    = document.getElementById("MergeType");
-    var xhttp = new XMLHttpRequest();                      // Create the xhttp object
+    var mergeType = document.getElementById("MergeType");
+    var xhttp     = new XMLHttpRequest();                      // Create the xhttp object
 
     // This is actually run after open and send are done
     xhttp.onreadystatechange = function() {

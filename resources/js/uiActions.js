@@ -1,37 +1,28 @@
 var formerFileName = "";
 
-function showOptions() {
-    var popOutControls = document.getElementById("popOutControls");
-    if (popOutControls.style.display == "none") {
-        popOutControls.style.display = "block";
+function tgglElmView(id) {
+    var elm = document.getElementById(id);
+    if (elm.style.display == "none") {
+        elm.style.display = "block";
     } else {
-        popOutControls.style.display = "none";
-    }
-}
-
-function tgglServerMsgView() {
-    var serverMsgView = document.getElementById("toggleServerMsg");
-    if (serverMsgView.style.display == "none") {
-        serverMsgView.style.display = "block";
-    } else {
-        serverMsgView.style.display = "none";
+        elm.style.display = "none";
     }
 }
 
 function enableEdit(obj) {
-    obj.style.backgroundColor   = "#ffffffff";
-    obj.style.color             = '#000000ff';
-    obj.readOnly                = '';
-    formerFileName              = obj.value;
+    obj.style.backgroundColor  = "#ffffffff";
+    obj.style.color            = '#000000ff';
+    obj.readOnly               = '';
+    formerFileName             = obj.value;
 }
 
 function disableEdits() {
     // this references the passed object from
     // addEventListener than us passing it
-    this.style.backgroundColor   = "#ffffff00";
-    this.style.color             = '#ffffff';
-    this.value                   = formerFileName;
-    this.readOnly                = "true";
+    this.style.backgroundColor  = "#ffffff00";
+    this.style.color            = '#ffffff';
+    this.value                  = formerFileName;
+    this.readOnly               = "true";
 }
 
 function showImg(imgLoc) {
@@ -61,9 +52,9 @@ function showMedia(media) {
             var popButton       = "<a title=\"New Tab\" href=\"" + fullMedia + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
             var CloseBttn       = "<div class=\"closeBttn\" title=\"Close\" onclick=\"closeMedia()\">X</div>";
 
-            mediaView.style.display   = "block";
-            mediaView.innerHTML       = CloseBttn + popButton + toPlayerButton;
-            mediaView.innerHTML += "<iframe id=\"fileViewInner\" src=\"" + fullMedia + "\"></iframe>";
+            mediaView.style.display = "block";
+            mediaView.innerHTML     = CloseBttn + popButton + toPlayerButton;
+            mediaView.innerHTML     += "<iframe id=\"fileViewInner\" src=\"" + fullMedia + "\"></iframe>";
 
             dragContainer(mediaView);  // Set for dragging events
     } else {
@@ -72,13 +63,13 @@ function showMedia(media) {
 }
 
 function closeImg() {
-    var imgView = document.getElementById("imgView");
+    var imgView           = document.getElementById("imgView");
     imgView.style.display = "none";
 }
 
 function closeMedia() {
-    var mediaView = document.getElementById("fileView");
-    mediaView.style.display = "none";
+    var mediaView             = document.getElementById("fileView");
+    mediaView.style.display   = "none";
     mediaView.children[3].src = "";
 }
 
@@ -88,14 +79,6 @@ function clearDirCookie() {
     getDir("/");
 }
 
-function clearDlList() {
-    document.getElementById("CLEARBTTN").click();
-}
-
-function onloadSetBG() {
-    updateBG("resources/images/backgrounds/000.jpg");
-}
-
-function updateBG(bgImg) {
-    document.getElementById("bg").src = bgImg;
-}
+function clearDlList() {   document.getElementById("CLEARBTTN").click(); }
+function onloadSetBG() {   updateBG("resources/images/backgrounds/000.jpg"); }
+function updateBG(bgImg) { document.getElementById("bg").src = bgImg; }

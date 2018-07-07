@@ -14,14 +14,14 @@
     <!-- Create the menu -->
     <menu type="context" id="menu">
         <menuitem label="Home Directory" onclick="clearDirCookie()"></menuitem>
-        <menuitem label="Show Server Messages" onclick="tgglServerMsgView()"></menuitem>
+        <menuitem label="Show Server Messages" onclick="tgglElmView('toggleServerMsg')"></menuitem>
         <menuitem label="Clear Upload List" onclick="clearDlList()"></menuitem>
         <menuitem label="Delete File/Directory" onclick="deleteItem()"></menuitem>
     </menu>
 
     <!-- Uploader -->
     <h2 id="fullPathHeader">
-        <button type="button" title="Other Options" name="button" onclick="showOptions()">&#9881;</button>
+        <button type="button" title="Other Options" name="button" onclick="tgglElmView('popOutControls')">&#9881;</button>
         <button type="button" title="Refresh" name="button" onclick="getDir('./')">&#8635;</button>
         <button type="button" title="Back" name="button" onclick="getDir('../')">&lArr;</button>
         &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
