@@ -102,7 +102,7 @@ function openFile($FILE) {
     $EXTNSN = strtolower(pathinfo($FILE, PATHINFO_EXTENSION));
 
     if (preg_match('(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|webm)', $EXTNSN) === 1) {
-        shell_exec($MEDIAPLAYER . $MPLAYER_WH . "\"" . $FILE . "\" > /dev/null &");
+        shell_exec($MEDIAPLAYER . "\"" . $FILE . "\" > /dev/null &");
     } else if (preg_match('(png|jpg|jpeg|gif)', $EXTNSN) === 1) {
         shell_exec($IMGVIEWER . ' "' . $FILE . '" > /dev/null &');
     } else if (preg_match('(psf|mp3|ogg|flac)', $EXTNSN) === 1) {

@@ -14,6 +14,8 @@ if(typeof(EventSource) !== "undefined") {
 
 function getDir(query) {
     var formUlPth  = document.getElementById("DIRPATHUL");
+    var mergeType  = document.getElementById("MergeType");
+    var passwd = undefined;
     var path       = "";
     var cookies    = "";
     var dirCookie  = "";
@@ -46,19 +48,27 @@ function getDir(query) {
     }
 
     // Create path from array of items
-    for (pathNode of pathNodes) {
-        path += pathNode;
+    for (pathNode of pathNodes) { path += pathNode; }
+
+    try {
+        passwd = document.getElementById("PASSWD").value;
+    } catch (e) {
+        passwd = "";
     }
 
-    formUlPth.value = path; // Setup upload path for form
+    // Setup upload path for form and make a cookie for persistence during browser session....
+    formUlPth.value = path;
     path            = "dirQuery=" + encodeURIComponent(path);
+    document.cookie = path + "; expires=Sun, 31 Dec 2034 12:00:00 UTC";
+    path            +="&mergeType=" + mergeType.checked
+                    + "Here&passwd=" + passwd;
+
     process(path);
 }
 
 // Get dir info...
 function process(path) {
-    var mergeType = document.getElementById("MergeType");
-    var xhttp     = new XMLHttpRequest();                      // Create the xhttp object
+    var xhttp = new XMLHttpRequest();   // Create the xhttp object
 
     // This is actually run after open and send are done
     xhttp.onreadystatechange = function() {
@@ -76,8 +86,5 @@ function process(path) {
     xhttp.open("POST", "resources/php/getDirList.php", true);        // Open the connection
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.overrideMimeType('application/xml');                       // Force return to be XML
-    xhttp.send(path + "&mergeType=" + mergeType.checked + "Here");   // Start the process
-
-    // Use a cookie for persistence during browser session....
-    document.cookie = path + "; expires=Sun, 31 Dec 2034 12:00:00 UTC";
+    xhttp.send(path);                                                // Start the process
 }

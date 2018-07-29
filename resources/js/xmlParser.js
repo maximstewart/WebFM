@@ -1,7 +1,13 @@
 const insertArea = document.getElementById('dynDiv');
 
 async function updateHTMLDirList(returnData) {
-    var dirPath    = returnData.getElementsByTagName('PATH_HEAD')[0].innerHTML;
+    try {
+        var dirPath = returnData.getElementsByTagName('PATH_HEAD')[0].innerHTML;
+    } catch (e) {
+        createPassField(returnData);
+        return;
+    }
+
     var dirs       = returnData.getElementsByTagName('DIR');
     var videos     = returnData.getElementsByTagName('VID_FILE');
     var images     = returnData.getElementsByTagName('IMG_FILE');

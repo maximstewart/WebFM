@@ -3,16 +3,24 @@
 session_start();
 
 // Start of retrieving dir data
-function startListing($NEWPATH, $MERGESEASSONS) {
+function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
     if (is_dir($NEWPATH)) {
-        $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"
-                        . "<PATH_HEAD>" . $NEWPATH . "</PATH_HEAD>";
-        $subPath = ""; // This is used for season scanning as a means of properly getting
-                       // the video src.... It's left blank when not in a sub dir
-        listDir($GeneratedXML, $NEWPATH, $MERGESEASSONS, $subPath);
+        include 'lockedFolders.php';
+        if (checkForLock($NEWPATH, $PASSWD) == false) {
+            $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"
+            . "<PATH_HEAD>" . $NEWPATH . "</PATH_HEAD>";
+            $subPath = ""; // This is used for season scanning as a means of properly getting
+            // the video src.... It's left blank when not in a sub dir
+            listDir($GeneratedXML, $NEWPATH, $MERGESEASSONS, $subPath);
 
-        $GeneratedXML .= "</DIR_LIST>";
-        echo $GeneratedXML;
+            $GeneratedXML .= "</DIR_LIST>";
+            echo $GeneratedXML;
+        } else {
+            $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                          . "<MESSAGE>Folder is locked."
+                          . "</MESSAGE>";
+            echo $GeneratedXML;
+        }
     }
 }
 
@@ -67,7 +75,7 @@ function processItem(&$GeneratedXML, &$fullPath, &$fileName, $subPath) {
 // Determin action
 chdir("../../");
 if (isset($_POST['dirQuery'])) {
-    startListing(trim($_POST['dirQuery']), $_POST['mergeType']);
+    startListing(trim($_POST['dirQuery']), $_POST['mergeType'], $_POST['passwd']);
 } else {
     echo "<h2 class='error'>Error! Illegal Access Method!</h2>";
 }
