@@ -8,7 +8,7 @@ $OFFICEPROG      = "libreoffice";
 $PDFVIEWER       = "evince";
 $TEXTVIEWER      = "leafpad";
 $FILEMANAGER     = "spacefm";
-$LOCKEDFOLDERS   = "./MEGA_Sync/222_Photos/Other/::::./MEGA_Sync/333_Movies-Music/Other/";
+$LOCKEDFOLDERS   = "./dirLockCheck/";
 $LOCKPASSWORD    = "1234";
 
 ?>
