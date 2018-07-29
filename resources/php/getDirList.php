@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 // Start of retrieving dir data
