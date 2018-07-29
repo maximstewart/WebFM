@@ -10,7 +10,7 @@
         $_SESSION["refreshState"] = $state;
     }
 
-    if (isset($_SESSION["unlockTime"])) {
+    if (isset($_SESSION["unlockTime"]) && $_SESSION["unlockTime"] >= 0) {
         $_SESSION["unlockTime"] -= 1;
     }
 
