@@ -11,7 +11,7 @@
     }
 
     if (isset($_SESSION["unlockTime"])) {
-        $_SESSION["unlockTime"] += 1;
+        $_SESSION["unlockTime"] -= 1;
     }
 
     header('Content-Type: text/event-stream');
@@ -19,7 +19,5 @@
     echo "data:" . $state . "\n\n";
 
     $_SESSION["refreshState"] = "none";
-    $UNLOCKTIME      = 0;
-
     flush();
 ?>
