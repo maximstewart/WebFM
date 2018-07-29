@@ -3,11 +3,8 @@
     session_start();
     include 'config.php';
 
-    if (isset($_SESSION["refreshState"])) {
-        $state =  $_SESSION["refreshState"];
-    } else {
-        $state = "none";
-        $_SESSION["refreshState"] = $state;
+    if (!isset($_SESSION["refreshState"])) {
+        $_SESSION["refreshState"] = "none";
     }
 
     if (isset($_SESSION["unlockTime"]) && $_SESSION["unlockTime"] >= 0) {
@@ -16,7 +13,7 @@
 
     header('Content-Type: text/event-stream');
     header('Cache-Control: no-cache');
-    echo "data:" . $state . "\n\n";
+    echo "data:" . $_SESSION["refreshState"] . "\n\n";
 
     $_SESSION["refreshState"] = "none";
     flush();
