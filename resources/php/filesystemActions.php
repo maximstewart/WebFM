@@ -1,10 +1,11 @@
 <?php
 session_start();
+include 'serverMessanger.php';
 
 // Create file or folder
 function createItem($FILE, $TYPE) {
-    $FILE = preg_replace('/[^.[:alnum:]_-]/','_',trim($FILE));  // converting all on alphanumeric chars to _
-    $FILE = preg_replace('/\.*$/','',$FILE);                    // removing dot . after file extension
+    $FILE = trim($FILE);
+    $FILE = preg_replace('/\.*$/','',$FILE);  // removing dot . after file extension
 
     if ($TYPE == "dir"){
         mkdir($FILE, 0755);
@@ -12,6 +13,9 @@ function createItem($FILE, $TYPE) {
          $myfile = fopen($FILE, "w");
          fclose($myfile);
     }
+
+    $message = "Server: [Success] --> The file " . $FILE . " has been created.";
+    serverMessage("success", $message);
     $_SESSION["refreshState"] = "updateListing";
 }
 
@@ -27,19 +31,25 @@ function deleteItem($FILE) {
     } else if (is_file($FILE)) {
         unlink($FILE);
     }
+
+    $message = "Server: [Success] --> The file(s) has/have been deleted.";
+    serverMessage("success", $message);
     $_SESSION["refreshState"] = "updateListing";
 }
 
 // Rename file or folder
 function renameItem($OLDFILE, $NEWNAME, $PATH) {
     rename($PATH . $OLDFILE, $PATH . $NEWNAME);
+    $message = "Server: [Success] --> The file " . $OLDFILE . " has been renamed to " . $NEWNAME . " side.";
+    serverMessage("success", $message);
     $_SESSION["refreshState"] = "updateListing";
 }
 
 // Uploader
 function uploadFiles($targetDir) {
-    $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     $numberOfFiles = count($_FILES['filesToUpload']['name']);
+    $type = "";
+    $message = "";
 
     for ($i=0; $i < $numberOfFiles; $i++) {
         $uploadOk = 1;
@@ -51,11 +61,9 @@ function uploadFiles($targetDir) {
         if (file_exists($targetFile)) {
             if (is_file($targetFile)) {
                 unlink($targetFile);
-                $GeneratedXML .= "<SERV_MSG class='warnning'>" .
-                     "Server: [Warnning] --> This file already exists. Overwriting it.</SERV_MSG>";
+                $message = "Server: [Warnning] --> This file already exists. Overwriting it.";
             } else {
-                $GeneratedXML .= "<SERV_MSG class='warnning'>" .
-                     "Server: [Warnning] --> This file might be a directory. Or, no files were submitted for uploading.</SERV_MSG>";
+                $message = "Server: [Warnning] --> This file might be a directory. Or, no files were submitted for uploading.";
                 $uploadOk = 0;
             }
         }
@@ -63,31 +71,31 @@ function uploadFiles($targetDir) {
         // Check file size
         $fileSize = $_FILES['filesToUpload']['size'][$i];
         if ($fileSize > 500000000000) {
-            $GeneratedXML .= "<SERV_MSG class='warnning'>" .
-                 "Server: [Warnning] --> This file is too large.</SERV_MSG>";
+            $message = "Server: [Warnning] --> This file is too large.";
             $uploadOk = 0;
         }
 
         // Allow certain file formats
         // $ext = pathinfo($targetFile,PATHINFO_EXTENSION);
         // if(!preg_match('/^.*\.(rar|iso|img|tar|zip|7z|7zip|jpg|jpeg|png|gif|mpeg|mov|flv|avi|mp4|webm|mpg|mkv|m4a|mp3|ogg|docx|doc|odt|txt|pdf|)$/i', strtolower($ext))) {
-        //     $GeneratedXML .= "<SERV_MSG class='warnning'>This file type is not allowed. File Not uploade.</SERV_MSG>";
+        // $message = "Server: [Warnning] --> This file type is not allowed.";
         //     $uploadOk = 0;
         // }
 
         // if everything is ok, try to upload file
         if ($uploadOk !== 0) {
             if (move_uploaded_file($fileTmpName, $targetFile)) {
-                $GeneratedXML .= "<SERV_MSG class='success'>" .
-                     "Server: [Success] --> The file " . $fileName . " has been uploaded.</SERV_MSG>";
+                $type    = "success";
+                $message = "Server: [Success] --> The file " . $fileName . " has been uploaded.";
                 $_SESSION["refreshState"] = "updateListing";
             }
         } else {
-            $GeneratedXML .= "<SERV_MSG class='error'>" .
-                 "Server: [Error] --> Your file " . $fileName . " was not uploaded.</SERV_MSG>";
+            $type     = "error";
+            $message .= "\nServer: [Error] --> Your file " . $fileName . " was not uploaded.";
         }
     }
-    echo $GeneratedXML;
+
+    serverMessage($type, $message);
 }
 
 // Local program file access
@@ -108,6 +116,9 @@ function openFile($FILE) {
     } else if (preg_match('(pdf)', $EXTNSN) === 1) {
         shell_exec($PDFVIEWER . ' "' . $FILE . '" > /dev/null &');
     }
+
+    $message = "Server: [Success] --> The file " . $FILE . " has been opened server side.";
+    serverMessage("success", $message);
 }
 
 
@@ -128,8 +139,8 @@ if (isset($_POST["createItem"],
 } else if (isset($_POST["media"])) {
     openFile($_POST["media"]);
 } else {
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SERV_MSG class='error'>" .
-         "Server: [Error] --> Incorrect access attempt!</SERV_MSG>";
+    $message = "Server: [Error] --> Incorrect access attempt!";
+    serverMessage("error", $message);
 }
 
 ?>

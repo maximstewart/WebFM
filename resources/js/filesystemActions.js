@@ -72,9 +72,8 @@ async function uploadFiles() {
         for (var i = 0; i < size; i++) {
             data.append("filesToUpload[]", toUpload.files[i]);
         }
+        fileUploader(data);
     }
-
-    fileUploader(data);
 }
 
 function createItem(type) {
