@@ -35,9 +35,9 @@
 
     <div id="popOutControls" style="display:none;">
         <center>
-        <form action="resources/php/filesystemActions.php" method="post" enctype="multipart/form-data" target="FormSubmitter">
+        <form>
             <input class="ulFile" type="file" title="files To Upload" name="filesToUpload[]" data-multiple-caption="{count} files selected" multiple />
-            <input type="submit" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
+            <input type="button" onclick="uploadFiles()" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
             <input type="reset" title="Clear" id="CLEARBTTN" value="Clear" style="display:none;">
             <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
         </form>
@@ -56,7 +56,6 @@
 
     <!-- Uploader processor -->
     <div id="serverMsgView" style="display:none;">
-        <iframe id="FormSubmitter" name="FormSubmitter" frameborder="0" ></iframe>
     </div>
 
     <script type="text/javascript" src="resources/js/passwordFieldInsert.js" charset="utf-8"></script>

@@ -1,20 +1,27 @@
 const insertArea = document.getElementById('dynDiv');
 
-async function updateHTMLDirList(returnData) {
-    try {
-        var dirPath = returnData.getElementsByTagName('PATH_HEAD')[0].innerHTML;
-    } catch (e) {
-        createPassField(returnData);
-        return;
-    }
 
-    var dirs       = returnData.getElementsByTagName('DIR');
-    var videos     = returnData.getElementsByTagName('VID_FILE');
-    var images     = returnData.getElementsByTagName('IMG_FILE');
-    var files      = returnData.getElementsByTagName('FILE');
-    var dirImg     = "resources/images/icons/folder.png";
-    var i          = 0;
-    var size       = 0;
+function handleXMLReturnData(data) {
+    if (data.activeElement.tagName == "DIR_LIST") {
+        updateHTMLDirList(data);
+    } else if (data.activeElement.tagName == "LOCK_MESSAGE") {
+        createPassField(data);
+    } else if (data.activeElement.tagName == "SERV_MSG") {
+        console.log(document.getElementById("serverMsgView"));
+        document.getElementById("serverMsgView").appendChild(data.activeElement);
+    }
+}
+
+
+async function updateHTMLDirList(data) {
+    var dirPath = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
+    var dirs    = data.getElementsByTagName('DIR');
+    var videos  = data.getElementsByTagName('VID_FILE');
+    var images  = data.getElementsByTagName('IMG_FILE');
+    var files   = data.getElementsByTagName('FILE');
+    var dirImg  = "resources/images/icons/folder.png";
+    var i       = 0;
+    var size    = 0;
 
     // Insert dirs
     document.getElementById("path").innerHTML = dirPath;

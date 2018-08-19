@@ -7,6 +7,7 @@
     $PDFVIEWER       = "evince";
     $TEXTVIEWER      = "leafpad";
     $FILEMANAGER     = "spacefm";
+    // NOTE:  Split folders with ::::
     $LOCKEDFOLDERS   = "./dirLockCheck/";
     $LOCKPASSWORD    = "1234";
 ?>

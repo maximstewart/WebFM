@@ -1,5 +1,3 @@
-var pathNodes = [];
-
 // SSE events if supported
 if(typeof(EventSource) !== "undefined") {
     var source = new EventSource("resources/php/sse.php");
@@ -12,70 +10,14 @@ if(typeof(EventSource) !== "undefined") {
     console.log("SSE Not Supported In Browser...");
 }
 
-function getDir(query) {
-    var formUlPth  = document.getElementById("DIRPATHUL");
-    var mergeType  = document.getElementById("MergeType");
-    var passwd = undefined;
-    var path       = "";
-    var cookies    = "";
-    var dirCookie  = "";
+function doAjax(actionPath, data) {
+    var xhttp = new XMLHttpRequest();
 
-    // push or pop to path list
-    if (query === "/") {
-        // Process path from cookie and set to array/list
-        dirCookie = getCookie("dirQuery");
-        if (dirCookie != "" && dirCookie != "./") {
-            dirCookie = dirCookie.split("/");
-            dirCookie.pop(); // account for ending empty slot
-
-            var size = dirCookie.length;
-            for (var i = 0; i < size; i++) {
-                pathNodes.push(dirCookie[i] + "/");
-            }
-        } else {
-            pathNodes = [];
-            pathNodes.push("." + query);
-        }
-    } else if (query === "../") {
-        // Only remove while not in root
-        if (pathNodes.length > 1) {
-            pathNodes.pop();
-        }
-    } else if (query === "./") {
-        // Do nothing since re-scanning dir
-    } else    {
-        pathNodes.push(query); // Add path
-    }
-
-    // Create path from array of items
-    for (pathNode of pathNodes) { path += pathNode; }
-
-    try {
-        passwd = document.getElementById("PASSWD").value;
-    } catch (e) {
-        passwd = "";
-    }
-
-    // Setup upload path for form and make a cookie for persistence during browser session....
-    formUlPth.value = path;
-    path            = "dirQuery=" + encodeURIComponent(path);
-    document.cookie = path + "; expires=Sun, 31 Dec 2034 12:00:00 UTC";
-    path            +="&mergeType=" + mergeType.checked
-                    + "Here&passwd=" + passwd;
-
-    process(path);
-}
-
-// Get dir info...
-function process(path) {
-    var xhttp = new XMLHttpRequest();   // Create the xhttp object
-
-    // This is actually run after open and send are done
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             // Send the returned data to further process
             if (this.responseXML != null) {
-                updateHTMLDirList(this.responseXML);
+                handleXMLReturnData(this.responseXML);
             } else {
                 document.getElementById('dynDiv').innerHTML =
                 "<p class=\"error\" style=\"width:100%;text-align:center;\"> "
@@ -83,8 +25,26 @@ function process(path) {
             }
         }
     };
-    xhttp.open("POST", "resources/php/getDirList.php", true);        // Open the connection
+
+    xhttp.open("POST", actionPath, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.overrideMimeType('application/xml');                       // Force return to be XML
-    xhttp.send(path);                                                // Start the process
+    xhttp.overrideMimeType('application/xml'); // Force return to be XML
+    xhttp.send(data);
+}
+
+function fileUploader(data) {
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            // Send the returned data to further process
+            if (this.responseXML != null) {
+                handleXMLReturnData(this.responseXML);
+            }
+        }
+    };
+
+    xhttp.open("POST", "resources/php/filesystemActions.php", true);
+    xhttp.overrideMimeType('application/xml'); // Force return to be XML
+    xhttp.send(data);
 }

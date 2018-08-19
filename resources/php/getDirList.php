@@ -16,8 +16,8 @@ function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
             echo $GeneratedXML;
         } else {
             $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                          . "<MESSAGE>Folder is locked."
-                          . "</MESSAGE>";
+                          . "<LOCK_MESSAGE>Folder is locked."
+                          . "</LOCK_MESSAGE>";
             echo $GeneratedXML;
         }
     }
@@ -76,7 +76,8 @@ chdir("../../");
 if (isset($_POST['dirQuery'])) {
     startListing(trim($_POST['dirQuery']), $_POST['mergeType'], $_POST['passwd']);
 } else {
-    echo "<h2 class='error'>Error! Illegal Access Method!</h2>";
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SERV_MSG class='error'>" .
+         "Server: [Error] --> Incorrect access attempt!</SERV_MSG>";
 }
 
 ?>

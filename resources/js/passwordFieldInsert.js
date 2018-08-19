@@ -1,5 +1,5 @@
-function createPassField(returnData) {
-    var msg = returnData.getElementsByTagName('MESSAGE')[0].innerHTML;
+function createPassField(data) {
+    var msg = data.getElementsByTagName('SERV_MSG')[0].innerHTML;
     console.log("No PATH_HEAD tag in XML. Checking for error MESSAGE tag.");
     console.log("Message:  " + msg);
 

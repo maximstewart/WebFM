@@ -6,7 +6,7 @@
         $LOCKS = explode("::::", $LOCKEDFOLDERS);
         $size  = sizeof($LOCKS);
 
-        if ($_SESSION["unlockTime"] > 0) {
+        if (isset($_SESSION["unlockTime"]) && $_SESSION["unlockTime"] > 0) {
             return false;
         }
 

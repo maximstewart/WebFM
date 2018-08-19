@@ -38,13 +38,9 @@ function renameItem($OLDFILE, $NEWNAME, $PATH) {
 
 // Uploader
 function uploadFiles($targetDir) {
-    echo "<!DOCTYPE html>"
-        . "<head>"
-        . "<link type='text/css' rel='stylesheet' href='../css/base.css'/>"
-        . "<link type='text/css' rel='stylesheet' href='../css/main.css'/>"
-        . "</head><body>";
-
+    $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     $numberOfFiles = count($_FILES['filesToUpload']['name']);
+
     for ($i=0; $i < $numberOfFiles; $i++) {
         $uploadOk = 1;
         $fileName = $_FILES['filesToUpload']['name'][$i];
@@ -55,9 +51,11 @@ function uploadFiles($targetDir) {
         if (file_exists($targetFile)) {
             if (is_file($targetFile)) {
                 unlink($targetFile);
-                echo "<span class='warnning'>Server: [Warnning] --> This file already exists. Overwriting it.</span>";
+                $GeneratedXML .= "<SERV_MSG class='warnning'>" .
+                     "Server: [Warnning] --> This file already exists. Overwriting it.</SERV_MSG>";
             } else {
-                echo "<span class='warnning'>Server: [Warnning] --> This file might be a directory. Or, no files were submitted for uploading.</span>";
+                $GeneratedXML .= "<SERV_MSG class='warnning'>" .
+                     "Server: [Warnning] --> This file might be a directory. Or, no files were submitted for uploading.</SERV_MSG>";
                 $uploadOk = 0;
             }
         }
@@ -65,35 +63,31 @@ function uploadFiles($targetDir) {
         // Check file size
         $fileSize = $_FILES['filesToUpload']['size'][$i];
         if ($fileSize > 500000000000) {
-            echo "<span class='warnning'>Server: [Warnning] --> This file is too large.</span>";
+            $GeneratedXML .= "<SERV_MSG class='warnning'>" .
+                 "Server: [Warnning] --> This file is too large.</SERV_MSG>";
             $uploadOk = 0;
         }
 
         // Allow certain file formats
         // $ext = pathinfo($targetFile,PATHINFO_EXTENSION);
-        // if($ext != "rar" && $ext != "iso" && $ext != "img" && $ext != "tar"
-        // && $ext != "zip" && $ext != "7z" && $ext != "7zip" && $ext != "jpg"
-        // && $ext != "png" && $ext != "jpeg" && $ext != "gif" && $ext != "mpeg"
-        // && $ext != "MOV" && $ext != "flv" && $ext != "avi" && $ext != "mp4"
-        // && $ext != "mov" && $ext != "mp3" && $ext != "m4a" && $ext != "ogg"
-        // && $ext != "mkv" && $ext != "docx" && $ext != "doc" && $ext != "odt"
-        // && $ext != "txt" && $ext != "pdf" && $ext != "webm" && $ext != "M4A"
-        //                                                 && $ext != "mpg" ) {
-        //     echo "<span class='warnning'>This file type is not allowed. File Not uploade.</span>";
+        // if(!preg_match('/^.*\.(rar|iso|img|tar|zip|7z|7zip|jpg|jpeg|png|gif|mpeg|mov|flv|avi|mp4|webm|mpg|mkv|m4a|mp3|ogg|docx|doc|odt|txt|pdf|)$/i', strtolower($ext))) {
+        //     $GeneratedXML .= "<SERV_MSG class='warnning'>This file type is not allowed. File Not uploade.</SERV_MSG>";
         //     $uploadOk = 0;
         // }
 
         // if everything is ok, try to upload file
         if ($uploadOk !== 0) {
             if (move_uploaded_file($fileTmpName, $targetFile)) {
-                echo "<span class='success'>Server: [Success] --> The file " . $fileName . " has been uploaded.</span>";
+                $GeneratedXML .= "<SERV_MSG class='success'>" .
+                     "Server: [Success] --> The file " . $fileName . " has been uploaded.</SERV_MSG>";
                 $_SESSION["refreshState"] = "updateListing";
             }
         } else {
-            echo "<span class='error'>Server: [Error] --> Your file " . $fileName . " was not uploaded.</span>";
+            $GeneratedXML .= "<SERV_MSG class='error'>" .
+                 "Server: [Error] --> Your file " . $fileName . " was not uploaded.</SERV_MSG>";
         }
     }
-    echo "</body></html>";
+    echo $GeneratedXML;
 }
 
 // Local program file access
@@ -118,20 +112,24 @@ function openFile($FILE) {
 
 
 chdir("../../");
-if (isset($_POST["createItem"]) && isset($_POST["item"]) && isset($_POST["type"])) {
+if (isset($_POST["createItem"],
+          $_POST["item"],
+          $_POST["type"])) {
     createItem($_POST["item"], $_POST["type"]);
-} else if (isset($_POST["deleteItem"]) && isset($_POST["item"])) {
+} else if (isset($_POST["deleteItem"], $_POST["item"])) {
     deleteItem($_POST["item"]);
-} else if (isset($_POST["renameItem"]) && isset($_POST["oldName"]) && isset($_POST["newName"]) && isset($_POST["path"])) {
+} else if (isset($_POST["renameItem"],
+                 $_POST["oldName"],
+                 $_POST["newName"],
+                 $_POST["path"])) {
     renameItem($_POST["oldName"], $_POST["newName"], $_POST["path"]);
-} else if(isset($_POST["UploadFiles"]) && isset($_POST["DIRPATHUL"])) {
+} else if(isset($_POST["UploadFiles"], $_POST["DIRPATHUL"])) {
     uploadFiles($_POST["DIRPATHUL"]);
 } else if (isset($_POST["media"])) {
     openFile($_POST["media"]);
 } else {
-    echo "<span style='color:rgb(255, 0, 0);'>Server: [Error] --> Incorrect access attempt!</span>";
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SERV_MSG class='error'>" .
+         "Server: [Error] --> Incorrect access attempt!</SERV_MSG>";
 }
-
-
 
 ?>
