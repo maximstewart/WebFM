@@ -13,7 +13,7 @@
         for ($i = 0; $i < $size; $i++) {
             if (strpos($NEWPATH, $LOCKS[$i]) !== false) {
                 if ($PASSWD == $LOCKPASSWORD) {
-                    $_SESSION["unlockTime"] = 60;
+                    $_SESSION["unlockTime"] = $UNLOCKTIME;
                     return false;
                 } else {
                     return true;
