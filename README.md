@@ -11,6 +11,7 @@ WebFM is a media and file viewer aspiring to become a full fledged file manager 
 7. Right-click to get context menu options.
 8. Place an image such as a jpg, png, or gif labeled "000.itsExtension" in a directory then the viewer will use it as the background image for that folder/directory.
 9. Password protect folder based on resources/php/config.php file setting.
+10. Save paths to favorites list for quick access.
 
 Notes:
 1. Folders and files CAN NOT have & in the names. Otherwise, you can't access that item with the viewer.
