@@ -21,9 +21,10 @@
 
     <!-- Uploader -->
     <h2 id="fullPathHeader">
-        <button type="button" title="Other Options" name="button" onclick="tgglElmView('popOutControls')">&#9881;</button>
-        <button type="button" title="Refresh" name="button" onclick="getDir('./')">&#8635;</button>
-        <button type="button" title="Back" name="button" onclick="getDir('../')">&lArr;</button>
+        <button type="button" title="Other Options" onclick="tgglElmView('popOutControls')">&#9881;</button>
+        <button type="button" id="faves" title="Favorites" onclick="faveManager(this)">&#9734;</button>
+        <button type="button" title="Refresh" onclick="getDir('./')">&#8635;</button>
+        <button type="button" title="Back" onclick="getDir('../')">&lArr;</button>
         &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
     </h2>
 
@@ -58,6 +59,7 @@
     <div id="serverMsgView" style="display:none;">
     </div>
 
+    <script type="text/javascript" src="resources/js/favorites.js" charset="utf-8"></script>
     <script type="text/javascript" src="resources/js/passwordFieldInsert.js" charset="utf-8"></script>
     <script type="text/javascript" src="resources/js/cookieHandler.js" charset="utf-8"></script>
     <script type="text/javascript" src="resources/js/xmlParser.js" charset="utf-8"></script>

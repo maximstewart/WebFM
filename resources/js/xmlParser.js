@@ -14,6 +14,7 @@ function handleXMLReturnData(data) {
 
 
 async function updateHTMLDirList(data) {
+    var isInFaves = data.getElementsByTagName('IN_FAVE')[0].innerHTML;
     var dirPath = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
     var dirs    = data.getElementsByTagName('DIR');
     var videos  = data.getElementsByTagName('VID_FILE');
@@ -26,6 +27,17 @@ async function updateHTMLDirList(data) {
     // Insert dirs
     document.getElementById("path").innerHTML = dirPath;
     insertArea.innerHTML = "";
+
+    // determin whether to style faves or nor
+    if (isInFaves == "true") {
+        var elm = document.getElementById("faves");
+        elm.style.backgroundColor = "rgb(255, 255, 255)";
+        elm.style.color = "rgb(0, 0, 0)";
+    } else {
+        var elm = document.getElementById("faves");
+        elm.style.backgroundColor = "";
+        elm.style.color = "";
+    }
 
     size = dirs.length;
     for (; i < size; i++) {

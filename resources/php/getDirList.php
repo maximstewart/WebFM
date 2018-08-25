@@ -1,10 +1,12 @@
 <?php
 session_start();
+include 'serverMessanger.php';
 
 // Start of retrieving dir data
 function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
     if (is_dir($NEWPATH)) {
         include 'lockedFolders.php';
+
         if (checkForLock($NEWPATH, $PASSWD) == false) {
             $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"
             . "<PATH_HEAD>" . $NEWPATH . "</PATH_HEAD>";
@@ -12,6 +14,7 @@ function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
             // the video src.... It's left blank when not in a sub dir
             listDir($GeneratedXML, $NEWPATH, $MERGESEASSONS, $subPath);
 
+            $GeneratedXML .= "<IN_FAVE>" . isInDBCheck($NEWPATH) . "</IN_FAVE>";
             $GeneratedXML .= "</DIR_LIST>";
             echo $GeneratedXML;
         } else {
@@ -70,14 +73,35 @@ function processItem(&$GeneratedXML, &$fullPath, &$fileName, $subPath) {
    }
 }
 
+function isInDBCheck($PATH) {
+    $db = new SQLite3('resources/db/webfm.db');
+
+    if($db === false){
+        $message = "Server: [Error] --> Database connection failed!";
+        serverMessage("error", $message);
+        die("ERROR: Could not connect to db.");
+    }
+
+    $stmt = $db->prepare('SELECT 1 FROM faves WHERE link = :link');
+    $stmt->bindValue(":link", $PATH, SQLITE3_TEXT);
+    $result = $stmt->execute() ;
+    $row = $result->fetchArray() ;
+
+    if ($row > 0) {
+        return "true";
+    } else {
+        return "false";
+    }
+}
+
 
 // Determin action
 chdir("../../");
 if (isset($_POST['dirQuery'])) {
     startListing(trim($_POST['dirQuery']), $_POST['mergeType'], $_POST['passwd']);
 } else {
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SERV_MSG class='error'>" .
-         "Server: [Error] --> Incorrect access attempt!</SERV_MSG>";
+    $message = "Server: [Error] --> Illegal Access Method!";
+    serverMessage("error", $message);
 }
 
 ?>
