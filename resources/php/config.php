@@ -8,8 +8,8 @@
     $TEXTVIEWER      = "leafpad";
     $FILEMANAGER     = "spacefm";
     // NOTE:  Split folders with ::::
-    $LOCKEDFOLDERS   = "./MEGA_Sync/";
+    $LOCKEDFOLDERS   = "./dirLockCheck/";
     $LOCKPASSWORD    = "1234";
-    $UNLOCKTIME      = 80;  // Every ~3 sec this ticks down
+    $UNLOCKTIME      = 60;  // Every ~3 sec this ticks down
                             // Ex: 3*60 == 180 sec or 3 minutes
 ?>
