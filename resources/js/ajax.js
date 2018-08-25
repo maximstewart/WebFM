@@ -10,6 +10,10 @@ if(typeof(EventSource) !== "undefined") {
     console.log("SSE Not Supported In Browser...");
 }
 
+function getFavesList() {
+    doAjax("resources/php/dbController.php", "getTabs=true");
+}
+
 function doAjax(actionPath, data) {
     var xhttp = new XMLHttpRequest();
 

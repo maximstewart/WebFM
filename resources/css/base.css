@@ -2,13 +2,3 @@ html {
     margin: 0em;
     padding: 0em;
 }
-
-iframe {
-    position: fixed;
-    overflow: auto;
-    background-color: rgba(60, 110, 135, 0.24);
-    color: rgba(255, 255, 255, 1);
-    width: 100%;
-    height: auto;
-    bottom: 0;
-}

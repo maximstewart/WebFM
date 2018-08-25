@@ -22,9 +22,13 @@
     <!-- Uploader -->
     <h2 id="fullPathHeader">
         <button type="button" title="Other Options" onclick="tgglElmView('popOutControls')">&#9881;</button>
-        <button type="button" id="faves" title="Favorites" onclick="faveManager(this)">&#9734;</button>
         <button type="button" title="Refresh" onclick="getDir('./')">&#8635;</button>
         <button type="button" title="Back" onclick="getDir('../')">&lArr;</button>
+        <button type="button" id="faves" title="Favorites" onclick="faveManager(this)">&#9734;</button>
+        <span id="faves-constraint" >
+            <button onclick="getFavesList(); tgglElmView(this.parentElement.children[1].id)">Faves List &#8597;</button>
+            <ol id="favesList" style="display: none;"> </ol>
+        </span>
         &nbsp;&nbsp;&nbsp;&nbsp;Path:&nbsp;&nbsp;<span id="path"></span>
     </h2>
 

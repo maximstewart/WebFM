@@ -1,7 +1,7 @@
 <?php
     // Start the session
     session_start();
-    include 'config.php';
+    include_once 'config.php';
 
     if (!isset($_SESSION["refreshState"])) {
         $_SESSION["refreshState"] = "none";

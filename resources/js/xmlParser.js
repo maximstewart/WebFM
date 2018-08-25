@@ -9,9 +9,26 @@ function handleXMLReturnData(data) {
     } else if (data.activeElement.tagName == "SERV_MSG") {
         console.log(document.getElementById("serverMsgView"));
         document.getElementById("serverMsgView").appendChild(data.activeElement);
+    } else if (data.activeElement.tagName == "FAVES_LIST") {
+        generateFavesList(data);
     }
 }
 
+function generateFavesList(data) {
+    var listView       = document.getElementById("favesList");
+    var favesList      = data.getElementsByTagName("FAVE_LINK");
+    var size           = favesList .length;
+    listView.innerHTML = "";
+
+    for (i = 0; i < size; i++) {
+        var liTag  = document.createElement("LI");
+        var txtNode = document.createTextNode(favesList[i].innerHTML);
+
+        liTag.setAttribute("onclick", "loadFave(this)");
+        liTag.appendChild(txtNode);
+        listView.appendChild(liTag);
+    }
+}
 
 async function updateHTMLDirList(data) {
     var isInFaves = data.getElementsByTagName('IN_FAVE')[0].innerHTML;

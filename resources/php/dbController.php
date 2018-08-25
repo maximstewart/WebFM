@@ -1,5 +1,5 @@
 <?php
-include 'serverMessanger.php';
+include_once 'serverMessanger.php';
 
 function getTabLinks() {
     $db = new SQLite3('resources/db/webfm.db');
@@ -11,11 +11,11 @@ function getTabLinks() {
     }
 
     $res = $db->query('Select * FROM faves');
-    $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TABS_LIST>";
+    $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FAVES_LIST>";
     while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-        $GeneratedXML .= "<TAB_LINK>" . $row['link'] . "</TAB_LINK>";
+        $GeneratedXML .= "<FAVE_LINK>" . $row['link'] . "</FAVE_LINK>";
     }
-    $GeneratedXML .= "</TABS_LIST>";
+    $GeneratedXML .= "</FAVES_LIST>";
     echo $GeneratedXML;
 }
 
@@ -48,27 +48,6 @@ function manageLink($ACTION, $PATH) {
     $message = "Server: [Success] --> Fave link: " .
                 $PATH . "    " . $ACTION_TYPE . " the database!";
     serverMessage("success", $message);
-}
-
-function isInDBCheck($PATH) {
-    $db = new SQLite3('resources/db/webfm.db');
-
-    if($db === false){
-        $message = "Server: [Error] --> Database connection failed!";
-        serverMessage("error", $message);
-        die("ERROR: Could not connect to db.");
-    }
-
-    $stmt = $db->prepare('SELECT 1 FROM faves WHERE link = :link');
-    $stmt->bindValue(":link", $PATH, SQLITE3_TEXT);
-    $result = $stmt->execute() ;
-    $row = $result->fetchArray() ;
-
-    if ($row > 0) {
-        return "true";
-    } else {
-        return "false";
-    }
 }
 
 

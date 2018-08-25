@@ -1,11 +1,11 @@
 <?php
 session_start();
-include 'serverMessanger.php';
+include_once 'serverMessanger.php';
 
 // Start of retrieving dir data
 function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
     if (is_dir($NEWPATH)) {
-        include 'lockedFolders.php';
+        include_once 'lockedFolders.php';
 
         if (checkForLock($NEWPATH, $PASSWD) == false) {
             $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"

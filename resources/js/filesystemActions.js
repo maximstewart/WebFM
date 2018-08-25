@@ -34,7 +34,7 @@ function getDir(query) {
         }
     } else if (query === "./") {
         // Do nothing since re-scanning dir
-    } else    {
+    } else {
         pathNodes.push(query); // Add path
     }
 
