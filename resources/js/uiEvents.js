@@ -1,6 +1,27 @@
-// ondblclick
+var itemObj = undefined;
+
+document.onclick = function (event) {
+    var obj = event.target;
+    var callingID = obj.id;
+    var classNM   = obj.className;
+
+    // right-click detect
+    if (event.which == 3) {
+        if (callingID == "imageID") {
+           setSelectedItem(obj.alt);
+       } else if (callingID == "dirID" || callingID == "fileID" ||
+                                         callingID == "movieID") {
+           var node = obj.parentNode;
+           setSelectedItem(node.children[1].value);
+       } else if (classNM == "fileStyle" || classNM == "dirStyle" ||
+                                          classNM == "movieStyle") {
+           setSelectedItem(obj.children[1].value);
+       }
+    }
+}
+
 document.ondblclick = function (event) {
-    var obj       = event.target;
+    var obj = event.target;
     var callingID = obj.id;
     var classNM   = obj.className;
 
@@ -33,18 +54,6 @@ document.ondblclick = function (event) {
         } else if (callingID == "titleID") {
             enableEdit(obj);
         }
-    // Right click detect
-    } else if (event.which == 3) {
-        if (callingID == "imageID") {
-           startDeleteItem(obj.alt);
-       } else if (callingID == "dirID" || callingID == "fileID" ||
-                                         callingID == "movieID") {
-           var node = obj.parentNode;
-           startDeleteItem(node.children[1].value);
-       } else if (classNM == "fileStyle" || classNM == "dirStyle" ||
-                                          classNM == "movieStyle") {
-           startDeleteItem(obj.children[1].value);
-       }
     }
 }
 
@@ -60,6 +69,11 @@ document.onkeydown = function (event) {
             renameItem(obj);
         }
     }
+}
+
+function setSelectedItem(item) {
+    // Get the item name
+    itemObj = item;
 }
 
 //  Drage event for the poped out image and media container
