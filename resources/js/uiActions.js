@@ -81,6 +81,7 @@ function clearDirCookie() {
 
 function downloadItem() {
     var partialPath = document.getElementById("path").innerHTML;
+    var brTag       = document.createElement("BR");
     var aTag        = document.createElement("A");
     var text        = document.createTextNode(itemObj);
     var fullPath    = partialPath + itemObj;
@@ -89,9 +90,8 @@ function downloadItem() {
     aTag.setAttribute("id", itemObj);
     aTag.append(text);
 
-    console.log(aTag);
-    document.getElementById("serverMsgView").append(aTag);
-    document.getElementById(itemObj).click();
+    document.getElementById("serverMsgView").append(aTag, brTag);
+    aTag.click();
 }
 
 function clearDlList() {   document.getElementById("CLEARBTTN").click(); }
