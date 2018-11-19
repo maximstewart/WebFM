@@ -7,9 +7,10 @@
     $PDFVIEWER       = "evince";
     $TEXTVIEWER      = "leafpad";
     $FILEMANAGER     = "spacefm";
-    // NOTE:  Split folders with ::::
-    $LOCKEDFOLDERS   = "./dirLockCheck/";
     $LOCKPASSWORD    = "1234";
-    $UNLOCKTIME      = 60;  // Every ~3 sec this ticks down
+    $UNLOCKTIME      = 80;  // Every ~3 sec this ticks down
                             // Ex: 3*60 == 180 sec or 3 minutes
+    // NOTE:  Split folders with ::::
+    $LOCKEDFOLDERS   = "./MEGA_Sync/333_Movies-Music/Other/::::./MEGA_Sync/000_General/";
+
 ?>

@@ -1,4 +1,3 @@
-var itemObj   = undefined;
 var binary    = null;
 var pathNodes = [];
 
@@ -85,11 +84,6 @@ function createItem(type) {
 
     doAjax("resources/php/filesystemActions.php",
            "createItem=true&item=" + fullPth + "&type=" + type);
-}
-
-function startDeleteItem(item) {
-    // Get the item name
-    itemObj = item;
 }
 
 function deleteItem() {

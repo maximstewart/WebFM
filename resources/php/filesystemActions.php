@@ -7,11 +7,15 @@ function createItem($FILE, $TYPE) {
     $FILE = trim($FILE);
     $FILE = preg_replace('/\.*$/','',$FILE);  // removing dot . after file extension
 
-    if ($TYPE == "dir"){
+    if ($TYPE === "dir"){
         mkdir($FILE, 0755);
-    } else if ($TYPE == "file") {
+    } else if ($TYPE === "file") {
          $myfile = fopen($FILE, "w");
          fclose($myfile);
+    } else {
+        $message = "Server: [Error] --> Failed to create folder or file!";
+        serverMessage("error", $message);
+        return;
     }
 
     $message = "Server: [Success] --> The file " . $FILE . " has been created.";
@@ -30,6 +34,10 @@ function deleteItem($FILE) {
         rmdir($FILE);
     } else if (is_file($FILE)) {
         unlink($FILE);
+    } else {
+        $message = "Server: [Error] --> Failed to delete item! Not a folder or file!";
+        serverMessage("error", $message);
+        return;
     }
 
     $message = "Server: [Success] --> The file(s) has/have been deleted.";
@@ -48,9 +56,15 @@ function renameItem($OLDFILE, $NEWNAME, $PATH) {
 // Uploader
 function uploadFiles($targetDir) {
     $numberOfFiles = count($_FILES['filesToUpload']['name']);
+
+    if ($numberOfFiles === 0) {
+        $message = "Server: [Error] --> No files were uploaded!";
+        serverMessage("error", $message);
+        return;
+    }
+
     $type = "";
     $message = "";
-
     for ($i=0; $i < $numberOfFiles; $i++) {
         $uploadOk = 1;
         $fileName = $_FILES['filesToUpload']['name'][$i];

@@ -45,8 +45,10 @@
     background-color: rgba(7, 150, 159, 0.8);
     position: fixed;
     font-size: 2em;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: scroll;
     padding: 1.5em;
+    max-height: 632px;
 }
 
 #favesList > li:hover {
@@ -125,6 +127,7 @@
     height: 5em;
     overflow-y: scroll;
     width: 100%;
+    background-color: rgba(0,0,0,0.64);
 }
 
 /* Classes */

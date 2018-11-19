@@ -79,6 +79,21 @@ function clearDirCookie() {
     getDir("/");
 }
 
+function downloadItem() {
+    var partialPath = document.getElementById("path").innerHTML;
+    var brTag       = document.createElement("BR");
+    var aTag        = document.createElement("A");
+    var text        = document.createTextNode(itemObj);
+    var fullPath    = partialPath + itemObj;
+    aTag.setAttribute("href", fullPath);
+    aTag.setAttribute("target", "_blank");
+    aTag.setAttribute("id", itemObj);
+    aTag.append(text);
+
+    document.getElementById("serverMsgView").append(aTag, brTag);
+    aTag.click();
+}
+
 function clearDlList() {   document.getElementById("CLEARBTTN").click(); }
 function onloadSetBG() {   updateBG("resources/images/backgrounds/000.jpg"); }
 function updateBG(bgImg) { document.getElementById("bg").src = bgImg; }
