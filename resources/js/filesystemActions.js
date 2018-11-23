@@ -1,14 +1,14 @@
-var binary    = null;
-var pathNodes = [];
+let binary    = null;
+let pathNodes = [];
 
 
-function getDir(query) {
-    var formUlPth  = document.getElementById("DIRPATHUL");
-    var mergeType  = document.getElementById("MergeType");
-    var passwd     = undefined;
-    var data       = "";
-    var cookies    = "";
-    var dirCookie  = "";
+const getDir = (query) => {
+    let formUlPth  = document.getElementById("DIRPATHUL");
+    let mergeType  = document.getElementById("MergeType");
+    let passwd     = undefined;
+    let data       = "";
+    let cookies    = "";
+    let dirCookie  = "";
 
     // push or pop to path list
     if (query === "/") {
@@ -18,7 +18,7 @@ function getDir(query) {
             dirCookie = dirCookie.split("/");
             dirCookie.pop(); // account for ending empty slot
 
-            var size = dirCookie.length;
+            let size = dirCookie.length;
             for (var i = 0; i < size; i++) {
                 pathNodes.push(dirCookie[i] + "/");
             }
@@ -56,29 +56,29 @@ function getDir(query) {
     doAjax("resources/php/getDirList.php", data);
 }
 
-async function uploadFiles() {
-    var toUpload = document.getElementsByName("filesToUpload[]")[0];
-    var path     = document.getElementById("path").innerHTML;
-    var reader   = new FileReader();
-    var data     = new FormData();
-    var size     = toUpload.files.length;
+const uploadFiles = async () => {
+    let toUpload = document.getElementsByName("filesToUpload[]")[0];
+    let path     = document.getElementById("path").innerHTML;
+    let reader   = new FileReader();
+    let data     = new FormData();
+    let size     = toUpload.files.length;
 
     data.append("UploadFiles", "trut");
     data.append("DIRPATHUL", path);
 
     // Add files
     if (size > 0) {
-        for (var i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
             data.append("filesToUpload[]", toUpload.files[i]);
         }
         fileUploader(data);
     }
 }
 
-function createItem(type) {
-    var path      = document.getElementById("path").innerHTML;
-    var newItem   = document.getElementById("NewItem");
-    var fullPth   = path + newItem.value;
+const createItem = (type) => {
+    let path      = document.getElementById("path").innerHTML;
+    let newItem   = document.getElementById("NewItem");
+    let fullPth   = path + newItem.value;
     newItem.value = "";
     fullPth       = encodeURIComponent(fullPth);
 
@@ -86,13 +86,13 @@ function createItem(type) {
            "createItem=true&item=" + fullPth + "&type=" + type);
 }
 
-function deleteItem() {
-    var path = document.getElementById("path").innerHTML;
+const deleteItem = () => {
+    let path = document.getElementById("path").innerHTML;
     // Clicked yes to delete and there is an item
     if (itemObj != undefined && itemObj != null) {
-        var fullPth = path + itemObj;
+        let fullPth = path + itemObj;
         fullPth     = encodeURIComponent(fullPth);
-        var answer  = confirm("Are you sure you want to delete: " + fullPth);
+        let answer  = confirm("Are you sure you want to delete: " + fullPth);
         if (answer == true) {
             doAjax("resources/php/filesystemActions.php",
                    "deleteItem=true&item=" + fullPth);
@@ -103,11 +103,11 @@ function deleteItem() {
     }
 }
 
-function renameItem(obj) {
-    var path      = encodeURIComponent(document.getElementById("path").innerHTML);
-    var oldName   = encodeURIComponent(formerFileName);
-    var newName   = encodeURIComponent(obj.value);
-    var formData  = "renameItem=true&oldName=" + oldName + "&newName=" + newName + "&path=" + path;
+const renameItem = (obj) => {
+    let path      = encodeURIComponent(document.getElementById("path").innerHTML);
+    let oldName   = encodeURIComponent(formerFileName);
+    let newName   = encodeURIComponent(obj.value);
+    let formData  = "renameItem=true&oldName=" + oldName + "&newName=" + newName + "&path=" + path;
 
     console.log("Old name:  " + oldName);
     console.log("New name:  " + newName);
@@ -116,7 +116,7 @@ function renameItem(obj) {
             formData);
 }
 
-function openInLocalProg(media) {
+const openInLocalProg = (media) => {
     doAjax("resources/php/filesystemActions.php",
            "media=" + media);
 }

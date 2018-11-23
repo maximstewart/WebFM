@@ -1,9 +1,9 @@
-var itemObj = undefined;
+let itemObj = undefined;
 
-document.onclick = function (event) {
-    var obj = event.target;
-    var callingID = obj.id;
-    var classNM   = obj.className;
+document.onclick = (event) => {
+    let obj       = event.target;
+    let callingID = obj.id;
+    let classNM   = obj.className;
 
     // right-click detect
     if (event.which == 3) {
@@ -11,7 +11,7 @@ document.onclick = function (event) {
            setSelectedItem(obj.alt);
        } else if (callingID == "dirID" || callingID == "fileID" ||
                                          callingID == "movieID") {
-           var node = obj.parentNode;
+           let node = obj.parentNode;
            setSelectedItem(node.children[1].value);
        } else if (classNM == "fileStyle" || classNM == "dirStyle" ||
                                           classNM == "movieStyle") {
@@ -20,10 +20,10 @@ document.onclick = function (event) {
     }
 }
 
-document.ondblclick = function (event) {
-    var obj = event.target;
-    var callingID = obj.id;
-    var classNM   = obj.className;
+document.ondblclick = (event) => {
+    let obj       = event.target;
+    let callingID = obj.id;
+    let classNM   = obj.className;
 
     // Left click detect
     if (event.which == 1) {
@@ -37,15 +37,15 @@ document.ondblclick = function (event) {
             }
         // If clicking on dir icon
         } else if (callingID == "dirID") {
-            var node = obj.parentNode;
+            let node = obj.parentNode;
             getDir(node.children[1].value);
         // If clicking on movie thumbnail
         } else if (callingID == "movieID") {
-            var node = obj.parentNode;
+            let node = obj.parentNode;
             showMedia(node.children[1].value);
         // If clicking on file icon
         } else if (callingID == "fileID") {
-            var node = obj.parentNode;
+            let node = obj.parentNode;
             showMedia(node.children[1].value);
         // If clicking on image
         } else if (callingID == "imageID") {
@@ -58,10 +58,10 @@ document.ondblclick = function (event) {
 }
 
 // Mainly for rename event
-document.onkeydown = function (event) {
-    var obj        = event.target;
-    var callingID  = event.target.id;
-    var keyCodeVal = event.keyCode;
+document.onkeydown = (event) => {
+    let obj        = event.target;
+    let callingID  = event.target.id;
+    let keyCodeVal = event.keyCode;
 
     // If keycode == Enter
     if (keyCodeVal == 13) {
@@ -71,14 +71,14 @@ document.onkeydown = function (event) {
     }
 }
 
-function setSelectedItem(item) {
+const setSelectedItem = (item) => {
     // Get the item name
     itemObj = item;
 }
 
 //  Drage event for the poped out image and media container
-function dragContainer(elmnt) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+const dragContainer = (elmnt) => {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     elmnt.onmousedown  = dragMouseDown;
 
     function dragMouseDown(e) {

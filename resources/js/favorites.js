@@ -1,6 +1,6 @@
-function faveManager(elm) {
-    var path = document.getElementById("path").innerHTML;
-    var data = "";
+const faveManager = (elm) => {
+    let path = document.getElementById("path").innerHTML;
+    let data = "";
 
     if (elm.style.backgroundColor != "") {
         elm.style.backgroundColor = "";
@@ -18,14 +18,14 @@ function faveManager(elm) {
 
 // Basically resetting path nodes and setting them up
 // to the new path and just doing a refresh
-function loadFave(elm) {
-    var path  = elm.innerHTML;
-    var parts = path.split("/");
-    var size  = parts.length;
+const loadFave = (elm) => {
+    let path  = elm.innerHTML;
+    let parts = path.split("/");
+    let size  = parts.length;
     pathNodes = [];
 
     pathNodes.push(parts[0] + "/");
-    for (var i = 1; i < size - 1; i++) {
+    for (let i = 1; i < size - 1; i++) {
         pathNodes.push(parts[i] + "/");
     }
     pathNodes.push(parts[size - 1]);

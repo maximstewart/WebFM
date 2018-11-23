@@ -1,11 +1,11 @@
-function createPassField(data) {
-    insertArea.innerHTML  = "";
-    var passField         = document.createElement("INPUT");
-    var submitBttn        = document.createElement("BUTTON");
+const createPassField = (data) => {
+    let passField         = document.createElement("INPUT");
+    let submitBttn        = document.createElement("BUTTON");
     passField.id          = "PASSWD";
     passField.type        = "password";
     passField.placeholder = "Password...";
     submitBttn.innerHTML  = "Submit";
+    insertArea.innerHTML  = "";
 
     passField.onkeyup = (eve) => {
         if (eve.key == "Enter") {

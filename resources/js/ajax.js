@@ -1,7 +1,7 @@
 // SSE events if supported
 if(typeof(EventSource) !== "undefined") {
-    var source = new EventSource("resources/php/sse.php");
-    source.onmessage = function(event) {
+    let source = new EventSource("resources/php/sse.php");
+    source.onmessage = (event) => {
         if (event.data === "updateListing") {
             getDir("./");
         }
@@ -10,12 +10,12 @@ if(typeof(EventSource) !== "undefined") {
     console.log("SSE Not Supported In Browser...");
 }
 
-function getFavesList() {
+const getFavesList = () => {
     doAjax("resources/php/dbController.php", "getTabs=true");
 }
 
-function doAjax(actionPath, data) {
-    var xhttp = new XMLHttpRequest();
+const doAjax = (actionPath, data) => {
+    let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
@@ -36,8 +36,8 @@ function doAjax(actionPath, data) {
     xhttp.send(data);
 }
 
-function fileUploader(data) {
-    var xhttp = new XMLHttpRequest();
+const fileUploader = (data) => {
+    let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {

@@ -1,7 +1,7 @@
-var formerFileName = "";
+let formerFileName = "";
 
-function tgglElmView(id) {
-    var elm = document.getElementById(id);
+const tgglElmView = (id) => {
+    let elm = document.getElementById(id);
     if (elm.style.display == "none") {
         elm.style.display = "block";
     } else {
@@ -9,14 +9,14 @@ function tgglElmView(id) {
     }
 }
 
-function enableEdit(obj) {
+const enableEdit = (obj) => {
     obj.style.backgroundColor  = "#ffffffff";
     obj.style.color            = '#000000ff';
     obj.readOnly               = '';
     formerFileName             = obj.value;
 }
 
-function disableEdits() {
+const disableEdits = () => {
     // this references the passed object from
     // addEventListener than us passing it
     this.style.backgroundColor  = "#ffffff00";
@@ -25,13 +25,13 @@ function disableEdits() {
     this.readOnly               = "true";
 }
 
-function showImg(imgLoc) {
-    var path               = document.getElementById("path").innerHTML;
-    var imgView            = document.getElementById("imgView");
-    var fullImage          = path + imgLoc;
-    var toPlayerButton     = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + fullImage + "')\">&#8765;</div>";
-    var popButton          = "<a href=\"" + fullImage + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
-    var CloseBttn          = "<div class=\"closeBttn\" onclick=\"closeImg()\">X</div>";
+const showImg = (imgLoc) => {
+    let path               = document.getElementById("path").innerHTML;
+    let imgView            = document.getElementById("imgView");
+    let fullImage          = path + imgLoc;
+    let toPlayerButton     = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + fullImage + "')\">&#8765;</div>";
+    let popButton          = "<a href=\"" + fullImage + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
+    let CloseBttn          = "<div class=\"closeBttn\" onclick=\"closeImg()\">X</div>";
     imgView.style.display  = "block";
     imgView.innerHTML      = CloseBttn + popButton + toPlayerButton;
 
@@ -39,18 +39,18 @@ function showImg(imgLoc) {
     dragContainer(imgView);  // Set for dragging events
 }
 
-function showMedia(media) {
-    var path      = document.getElementById("path").innerHTML;
-    var tempRef   = media.toLowerCase();
-    var fullMedia = path + media;
+const showMedia = (media) => {
+    let path      = document.getElementById("path").innerHTML;
+    let tempRef   = media.toLowerCase();
+    let fullMedia = path + media;
 
     if (tempRef.includes(".mp4") || tempRef.includes(".webm") ||
         tempRef.includes(".mp3") || tempRef.includes(".ogg") ||
         tempRef.includes(".pdf") || tempRef.includes(".flac")) {
-            var mediaView       = document.getElementById("fileView");
-            var toPlayerButton  = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + fullMedia + "')\">&#8765;</div>";
-            var popButton       = "<a title=\"New Tab\" href=\"" + fullMedia + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
-            var CloseBttn       = "<div class=\"closeBttn\" title=\"Close\" onclick=\"closeMedia()\">X</div>";
+            let mediaView       = document.getElementById("fileView");
+            let toPlayerButton  = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + fullMedia + "')\">&#8765;</div>";
+            let popButton       = "<a title=\"New Tab\" href=\"" + fullMedia + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
+            let CloseBttn       = "<div class=\"closeBttn\" title=\"Close\" onclick=\"closeMedia()\">X</div>";
 
             mediaView.style.display = "block";
             mediaView.innerHTML     = CloseBttn + popButton + toPlayerButton;
@@ -62,29 +62,29 @@ function showMedia(media) {
     }
 }
 
-function closeImg() {
-    var imgView           = document.getElementById("imgView");
+const closeImg = () => {
+    let imgView           = document.getElementById("imgView");
     imgView.style.display = "none";
 }
 
-function closeMedia() {
-    var mediaView             = document.getElementById("fileView");
+const closeMedia = () => {
+    let mediaView             = document.getElementById("fileView");
     mediaView.style.display   = "none";
     mediaView.children[3].src = "";
 }
 
-function clearDirCookie() {
-    var expireDate = "Thu, 01 Jan 1970 00:00:00 UTC";
+const clearDirCookie = () => {
+    let expireDate = "Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "dirQuery=; expires=" + expireDate;
     getDir("/");
 }
 
-function downloadItem() {
-    var partialPath = document.getElementById("path").innerHTML;
-    var brTag       = document.createElement("BR");
-    var aTag        = document.createElement("A");
-    var text        = document.createTextNode(itemObj);
-    var fullPath    = partialPath + itemObj;
+const downloadItem = () => {
+    let partialPath = document.getElementById("path").innerHTML;
+    let brTag       = document.createElement("BR");
+    let aTag        = document.createElement("A");
+    let text        = document.createTextNode(itemObj);
+    let fullPath    = partialPath + itemObj;
     aTag.setAttribute("href", fullPath);
     aTag.setAttribute("target", "_blank");
     aTag.setAttribute("id", itemObj);
@@ -94,6 +94,6 @@ function downloadItem() {
     aTag.click();
 }
 
-function clearDlList() {   document.getElementById("CLEARBTTN").click(); }
-function onloadSetBG() {   updateBG("resources/images/backgrounds/000.jpg"); }
-function updateBG(bgImg) { document.getElementById("bg").src = bgImg; }
+const clearDlList = () => {   document.getElementById("CLEARBTTN").click(); }
+const onloadSetBG = () => {   updateBG("resources/images/backgrounds/000.jpg"); }
+const updateBG = (bgImg) => { document.getElementById("bg").src = bgImg; }

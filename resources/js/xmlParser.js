@@ -1,7 +1,7 @@
 const insertArea = document.getElementById('dynDiv');
 
 
-function handleXMLReturnData(data) {
+const handleXMLReturnData = (data) => {
     if (data.activeElement.tagName == "DIR_LIST") {
         updateHTMLDirList(data);
     } else if (data.activeElement.tagName == "LOCK_MESSAGE") {
@@ -14,15 +14,15 @@ function handleXMLReturnData(data) {
     }
 }
 
-function generateFavesList(data) {
-    var listView       = document.getElementById("favesList");
-    var favesList      = data.getElementsByTagName("FAVE_LINK");
-    var size           = favesList .length;
-    listView.innerHTML = "";
+const generateFavesList = (data) => {
+    let listView        = document.getElementById("favesList");
+    let favesList       = data.getElementsByTagName("FAVE_LINK");
+    let size            = favesList .length;
+    listView.innerHTML  = "";
 
     for (i = 0; i < size; i++) {
-        var liTag  = document.createElement("LI");
-        var txtNode = document.createTextNode(favesList[i].innerHTML);
+        let liTag  = document.createElement("LI");
+        let txtNode = document.createTextNode(favesList[i].innerHTML);
 
         liTag.setAttribute("onclick", "loadFave(this)");
         liTag.appendChild(txtNode);
@@ -30,16 +30,16 @@ function generateFavesList(data) {
     }
 }
 
-async function updateHTMLDirList(data) {
-    var isInFaves = data.getElementsByTagName('IN_FAVE')[0].innerHTML;
-    var dirPath = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
-    var dirs    = data.getElementsByTagName('DIR');
-    var videos  = data.getElementsByTagName('VID_FILE');
-    var images  = data.getElementsByTagName('IMG_FILE');
-    var files   = data.getElementsByTagName('FILE');
-    var dirImg  = "resources/images/icons/folder.png";
-    var i       = 0;
-    var size    = 0;
+const updateHTMLDirList = async (data) => {
+    let isInFaves = data.getElementsByTagName('IN_FAVE')[0].innerHTML;
+    let dirPath   = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
+    let dirs      = data.getElementsByTagName('DIR');
+    let videos    = data.getElementsByTagName('VID_FILE');
+    let images    = data.getElementsByTagName('IMG_FILE');
+    let files     = data.getElementsByTagName('FILE');
+    let dirImg    = "resources/images/icons/folder.png";
+    let i         = 0;
+    let size      = 0;
 
     // Insert dirs
     document.getElementById("path").innerHTML = dirPath;
@@ -47,18 +47,18 @@ async function updateHTMLDirList(data) {
 
     // determin whether to style faves or nor
     if (isInFaves == "true") {
-        var elm = document.getElementById("faves");
+        let elm = document.getElementById("faves");
         elm.style.backgroundColor = "rgb(255, 255, 255)";
         elm.style.color = "rgb(0, 0, 0)";
     } else {
-        var elm = document.getElementById("faves");
+        let elm = document.getElementById("faves");
         elm.style.backgroundColor = "";
         elm.style.color = "";
     }
 
     size = dirs.length;
     for (; i < size; i++) {
-        var dir = dirs[i].innerHTML;
+        let dir = dirs[i].innerHTML;
 
         if (dir != "resources/") {
             createElmBlock("DIV", "dirStyle", "dirID", "systemIcon", dirImg ,
@@ -67,8 +67,8 @@ async function updateHTMLDirList(data) {
     }
 
     // Insert videos
-    var thumbnail    = "";
-    var vidNme       = "";
+    let thumbnail    = "";
+    let vidNme       = "";
     size             = videos .length;
 
     for (i = 0; i < size; i++) {
@@ -79,8 +79,8 @@ async function updateHTMLDirList(data) {
     }
 
     // Insert images
-    var path       = document.getElementById("path").innerHTML;
-    var thumbnail  = ""
+    let path       = document.getElementById("path").innerHTML;
+    thumbnail      = "";
     size           = images.length;
 
     for (i = 0; i < size; i++) {
@@ -88,7 +88,7 @@ async function updateHTMLDirList(data) {
 
         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
                              !thumbnail.includes("favicon.png")) {
-            var imgTag       = document.createElement("IMG");
+            let imgTag       = document.createElement("IMG");
             imgTag.id        = "imageID";
             imgTag.className = "iconImg";
             imgTag.src       = path + thumbnail;
@@ -98,7 +98,7 @@ async function updateHTMLDirList(data) {
     }
 
     // Setup background if there is a 000.* in selection
-    var bgImgPth = images[0] ? images[0].children[0].innerHTML : "";
+    let bgImgPth = images[0] ? images[0].children[0].innerHTML : "";
     if (bgImgPth.match(/000\.(jpg|png|gif)\b/) != null) {
         updateBG(path + bgImgPth);
     } else {
@@ -108,17 +108,17 @@ async function updateHTMLDirList(data) {
     // Insert files
     size = files.length;
     for (i = 0; i < size; i++) {
-        var fileName   = files[i].children[0].innerHTML;
+        let fileName   = files[i].children[0].innerHTML;
         createElmBlock("DIV", "fileStyle", "fileID", "systemIcon", setFileIconType(fileName),
                                                                       "fileTitle", fileName);
     }
 }
 
-function createElmBlock(contnrType, contnrClass, imgID, imgClass,
-                                    imgSrc, inputClass, fileName) {
-    var contnrTag  = document.createElement(contnrType);
-    var imgTag     = document.createElement("IMG");
-    var inputTag   = document.createElement("INPUT");
+const createElmBlock = (contnrType, contnrClass, imgID, imgClass,
+                                    imgSrc, inputClass, fileName) => {
+    let contnrTag  = document.createElement(contnrType);
+    let imgTag     = document.createElement("IMG");
+    let inputTag   = document.createElement("INPUT");
 
     contnrTag.className  = contnrClass;
     contnrTag.title      = fileName;
@@ -139,7 +139,7 @@ function createElmBlock(contnrType, contnrClass, imgID, imgClass,
     insertArea.appendChild(contnrTag);
 }
 
-function setFileIconType(fileName) {
+const setFileIconType = (fileName) => {
     if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null) {
         return "resources/images/icons/doc.png";
     } else if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null) {
