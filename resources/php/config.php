@@ -11,6 +11,6 @@
     $UNLOCKTIME      = 80;  // Every ~3 sec this ticks down
                             // Ex: 3*60 == 180 sec or 3 minutes
     // NOTE:  Split folders with ::::
-    $LOCKEDFOLDERS   = "./MEGA_Sync/333_Movies-Music/Other/::::./MEGA_Sync/000_General/";
+    $LOCKEDFOLDERS   = "./dirLockCheck/";
 
 ?>
