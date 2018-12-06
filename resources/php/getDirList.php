@@ -4,7 +4,7 @@ include_once 'serverMessanger.php';
 
 // Start of retrieving dir data
 function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
-    if (is_dir($NEWPATH)) {
+    if (filetype($NEWPATH) == "dir") {
         include_once 'lockedFolders.php';
 
         if (checkForLock($NEWPATH, $PASSWD) == false) {
@@ -28,12 +28,13 @@ function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
 
 // Used for recursion
 function listDir(&$GeneratedXML, &$NEWPATH, &$MERGESEASSONS, &$subPath) {
-    $dirContents = scandir($NEWPATH);
-    foreach ($dirContents as $fileName) {
+    // $dirContents = scandir($NEWPATH);
+    $handle = opendir($NEWPATH);
+    while (false !== ($fileName = readdir($handle))) {
         // Filter for . and .. items We have controls for these actions
         if ($fileName !== "." && $fileName !== "..") {
             $fullPath = $NEWPATH . $fileName;
-            if ($MERGESEASSONS == "trueHere" && is_dir($fullPath) &&
+            if ($MERGESEASSONS == "trueHere" && filetype($fullPath) == "dir" &&
             strpos(strtolower($fileName), 'season') !== false) {
                 $fileName .= "/";
                 listDir($GeneratedXML, $fullPath, $MERGESEASSONS, $fileName);
@@ -42,11 +43,12 @@ function listDir(&$GeneratedXML, &$NEWPATH, &$MERGESEASSONS, &$subPath) {
             }
         }
     }
+    closedir($handle);
 }
 
 // Assign XML Markup based on file type
 function processItem(&$GeneratedXML, &$fullPath, &$fileName, $subPath) {
-    if (is_dir($fullPath)) {
+    if (filetype($fullPath) == "dir") {
        $GeneratedXML .= "<DIR>" . $fileName . "/</DIR>";
    } elseif (preg_match('/^.*\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|webm)$/i', strtolower($fileName))) {
        $NAMEHASH = hash('sha256', $fileName);

@@ -25,14 +25,14 @@ function createItem($FILE, $TYPE) {
 
 // File or folder delition
 function deleteItem($FILE) {
-    if (is_dir($FILE)){
+    if (filetype($FILE) == "dir"){
         //GLOB_MARK adds a slash to directories returned
         $files = glob($FILE . '*', GLOB_MARK);
         foreach ($files as $file) {
             deleteItem($file);
         }
         rmdir($FILE);
-    } else if (is_file($FILE)) {
+    } else if (filetype($FILE) == "file") {
         unlink($FILE);
     } else {
         $message = "Server: [Error] --> Failed to delete item! Not a folder or file!";
@@ -73,7 +73,7 @@ function uploadFiles($targetDir) {
         // Check if file already exists
         $targetFile = $targetDir . $fileName;
         if (file_exists($targetFile)) {
-            if (is_file($targetFile)) {
+            if (filetype($targetFile) == "file") {
                 unlink($targetFile);
                 $message = "Server: [Warnning] --> This file already exists. Overwriting it.";
             } else {
