@@ -17,13 +17,17 @@ const handleXMLReturnData = (data) => {
 const generateFavesList = (data) => {
     let listView        = document.getElementById("favesList");
     let favesList       = data.getElementsByTagName("FAVE_LINK");
-    let size            = favesList .length;
+    let size            = favesList.length;
     listView.innerHTML  = "";
 
     for (i = 0; i < size; i++) {
-        let liTag  = document.createElement("LI");
-        let txtNode = document.createTextNode(favesList[i].innerHTML);
+        let liTag   = document.createElement("LI");
+        let name    = favesList[i].innerHTML;
+        let parts   = (name.includes("/")) ? name.split("/") : name.split("\\");
+        let txtNode = document.createTextNode(parts[parts.length - 2]);
 
+        liTag.setAttribute("name", name);
+        liTag.setAttribute("title", name);
         liTag.setAttribute("onclick", "loadFave(this)");
         liTag.appendChild(txtNode);
         listView.appendChild(liTag);

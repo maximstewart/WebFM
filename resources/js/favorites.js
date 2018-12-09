@@ -19,7 +19,7 @@ const faveManager = (elm) => {
 // Basically resetting path nodes and setting them up
 // to the new path and just doing a refresh
 const loadFave = (elm) => {
-    let path  = elm.innerHTML;
+    let path  = elm.getAttribute("name");
     let parts = path.split("/");
     let size  = parts.length;
     pathNodes = [];

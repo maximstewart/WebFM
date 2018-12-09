@@ -2,3 +2,7 @@ html {
     margin: 0em;
     padding: 0em;
 }
+
+ol, ul, li {
+    list-style: none;
+}

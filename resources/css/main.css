@@ -25,7 +25,7 @@
     z-index: -999;
 }
 
-#fullPathHeader, #dynDiv,
+#controls, #fullPathHeader, #dynDiv,
 .errorStyling, .dirStyle, .movieStyle, .fileStyle {
     display: block;
     width: 100%;
@@ -49,6 +49,7 @@
     overflow-y: scroll;
     padding: 1.5em;
     max-height: 632px;
+    color: #ffffff;
 }
 
 #favesList > li:hover {
@@ -58,16 +59,15 @@
     padding-right: 1em;
 }
 
-
-#fullPathHeader {
+#fullPathHeader,
+#controls {
     display: block;
     position: fixed;
-    top: 0.5em;
 }
 
-#dynDiv {
-    margin-top: 5em;
-}
+#controls { top: 0em; }
+#fullPathHeader { top: 2em; }
+#dynDiv { margin-top: 5em; }
 
 #imgView, #imgArea, #fileView {
    width: 800px;
@@ -101,7 +101,10 @@
     overflow-y: scroll;
 }
 
-#imgView { overflow: hidden; left: 15em; }
+#imgView {
+    overflow: hidden;
+    left: 15em;
+}
 
 #NewItem {
     background-color: #ffffff;
