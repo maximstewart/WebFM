@@ -7,7 +7,6 @@ const handleXMLReturnData = (data) => {
     } else if (data.activeElement.tagName == "LOCK_MESSAGE") {
         createPassField(data);
     } else if (data.activeElement.tagName == "SERV_MSG") {
-        console.log(document.getElementById("serverMsgView"));
         document.getElementById("serverMsgView").appendChild(data.activeElement);
     } else if (data.activeElement.tagName == "FAVES_LIST") {
         generateFavesList(data);
@@ -50,7 +49,7 @@ const updateHTMLDirList = async (data) => {
     insertArea.innerHTML = "";
 
     // Setup background if there is a 000.* in selection
-    let bgImgPth = images[0] ? images[0].children[0].innerHTML : "";
+    let bgImgPth = images[0] ? images[0].innerHTML : "";
     if (bgImgPth.match(/000\.(jpg|png|gif)\b/) != null) {
         updateBG(dirPath + bgImgPth);
     } else {
@@ -84,7 +83,6 @@ const updateHTMLDirList = async (data) => {
     let thumbnail = "";
     let vidNme    = "";
     size          = videos.length;
-    console.log(videos);
 
     sortVidElms(videos);
     for (i = 0; i < size; i++) {
