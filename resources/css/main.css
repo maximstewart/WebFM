@@ -133,6 +133,17 @@
     background-color: rgba(0,0,0,0.64);
 }
 
+#searchField {
+    text-align: center;
+}
+
+#searchField:focus {
+    height: 2em;
+    border-style: solid;
+    border-width: thin;
+    border-color: rgba(55, 204, 209, 1);
+}
+
 /* Classes */
 .imgViewImg {
     width: inherit;
