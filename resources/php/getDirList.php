@@ -9,9 +9,10 @@ function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
 
         if (checkForLock($NEWPATH, $PASSWD) == false) {
             $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIR_LIST>"
-            . "<PATH_HEAD>" . $NEWPATH . "</PATH_HEAD>";
+                          . "<PATH_HEAD>" . $NEWPATH . "</PATH_HEAD>";
             $subPath = ""; // This is used for season scanning as a means of properly getting
-            // the video src.... It's left blank when not in a sub dir
+                           // the video src.... It's left blank when not in a sub dir
+
             listDir($GeneratedXML, $NEWPATH, $MERGESEASSONS, $subPath);
 
             $GeneratedXML .= "<IN_FAVE>" . isInDBCheck($NEWPATH) . "</IN_FAVE>";
@@ -26,20 +27,28 @@ function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {
     }
 }
 
-// Used for recursion
 function listDir(&$GeneratedXML, &$NEWPATH, &$MERGESEASSONS, &$subPath) {
-    // $dirContents = scandir($NEWPATH);
     $handle = opendir($NEWPATH);
-    while (false !== ($fileName = readdir($handle))) {
-        // Filter for . and .. items We have controls for these actions
-        if ($fileName !== "." && $fileName !== "..") {
-            $fullPath = $NEWPATH . $fileName;
-            if ($MERGESEASSONS == "trueHere" && filetype($fullPath) == "dir" &&
-            strpos(strtolower($fileName), 'season') !== false) {
-                $fileName .= "/";
-                listDir($GeneratedXML, $fullPath, $MERGESEASSONS, $fileName);
-            } else {
+
+    // Note: We'll be filtering out . and .. items We have controls for these actions
+    if ($MERGESEASSONS !== "trueHere") {
+        while (false !== ($fileName = readdir($handle))) {
+            if ($fileName !== "." && $fileName !== "..") {
+                $fullPath = $NEWPATH . $fileName;
                 processItem($GeneratedXML, $fullPath, $fileName, $subPath);
+            }
+        }
+    } else {
+        while (false !== ($fileName = readdir($handle))) {
+            if ($fileName !== "." && $fileName !== "..") {
+                $fullPath = $NEWPATH . $fileName;
+                if (filetype($fullPath) == "dir" && strpos(strtolower($fileName),
+                                                           'season') !== false) {
+                    $fileName .= "/";
+                    listDir($GeneratedXML, $fullPath, $MERGESEASSONS, $fileName);
+                } else {
+                    processItem($GeneratedXML, $fullPath, $fileName, $subPath);
+                }
             }
         }
     }
@@ -49,7 +58,7 @@ function listDir(&$GeneratedXML, &$NEWPATH, &$MERGESEASSONS, &$subPath) {
 // Assign XML Markup based on file type
 function processItem(&$GeneratedXML, &$fullPath, &$fileName, $subPath) {
     if (filetype($fullPath) == "dir") {
-       $GeneratedXML .= "<DIR>" . $fileName . "/</DIR>";
+       $GeneratedXML  .= "<DIR>" . $fileName . "/</DIR>";
    } elseif (preg_match('/^.*\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|webm)$/i', strtolower($fileName))) {
        $NAMEHASH = hash('sha256', $fileName);
        if (!file_exists('resources/images/thumbnails/' . $NAMEHASH . '.jpg')) {
@@ -58,20 +67,14 @@ function processItem(&$GeneratedXML, &$fullPath, &$fileName, $subPath) {
                       . $NAMEHASH . '.jpg');
        }
        $GeneratedXML .=
-       "<VID_FILE>"
-         . "<VID_IMG>/resources/images/thumbnails/" . $NAMEHASH . ".jpg</VID_IMG>"
-         . "<VID_NAME>" . $subPath . $fileName . "</VID_NAME>" .
-       "</VID_FILE>";
+           "<VID_FILE>"
+             . "<VID_NAME>" . $subPath . $fileName . "</VID_NAME>"
+             . "<VID_IMG>/resources/images/thumbnails/" . $NAMEHASH . ".jpg</VID_IMG>" .
+           "</VID_FILE>";
    } elseif (preg_match('/^.*\.(png|jpg|gif|jpeg)$/i', strtolower($fileName))) {
-        $GeneratedXML .=
-        "<IMG_FILE>"
-          . "<IMAGE_NAME>" . $subPath . $fileName . "</IMAGE_NAME>"
-          . "</IMG_FILE>";
+        $GeneratedXML .= "<IMG_FILE>" . $subPath . $fileName . "</IMG_FILE>";
     } else {
-       $GeneratedXML .=
-       "<FILE>"
-         . "<FILE_NAME>" . $subPath . $fileName . "</FILE_NAME>"
-         . "</FILE>";
+       $GeneratedXML  .= "<FILE>" . $subPath . $fileName . "</FILE>";
    }
 }
 

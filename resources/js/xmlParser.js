@@ -37,30 +37,40 @@ const generateFavesList = (data) => {
 const updateHTMLDirList = async (data) => {
     let isInFaves = data.getElementsByTagName('IN_FAVE')[0].innerHTML;
     let dirPath   = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
-    let dirs      = data.getElementsByTagName('DIR');
-    let videos    = data.getElementsByTagName('VID_FILE');
-    let images    = data.getElementsByTagName('IMG_FILE');
-    let files     = data.getElementsByTagName('FILE');
+    let dirs      = Array.prototype.slice.call(data.getElementsByTagName('DIR'), 0);
+    let videos    = Array.prototype.slice.call(data.getElementsByTagName('VID_FILE'), 0);
+    let images    = Array.prototype.slice.call(data.getElementsByTagName('IMG_FILE'), 0);
+    let files     = Array.prototype.slice.call(data.getElementsByTagName('FILE'), 0);
     let dirImg    = "resources/images/icons/folder.png";
     let i         = 0;
     let size      = 0;
 
-    // Insert dirs
+
     document.getElementById("path").innerHTML = dirPath;
     insertArea.innerHTML = "";
 
-    // determin whether to style faves or nor
+    // Setup background if there is a 000.* in selection
+    let bgImgPth = images[0] ? images[0].children[0].innerHTML : "";
+    if (bgImgPth.match(/000\.(jpg|png|gif)\b/) != null) {
+        updateBG(dirPath + bgImgPth);
+    } else {
+        updateBG("resources/images/backgrounds/000.jpg");
+    }
+
+    // determin whether to style faves or not
+    let elm = document.getElementById("faves");
     if (isInFaves == "true") {
-        let elm = document.getElementById("faves");
         elm.style.backgroundColor = "rgb(255, 255, 255)";
         elm.style.color = "rgb(0, 0, 0)";
     } else {
-        let elm = document.getElementById("faves");
         elm.style.backgroundColor = "";
         elm.style.color = "";
     }
 
+    // Insert dirs
     size = dirs.length;
+
+    sortElms(dirs);
     for (; i < size; i++) {
         let dir = dirs[i].innerHTML;
 
@@ -71,51 +81,68 @@ const updateHTMLDirList = async (data) => {
     }
 
     // Insert videos
-    let thumbnail    = "";
-    let vidNme       = "";
-    size             = videos .length;
+    let thumbnail = "";
+    let vidNme    = "";
+    size          = videos.length;
+    console.log(videos);
 
+    sortVidElms(videos);
     for (i = 0; i < size; i++) {
-        thumbnail     = videos[i].children[0].innerHTML;
-        vidNme        = videos[i].children[1].innerHTML;
+        vidNme        = videos[i].children[0].innerHTML;
+        thumbnail     = videos[i].children[1].innerHTML;
+
         createElmBlock("SPAN", "movieStyle", "movieID", "thumbnail", thumbnail,
                                                          "movieTitle", vidNme);
     }
 
     // Insert images
-    let path       = document.getElementById("path").innerHTML;
-    thumbnail      = "";
-    size           = images.length;
+    thumbnail     = "";
+    size          = images.length;
 
+    // sortElms(images);
     for (i = 0; i < size; i++) {
-        thumbnail = images[i].children[0].innerHTML;
+        thumbnail = images[i].innerHTML;
 
         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
                              !thumbnail.includes("favicon.png")) {
             let imgTag       = document.createElement("IMG");
             imgTag.id        = "imageID";
             imgTag.className = "iconImg";
-            imgTag.src       = path + thumbnail;
+            imgTag.src       = dirPath + thumbnail;
             imgTag.alt       = thumbnail;
             insertArea.appendChild(imgTag);
         }
     }
 
-    // Setup background if there is a 000.* in selection
-    let bgImgPth = images[0] ? images[0].children[0].innerHTML : "";
-    if (bgImgPth.match(/000\.(jpg|png|gif)\b/) != null) {
-        updateBG(path + bgImgPth);
-    } else {
-        updateBG("resources/images/backgrounds/000.jpg");
-    }
-
     // Insert files
     size = files.length;
+
+    sortElms(files);
     for (i = 0; i < size; i++) {
-        let fileName   = files[i].children[0].innerHTML;
+        let fileName = files[i].innerHTML;
         createElmBlock("DIV", "fileStyle", "fileID", "systemIcon", setFileIconType(fileName),
                                                                       "fileTitle", fileName);
     }
+}
+
+const sortVidElms = (obj) => {
+    obj.sort(function(a,b) {
+        var n1 = a.children[0].innerHTML;
+        var n2 = b.children[0].innerHTML;
+        if (n1 > n2) return 1;
+        if (n1 < n2) return -1;
+        return 0;
+    });
+}
+
+const sortElms = (obj) => {
+    obj.sort(function(a,b) {
+        var n1 = a.innerHTML;
+        var n2 = b.innerHTML;
+        if (n1 > n2) return 1;
+        if (n1 < n2) return -1;
+        return 0;
+    });
 }
 
 const createElmBlock = (contnrType, contnrClass, imgID, imgClass,
