@@ -119,4 +119,9 @@ const downloadItem = () => {
 
 const clearDlList = () => {   document.getElementById("CLEARBTTN").click(); }
 const onloadSetBG = () => {   updateBG("resources/images/backgrounds/000.jpg"); }
-const updateBG = (bgImg) => { document.getElementById("bg").src = bgImg; }
+
+const updateBG = (bgImg) => {
+    try {
+        document.getElementById("bg").src = bgImg;
+    } catch (e) { }
+}

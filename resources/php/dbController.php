@@ -1,15 +1,9 @@
 <?php
-include_once 'serverMessanger.php';
+include_once 'connection.php';
+include_once 'serverMessenger.php';
 
 function getTabLinks() {
-    $db = new SQLite3('resources/db/webfm.db');
-
-    if($db === false){
-        $message = "Server: [Error] --> Database connection failed!";
-        serverMessage("error", $message);
-        die("ERROR: Could not connect to db.");
-    }
-
+    GLOBAL $db;
     $res = $db->query('Select * FROM faves');
     $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FAVES_LIST>";
     while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
@@ -20,14 +14,8 @@ function getTabLinks() {
 }
 
 function manageLink($ACTION, $PATH) {
-    $db = new SQLite3('resources/db/webfm.db');
+    GLOBAL $db;
     $ACTION_TYPE = "";
-
-    if($db === false){
-        $message = "Server: [Error] --> Database connection failed!";
-        serverMessage("error", $message);
-        die("ERROR: Could not connect to db.");
-    }
 
     // If action isn't true then we add else we delete or exit.
     if ($ACTION == "false") {
@@ -44,6 +32,7 @@ function manageLink($ACTION, $PATH) {
 
     $stmt->bindValue(":link", $PATH, SQLITE3_TEXT);
     $stmt->execute();
+    $stmt->close();
 
     $message = "Server: [Success] --> Fave link: " .
                 $PATH . "    " . $ACTION_TYPE . " the database!";

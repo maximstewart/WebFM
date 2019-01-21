@@ -1,0 +1,4 @@
+#controls, #fullPathHeader, #dynDiv,
+.errorStyling, .dirStyle, .movieStyle, .fileStyle {
+    background-color: rgba(0,0,0,0.2);
+}

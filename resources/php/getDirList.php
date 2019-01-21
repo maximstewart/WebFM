@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once 'serverMessanger.php';
+include_once 'serverMessenger.php';
 
 // Start of retrieving dir data
 function startListing($NEWPATH, $MERGESEASSONS, $PASSWD) {

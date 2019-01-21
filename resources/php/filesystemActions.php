@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once 'serverMessanger.php';
+include_once 'serverMessenger.php';
 
 // Create file or folder
 function createItem($FILE, $TYPE) {
