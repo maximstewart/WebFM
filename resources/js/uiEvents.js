@@ -48,8 +48,8 @@ document.ondblclick = (event) => {
             let node = obj.parentNode;
             showMedia(node.children[1].value);
         // If clicking on image
-        } else if (callingID == "imageID") {
-            showImg(obj.alt);
+    } else if (callingID == "imageID", "image") {
+            showMedia(obj.alt);
         // If clicking on text title
         } else if (callingID == "titleID") {
             enableEdit(obj);

@@ -48,52 +48,81 @@ const disableEdits = () => {
     this.readOnly               = "true";
 }
 
-const showImg = (imgLoc) => {
-    let path               = document.getElementById("path").innerHTML;
-    let imgView            = document.getElementById("imgView");
-    let fullImage          = path + imgLoc;
-    let toPlayerButton     = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + fullImage + "')\">&#8765;</div>";
-    let popButton          = "<a href=\"" + fullImage + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
-    let CloseBttn          = "<div class=\"closeBttn\" onclick=\"closeImg()\">X</div>";
-    imgView.style.display  = "block";
-    imgView.innerHTML      = CloseBttn + popButton + toPlayerButton;
+const showMedia = (mediaLoc, type) => {
+    let path         = document.getElementById("path").innerHTML;
+    let tempRef      = mediaLoc.toLowerCase();
+    let fullMedia    = path + mediaLoc;
 
-    imgView.innerHTML += "<div id=\"imgArea\"><img class=\"imgViewImg\" src=\"" + fullImage + "\" /></div>";
-    dragContainer(imgView);  // Set for dragging events
-}
+    let iframe       = document.createElement("IFRAME");
+    let outterDiv    = document.createElement("DIV");
+    let popOutDiv    = document.createElement("DIV");
+    let closeDiv     = document.createElement("DIV");
+    let toLocDiv     = document.createElement("DIV");
+    let imgDiv       = document.createElement("DIV");
+    let aTag         = document.createElement("A");
+    let imgTag       = document.createElement("IMG");
+    let closeText    = document.createTextNode("X");
 
-const showMedia = (media) => {
-    let path      = document.getElementById("path").innerHTML;
-    let tempRef   = media.toLowerCase();
-    let fullMedia = path + media;
+    if (type === "image") {
+        outterDiv.id = "imgView";
+    } else {
+        outterDiv.id = "fileView";
+    }
+
+    closeDiv.className  = "closeBttn";
+    closeDiv.title      = "Close";
+    closeDiv.setAttribute("onclick", "closeContainer(this)");
+    closeDiv.appendChild(closeText);
+
+    aTag.title          = "New Tab";
+    aTag.target         = "_blank";
+    aTag.href           = fullMedia;
+
+    popOutDiv.className = "popOutBttn";
+    popOutDiv.innerHTML = "&#8599;";
+    aTag.appendChild(popOutDiv);
+
+    toLocDiv.title      = "Open In Local Program";
+    toLocDiv.className  = "popOutBttn";
+    toLocDiv.innerHTML  = "&#8765;";
+    toLocDiv.setAttribute("onclick", "openInLocalProg('" + fullMedia + "')");
+
+    imgDiv.id           = "imgArea";
+    imgTag.className    = "imgViewImg";
+    imgDiv.appendChild(imgTag);
+    imgTag.src          = fullMedia;
 
     if (tempRef.includes(".mp4") || tempRef.includes(".webm") ||
-        tempRef.includes(".mp3") || tempRef.includes(".ogg") ||
-        tempRef.includes(".pdf") || tempRef.includes(".flac")) {
-            let mediaView       = document.getElementById("fileView");
-            let toPlayerButton  = "<div title=\"Open In Local Program\" class=\"popOutBttn\" onclick=\"openInLocalProg('" + fullMedia + "')\">&#8765;</div>";
-            let popButton       = "<a title=\"New Tab\" href=\"" + fullMedia + "\" target=\"_blank\"><div class=\"popOutBttn\">&#8599;</div></a>";
-            let CloseBttn       = "<div class=\"closeBttn\" title=\"Close\" onclick=\"closeMedia()\">X</div>";
-
-            mediaView.style.display = "block";
-            mediaView.innerHTML     = CloseBttn + popButton + toPlayerButton;
-            mediaView.innerHTML     += "<iframe id=\"fileViewInner\" src=\"" + fullMedia + "\"></iframe>";
-
-            dragContainer(mediaView);  // Set for dragging events
-    } else {
-        openInLocalProg(fullMedia);
+        tempRef.includes(".mp3") || tempRef.includes(".ogg")  ||
+        tempRef.includes(".pdf") || tempRef.includes(".flac") ||
+        tempRef.includes(".mkv") || tempRef.includes(".avi")) {
+            if (tempRef.includes(".mkv") || tempRef.includes(".avi")) {
+                openInLocalProg(fullMedia);
+                return;
+                // Future option to convert container and view certain media.
+                // fullMedia = quickRemux(fullMedia);
+            }
     }
+
+    iframe.id           = "fileViewInner";
+    iframe.src          = fullMedia;
+
+    outterDiv.appendChild(closeDiv);
+    outterDiv.appendChild(aTag);
+    outterDiv.appendChild(toLocDiv);
+
+    if (type === "image") {
+        outterDiv.appendChild(imgDiv);
+    } else {
+        outterDiv.appendChild(iframe);
+    }
+
+    document.body.appendChild(outterDiv);
+    dragContainer(outterDiv);  // Set for dragging events
 }
 
-const closeImg = () => {
-    let imgView           = document.getElementById("imgView");
-    imgView.style.display = "none";
-}
-
-const closeMedia = () => {
-    let mediaView             = document.getElementById("fileView");
-    mediaView.style.display   = "none";
-    mediaView.children[3].src = "";
+const closeContainer = (elm) => {
+    elm.parentElement.parentElement.removeChild(elm.parentElement);
 }
 
 const clearDirCookie = () => {
