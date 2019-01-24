@@ -33,23 +33,23 @@ document.ondblclick = (event) => {
             if (classNM == "dirStyle") {
                 getDir(obj.children[1].value);
             } else {
-                showMedia(obj.children[1].value);
+                showMedia(obj.children[1].value, "file");
             }
         // If clicking on dir icon
         } else if (callingID == "dirID") {
             let node = obj.parentNode;
-            getDir(node.children[1].value);
+            getDir(node.children[1].value, "dir");
         // If clicking on movie thumbnail
         } else if (callingID == "movieID") {
             let node = obj.parentNode;
-            showMedia(node.children[1].value);
+            showMedia(node.children[1].value, "movie");
         // If clicking on file icon
         } else if (callingID == "fileID") {
             let node = obj.parentNode;
-            showMedia(node.children[1].value);
+            showMedia(node.children[1].value, "file");
         // If clicking on image
-    } else if (callingID == "imageID", "image") {
-            showMedia(obj.alt);
+    } else if (callingID == "imageID") {
+            showMedia(obj.alt, "image");
         // If clicking on text title
         } else if (callingID == "titleID") {
             enableEdit(obj);

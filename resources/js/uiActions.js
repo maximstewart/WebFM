@@ -63,12 +63,6 @@ const showMedia = (mediaLoc, type) => {
     let imgTag       = document.createElement("IMG");
     let closeText    = document.createTextNode("X");
 
-    if (type === "image") {
-        outterDiv.id = "imgView";
-    } else {
-        outterDiv.id = "fileView";
-    }
-
     closeDiv.className  = "closeBttn";
     closeDiv.title      = "Close";
     closeDiv.setAttribute("onclick", "closeContainer(this)");
@@ -89,8 +83,8 @@ const showMedia = (mediaLoc, type) => {
 
     imgDiv.id           = "imgArea";
     imgTag.className    = "imgViewImg";
-    imgDiv.appendChild(imgTag);
     imgTag.src          = fullMedia;
+    imgDiv.appendChild(imgTag);
 
     if (tempRef.includes(".mp4") || tempRef.includes(".webm") ||
         tempRef.includes(".mp3") || tempRef.includes(".ogg")  ||
@@ -112,8 +106,10 @@ const showMedia = (mediaLoc, type) => {
     outterDiv.appendChild(toLocDiv);
 
     if (type === "image") {
+        outterDiv.id = "imgView";
         outterDiv.appendChild(imgDiv);
     } else {
+        outterDiv.id = "fileView";
         outterDiv.appendChild(iframe);
     }
 
