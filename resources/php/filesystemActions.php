@@ -142,7 +142,7 @@ function remuxVideo($FILE) {
     $EXTNSN      = strtolower(pathinfo($FILE, PATHINFO_EXTENSION));
 
     if (!file_exists($PTH . $HASHED_NAME)) {
-        if (preg_match('(mp4)', $EXTNSN) === 1) {
+        if (preg_match('(mkv)', $EXTNSN) === 1) {
             $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -codec copy ' . $PTH . $HASHED_NAME;
             shell_exec($COMMAND . " > /dev/null &");
         }
