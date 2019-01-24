@@ -38,7 +38,7 @@ document.ondblclick = (event) => {
         // If clicking on dir icon
         } else if (callingID == "dirID") {
             let node = obj.parentNode;
-            getDir(node.children[1].value, "dir");
+            getDir(node.children[1].value);
         // If clicking on movie thumbnail
         } else if (callingID == "movieID") {
             let node = obj.parentNode;

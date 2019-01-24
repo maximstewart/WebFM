@@ -48,7 +48,7 @@ const disableEdits = () => {
     this.readOnly               = "true";
 }
 
-const showMedia = (mediaLoc, type) => {
+const showMedia = async (mediaLoc, type) => {
     let path         = document.getElementById("path").innerHTML;
     let tempRef      = mediaLoc.toLowerCase();
     let fullMedia    = path + mediaLoc;
@@ -86,17 +86,37 @@ const showMedia = (mediaLoc, type) => {
     imgTag.src          = fullMedia;
     imgDiv.appendChild(imgTag);
 
-    if (tempRef.includes(".mp4") || tempRef.includes(".webm") ||
-        tempRef.includes(".mp3") || tempRef.includes(".ogg")  ||
-        tempRef.includes(".pdf") || tempRef.includes(".flac") ||
-        tempRef.includes(".mkv") || tempRef.includes(".avi")) {
-            if (tempRef.includes(".mkv") || tempRef.includes(".avi")) {
+
+
+    if ((/\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|mp3|webm|flac|ogg|pdf)$/i).test(tempRef)) {
+        if ((/\.(mkv)$/i).test(tempRef)) {
+            let data = "remuxVideo=true&mediaPth=" + fullMedia;
+
+            // This kinda sucks but calling doAjax wont return data for some reason
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        // Send the returned data to further process
+                        if (this.responseXML != null) {
+                            data  = this.responseXML;
+                            fullMedia = data.getElementsByTagName("REMUX_PATH")[0].innerHTML;
+                        } else {
+                            document.getElementById('dynDiv').innerHTML =
+                            "<p class=\"error\" style=\"width:100%;text-align:center;\"> "
+                            + "No content returned. Check the folder path.</p>";
+                            return ;
+                        }
+                    }
+                };
+                xhttp.open("POST", "resources/php/filesystemActions.php", false);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.overrideMimeType('application/xml'); // Force return to be XML
+                xhttp.send(data);
+            } else if ((/\.(avi|flv|mov|m4v|mpg|wmv)$/i).test(tempRef)) {
                 openInLocalProg(fullMedia);
-                return;
-                // Future option to convert container and view certain media.
-                // fullMedia = quickRemux(fullMedia);
+                return ;
             }
-    }
+        }
 
     iframe.id           = "fileViewInner";
     iframe.src          = fullMedia;

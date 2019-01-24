@@ -135,9 +135,29 @@ function openFile($FILE) {
     serverMessage("success", $message);
 }
 
+function remuxVideo($FILE) {
+    $FILE        = trim($FILE);
+    $PTH         = "resources/tmp/";
+    $HASHED_NAME = hash('sha256', $FILE) . '.mp4';
+    $EXTNSN      = strtolower(pathinfo($FILE, PATHINFO_EXTENSION));
+
+    if (!file_exists($PTH . $HASHED_NAME)) {
+        if (preg_match('(mp4)', $EXTNSN) === 1) {
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -codec copy ' . $PTH . $HASHED_NAME;
+            shell_exec($COMMAND . " > /dev/null &");
+        }
+    }
+
+    $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    $GeneratedXML .= "<REMUX_PATH>" . $PTH . $HASHED_NAME ."</REMUX_PATH>";
+    echo $GeneratedXML;
+}
+
 
 chdir("../../");
-if (isset($_POST["createItem"],
+if (isset($_POST["remuxVideo"], $_POST["mediaPth"])) {
+    remuxVideo($_POST["mediaPth"]);
+} else if (isset($_POST["createItem"],
           $_POST["item"],
           $_POST["type"])) {
     createItem($_POST["item"], $_POST["type"]);

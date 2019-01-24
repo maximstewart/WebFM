@@ -14,7 +14,7 @@ const getFavesList = () => {
     doAjax("resources/php/dbController.php", "getTabs=true");
 }
 
-const doAjax = (actionPath, data) => {
+const doAjax = async (actionPath, data) => {
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
