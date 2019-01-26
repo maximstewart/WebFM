@@ -141,7 +141,23 @@ function remuxVideo($FILE) {
     $HASHED_NAME = hash('sha256', $FILE) . '.mp4';
     $EXTNSN      = strtolower(pathinfo($FILE, PATHINFO_EXTENSION));
 
+
     if (!file_exists($PTH . $HASHED_NAME)) {
+        $io   = popen('/usr/bin/du -sm ' . $PTH, 'r');
+        $size = fgets($io, 4096);
+        $size = (int) substr($size, 0, strpos ( $size, "\t" ));
+        pclose ($io);
+
+        include 'config.php';
+        if ($size > $TMPFOLDERSIZE) {
+
+            $files = glob($PTH . '*');
+            foreach($files as $file){
+              if(is_file($file))
+                unlink($file);
+            }
+        }
+
         if (preg_match('(mkv)', $EXTNSN) === 1) {
             $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -codec copy ' . $PTH . $HASHED_NAME;
             shell_exec($COMMAND . " > /dev/null &");
