@@ -86,37 +86,23 @@ const showMedia = async (mediaLoc, type) => {
     imgTag.src          = fullMedia;
     imgDiv.appendChild(imgTag);
 
-
-
     if ((/\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|mp3|webm|flac|ogg|pdf)$/i).test(tempRef)) {
         if ((/\.(mkv)$/i).test(tempRef)) {
-            let data = "remuxVideo=true&mediaPth=" + fullMedia;
+            const params = "remuxVideo=true&mediaPth=" + fullMedia;
+            let response = await  fetch("resources/php/filesystemActions.php",
+                                        {method: "POST", body: new URLSearchParams(params)});
+            let xml      = new window.DOMParser().parseFromString(await response.text(), "text/xml");
 
-            // This kinda sucks but calling doAjax wont return data for some reason
-                let xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState === 4 && this.status === 200) {
-                        // Send the returned data to further process
-                        if (this.responseXML != null) {
-                            data  = this.responseXML;
-                            fullMedia = data.getElementsByTagName("REMUX_PATH")[0].innerHTML;
-                        } else {
-                            document.getElementById('dynDiv').innerHTML =
-                            "<p class=\"error\" style=\"width:100%;text-align:center;\"> "
-                            + "No content returned. Check the folder path.</p>";
-                            return ;
-                        }
-                    }
-                };
-                xhttp.open("POST", "resources/php/filesystemActions.php", false);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.overrideMimeType('application/xml'); // Force return to be XML
-                xhttp.send(data);
-            } else if ((/\.(avi|flv|mov|m4v|mpg|wmv)$/i).test(tempRef)) {
-                openInLocalProg(fullMedia);
+            if (xml.getElementsByTagName("REMUX_PATH")[0]) {
+                fullMedia = xml.getElementsByTagName("REMUX_PATH")[0].innerHTML;
+            } else {
                 return ;
             }
+        } else if ((/\.(avi|flv|mov|m4v|mpg|wmv)$/i).test(tempRef)) {
+            openInLocalProg(fullMedia);
+            return ;
         }
+    }
 
     iframe.id           = "fileViewInner";
     iframe.src          = fullMedia;
