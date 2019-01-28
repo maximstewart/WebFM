@@ -54,6 +54,9 @@ const showMedia = async (mediaLoc, type) => {
     let fullMedia    = path + mediaLoc;
 
     let iframe       = document.createElement("IFRAME");
+
+    let video       = document.createElement("VIDEO");
+
     let outterDiv    = document.createElement("DIV");
     let popOutDiv    = document.createElement("DIV");
     let closeDiv     = document.createElement("DIV");
@@ -107,6 +110,11 @@ const showMedia = async (mediaLoc, type) => {
     iframe.id           = "fileViewInner";
     iframe.src          = fullMedia;
 
+    video.controls      = true
+    video.autoplay      = true;
+    video.style         = "width: 100%; height: auto;";
+    video.poster        = "resources/images/loading.gif";
+
     outterDiv.appendChild(closeDiv);
     outterDiv.appendChild(aTag);
     outterDiv.appendChild(toLocDiv);
@@ -114,6 +122,9 @@ const showMedia = async (mediaLoc, type) => {
     if (type === "image") {
         outterDiv.id = "imgView";
         outterDiv.appendChild(imgDiv);
+    } else if (type === "video") {
+        outterDiv.id = "fileView";
+        outterDiv.appendChild(video);
     } else {
         outterDiv.id = "fileView";
         outterDiv.appendChild(iframe);
@@ -121,6 +132,14 @@ const showMedia = async (mediaLoc, type) => {
 
     document.body.appendChild(outterDiv);
     dragContainer(outterDiv);  // Set for dragging events
+
+    if (type === "video") {
+        // This is questionable in usage since it loads the full video
+        // before showing; but, seeking doesn't work otherwise...
+        let response = await fetch(fullMedia, {method: "GET"});
+        var vidSrc   = URL.createObjectURL(await response.blob()); // IE10+
+        video.src    = vidSrc;
+    }
 }
 
 const closeContainer = (elm) => {

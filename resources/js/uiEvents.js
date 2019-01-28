@@ -28,30 +28,32 @@ document.ondblclick = (event) => {
     // Left click detect
     if (event.which == 1) {
         // If clicking on container
-        if (classNM == "fileStyle" || classNM == "movieStyle" ||
-                                      classNM == "dirStyle") {
-            if (classNM == "dirStyle") {
+        if (classNM === "fileStyle" || classNM === "movieStyle" ||
+                                        classNM === "dirStyle") {
+            if (classNM === "dirStyle") {
                 getDir(obj.children[1].value);
+            } else if (classNM === "movieStyle") {
+                showMedia(obj.children[1].value, "video");
             } else {
                 showMedia(obj.children[1].value, "file");
             }
-        // If clicking on dir icon
-        } else if (callingID == "dirID") {
+            // If clicking on dir icon
+        } else if (callingID === "dirID") {
             let node = obj.parentNode;
             getDir(node.children[1].value);
-        // If clicking on movie thumbnail
-        } else if (callingID == "movieID") {
+            // If clicking on movie thumbnail
+        } else if (callingID === "movieID") {
             let node = obj.parentNode;
-            showMedia(node.children[1].value, "movie");
-        // If clicking on file icon
-        } else if (callingID == "fileID") {
+            showMedia(node.children[1].value, "video");
+            // If clicking on file icon
+        } else if (callingID === "fileID") {
             let node = obj.parentNode;
             showMedia(node.children[1].value, "file");
-        // If clicking on image
-    } else if (callingID == "imageID") {
+            // If clicking on image
+        } else if (callingID === "imageID") {
             showMedia(obj.alt, "image");
-        // If clicking on text title
-        } else if (callingID == "titleID") {
+            // If clicking on text title
+        } else if (callingID === "titleID") {
             enableEdit(obj);
         }
     }
