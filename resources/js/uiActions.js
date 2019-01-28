@@ -49,14 +49,8 @@ const disableEdits = () => {
 }
 
 const showMedia = async (mediaLoc, type) => {
-    let path         = document.getElementById("path").innerHTML;
-    let tempRef      = mediaLoc.toLowerCase();
-    let fullMedia    = path + mediaLoc;
-
     let iframe       = document.createElement("IFRAME");
-
-    let video       = document.createElement("VIDEO");
-
+    let video        = document.createElement("VIDEO");
     let outterDiv    = document.createElement("DIV");
     let popOutDiv    = document.createElement("DIV");
     let closeDiv     = document.createElement("DIV");
@@ -65,6 +59,9 @@ const showMedia = async (mediaLoc, type) => {
     let aTag         = document.createElement("A");
     let imgTag       = document.createElement("IMG");
     let closeText    = document.createTextNode("X");
+    let path         = document.getElementById("path").innerHTML;
+    let tempRef      = mediaLoc.toLowerCase();
+    let fullMedia    = path + mediaLoc;
 
     closeDiv.className  = "closeBttn";
     closeDiv.title      = "Close";
@@ -90,7 +87,7 @@ const showMedia = async (mediaLoc, type) => {
     imgDiv.appendChild(imgTag);
 
     if ((/\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|mp3|webm|flac|ogg|pdf)$/i).test(tempRef)) {
-        if ((/\.(mkv)$/i).test(tempRef)) {
+        if ((/\.(mkv|avi|wmv)$/i).test(tempRef)) {
             const params = "remuxVideo=true&mediaPth=" + fullMedia;
             let response = await  fetch("resources/php/filesystemActions.php",
                                         {method: "POST", body: new URLSearchParams(params)});
@@ -136,6 +133,7 @@ const showMedia = async (mediaLoc, type) => {
     if (type === "video") {
         // This is questionable in usage since it loads the full video
         // before showing; but, seeking doesn't work otherwise...
+        // video.src    = fullMedia;
         let response = await fetch(fullMedia, {method: "GET"});
         var vidSrc   = URL.createObjectURL(await response.blob()); // IE10+
         video.src    = vidSrc;

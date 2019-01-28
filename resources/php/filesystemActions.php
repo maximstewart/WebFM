@@ -150,7 +150,6 @@ function remuxVideo($FILE) {
 
         include 'config.php';
         if ($size > $TMPFOLDERSIZE) {
-
             $files = glob($PTH . '*');
             foreach($files as $file){
               if(is_file($file))
@@ -159,7 +158,17 @@ function remuxVideo($FILE) {
         }
 
         if (preg_match('(mkv)', $EXTNSN) === 1) {
-            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -codec copy ' . $PTH . $HASHED_NAME;
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -codec copy -strict -2 ' . $PTH . $HASHED_NAME;
+            shell_exec($COMMAND . " > /dev/null &");
+        }
+
+        if (preg_match('(avi)', $EXTNSN) === 1) {
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -c:v libx264 -crf 21 -c:a aac -b:a 192k -ac 2 ' . $PTH . $HASHED_NAME;
+            shell_exec($COMMAND . " > /dev/null &");
+        }
+
+        if (preg_match('(wmv)', $EXTNSN) === 1) {
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -c:v libx264 -crf 23 -c:a aac -strict -2 -q:a 100 ' . $PTH . $HASHED_NAME;
             shell_exec($COMMAND . " > /dev/null &");
         }
     }
