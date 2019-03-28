@@ -75,9 +75,9 @@ function uploadFiles($targetDir) {
         if (file_exists($targetFile)) {
             if (filetype($targetFile) == "file") {
                 unlink($targetFile);
-                $message = "Server: [Warnning] --> This file already exists. Overwriting it.";
+                $message = "Server: [Warning] --> This file already exists. Overwriting it.";
             } else {
-                $message = "Server: [Warnning] --> This file might be a directory. Or, no files were submitted for uploading.";
+                $message = "Server: [Warning] --> This file might be a directory. Or, no files were submitted for uploading.";
                 $uploadOk = 0;
             }
         }
@@ -85,14 +85,14 @@ function uploadFiles($targetDir) {
         // Check file size
         $fileSize = $_FILES['filesToUpload']['size'][$i];
         if ($fileSize > 500000000000) {
-            $message = "Server: [Warnning] --> This file is too large.";
+            $message = "Server: [Warning] --> This file is too large.";
             $uploadOk = 0;
         }
 
         // Allow certain file formats
         // $ext = pathinfo($targetFile,PATHINFO_EXTENSION);
         // if(!preg_match('/^.*\.(rar|iso|img|tar|zip|7z|7zip|jpg|jpeg|png|gif|mpeg|mov|flv|avi|mp4|webm|mpg|mkv|m4a|mp3|ogg|docx|doc|odt|txt|pdf|)$/i', strtolower($ext))) {
-        // $message = "Server: [Warnning] --> This file type is not allowed.";
+        // $message = "Server: [Warning] --> This file type is not allowed.";
         //     $uploadOk = 0;
         // }
 
@@ -157,20 +157,14 @@ function remuxVideo($FILE) {
             }
         }
 
-        if (preg_match('(mkv)', $EXTNSN) === 1) {
-            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -codec copy -strict -2 ' . $PTH . $HASHED_NAME;
-            shell_exec($COMMAND . " > /dev/null &");
-        }
+        if (preg_match('(mkv)', $EXTNSN) === 1)
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -hide_banner -movflags +faststart -codec copy -strict -2 ' . $PTH . $HASHED_NAME;
+        if (preg_match('(avi)', $EXTNSN) === 1)
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -hide_banner -movflags +faststart -c:v libx264 -crf 21 -c:a aac -b:a 192k -ac 2 ' . $PTH . $HASHED_NAME;
+        if (preg_match('(wmv)', $EXTNSN) === 1)
+            $COMMAND = 'ffmpeg -i "' . $FILE . '" -hide_banner -movflags +faststart -c:v libx264 -crf 23 -c:a aac -strict -2 -q:a 100 ' . $PTH . $HASHED_NAME;
 
-        if (preg_match('(avi)', $EXTNSN) === 1) {
-            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -c:v libx264 -crf 21 -c:a aac -b:a 192k -ac 2 ' . $PTH . $HASHED_NAME;
-            shell_exec($COMMAND . " > /dev/null &");
-        }
-
-        if (preg_match('(wmv)', $EXTNSN) === 1) {
-            $COMMAND = 'ffmpeg -i "' . $FILE . '" -movflags +faststart -c:v libx264 -crf 23 -c:a aac -strict -2 -q:a 100 ' . $PTH . $HASHED_NAME;
-            shell_exec($COMMAND . " > /dev/null &");
-        }
+        shell_exec($COMMAND . " 2> resources/vdata.txt");
     }
 
     $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";

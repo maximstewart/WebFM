@@ -22,4 +22,25 @@
         }
     return false;
     }
+
+    function lockFolders() {
+        session_start();
+        include 'serverMessenger.php';
+
+        if (isset($_SESSION["unlockTime"]) && $_SESSION["unlockTime"] > 0) {
+            $_SESSION["unlockTime"] = -1;
+            $message = "Server: [Success] --> Folders unlocked!";
+            serverMessage("success", $message);
+        } else {
+            $message = "Server: [Warning] --> Folders aren't unlocked!"
+                     . "\n" . $_SESSION["unlockTime"];
+            serverMessage("warning", $message);
+        }
+    }
+
+
+if (isset($_POST['lockFolders'])) {
+    lockFolders();
+}
+
 ?>

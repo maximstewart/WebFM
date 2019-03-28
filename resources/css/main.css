@@ -224,6 +224,12 @@
     border-color: rgb(255,255,255);
 }
 
+.completionBar {
+    float:left;
+    clear:left;
+    height: 0.1em;
+    background-color: rgba(25, 125, 10, 1.0);
+}
 
 /*    Hover events    */
 .dirTitle:hover,
@@ -246,5 +252,5 @@
 }
 
 .error { color: rgb(255, 0, 0); }
-.warnning { color: rgb(255, 168, 0); }
+.warning { color: rgb(255, 168, 0); }
 .success { color: rgb(136, 204, 39); }

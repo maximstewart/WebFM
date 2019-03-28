@@ -37,23 +37,18 @@ document.ondblclick = (event) => {
             } else {
                 showMedia(obj.children[1].value, "file");
             }
-            // If clicking on dir icon
-        } else if (callingID === "dirID") {
+        } else if (callingID === "dirID") {     // If clicking on dir icon
             let node = obj.parentNode;
             getDir(node.children[1].value);
-            // If clicking on movie thumbnail
-        } else if (callingID === "movieID") {
+        } else if (callingID === "movieID") {   // If clicking on movie thumbnail
             let node = obj.parentNode;
             showMedia(node.children[1].value, "video");
-            // If clicking on file icon
-        } else if (callingID === "fileID") {
+        } else if (callingID === "fileID") {    // If clicking on file icon
             let node = obj.parentNode;
             showMedia(node.children[1].value, "file");
-            // If clicking on image
-        } else if (callingID === "imageID") {
+        } else if (callingID === "imageID") {   // If clicking on image
             showMedia(obj.alt, "image");
-            // If clicking on text title
-        } else if (callingID === "titleID") {
+        } else if (callingID === "titleID") {   // If clicking on text title
             enableEdit(obj);
         }
     }
@@ -73,10 +68,7 @@ document.onkeydown = (event) => {
     }
 }
 
-const setSelectedItem = (item) => {
-    // Get the item name
-    itemObj = item;
-}
+const setSelectedItem = (item) => { itemObj = item; }
 
 //  Drage event for the poped out image and media container
 const dragContainer = (elmnt) => {

@@ -1,6 +1,10 @@
 let binary    = null;
 let pathNodes = [];
 
+const lockFolders = () => {
+    const data = "lockFolders=true";
+    doAjax("resources/php/lockedFolders.php", data);
+}
 
 const getDir = (query) => {
     let formUlPth  = document.getElementById("DIRPATHUL");
