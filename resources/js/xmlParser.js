@@ -34,15 +34,18 @@ const generateFavesList = (data) => {
 }
 
 const updateHTMLDirList = async (data) => {
-    let isInFaves = data.getElementsByTagName('IN_FAVE')[0].innerHTML;
-    let dirPath   = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
-    let dirs      = Array.prototype.slice.call(data.getElementsByTagName('DIR'), 0);
-    let videos    = Array.prototype.slice.call(data.getElementsByTagName('VID_FILE'), 0);
-    let images    = Array.prototype.slice.call(data.getElementsByTagName('IMG_FILE'), 0);
-    let files     = Array.prototype.slice.call(data.getElementsByTagName('FILE'), 0);
-    let dirImg    = "resources/images/icons/folder.png";
-    let i         = 0;
-    let size      = 0;
+    let isInFaves   = data.getElementsByTagName('IN_FAVE')[0].innerHTML;
+    let dirPath     = data.getElementsByTagName('PATH_HEAD')[0].innerHTML;
+    let dirs        = Array.prototype.slice.call(data.getElementsByTagName('DIR'), 0);
+    let videos      = Array.prototype.slice.call(data.getElementsByTagName('VID_FILE'), 0);
+    let images      = Array.prototype.slice.call(data.getElementsByTagName('IMG_FILE'), 0);
+    let files       = Array.prototype.slice.call(data.getElementsByTagName('FILE'), 0);
+    var dirTemplate = document.querySelector('#dirTemplate');
+    var vidTemplate = document.querySelector('#vidTemplate');
+    var imgTemplate = document.querySelector('#imgTemplate');
+    var filTemplate = document.querySelector('#filTemplate');
+    let i           = 0;
+    let size        = 0;
 
 
     document.getElementById("path").innerHTML = dirPath;
@@ -66,16 +69,16 @@ const updateHTMLDirList = async (data) => {
         elm.style.color = "";
     }
 
-    // Insert dirs
-    size = dirs.length;
 
+    // Insert dirs
+    let dirImg = "resources/images/icons/folder.png";
+    size       = dirs.length;
     sortElms(dirs);
     for (; i < size; i++) {
         let dir = dirs[i].innerHTML;
-
         if (dir != "resources/") {
-            createElmBlock("DIV", "dirStyle", "dirID", "systemIcon", dirImg ,
-                                                            "dirTitle", dir);
+            let dirClone = document.importNode(dirTemplate.content, true);
+            createElmBlock(dirClone, dirImg, dir);
         }
     }
 
@@ -83,43 +86,38 @@ const updateHTMLDirList = async (data) => {
     let thumbnail = "";
     let vidNme    = "";
     size          = videos.length;
-
     sortVidElms(videos);
     for (i = 0; i < size; i++) {
         vidNme        = videos[i].children[0].innerHTML;
         thumbnail     = videos[i].children[1].innerHTML;
+        let vidClone  = document.importNode(vidTemplate.content, true);
 
-        createElmBlock("SPAN", "movieStyle", "movieID", "thumbnail", thumbnail,
-                                                         "movieTitle", vidNme);
+        createElmBlock(vidClone, thumbnail, vidNme);
     }
 
     // Insert images
     thumbnail     = "";
     size          = images.length;
-
-    // sortElms(images);
+    sortElms(images);
     for (i = 0; i < size; i++) {
         thumbnail = images[i].innerHTML;
-
         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
                              !thumbnail.includes("favicon.png")) {
-            let imgTag       = document.createElement("IMG");
-            imgTag.id        = "imageID";
-            imgTag.className = "iconImg";
-            imgTag.src       = dirPath + thumbnail;
-            imgTag.alt       = thumbnail;
-            insertArea.appendChild(imgTag);
+            let imgClone = document.importNode(imgTemplate.content, true);
+            let imgTag   = imgClone.firstElementChild;
+            imgTag.src   = dirPath + thumbnail;
+            imgTag.alt   = thumbnail;
+            insertArea.appendChild(imgClone);
         }
     }
 
     // Insert files
     size = files.length;
-
     sortElms(files);
     for (i = 0; i < size; i++) {
+        let filClone = document.importNode(filTemplate.content, true);
         let fileName = files[i].innerHTML;
-        createElmBlock("DIV", "fileStyle", "fileID", "systemIcon", setFileIconType(fileName),
-                                                                      "fileTitle", fileName);
+        createElmBlock(filClone, setFileIconType(fileName), fileName);
     }
 }
 
@@ -143,29 +141,16 @@ const sortElms = (obj) => {
     });
 }
 
-const createElmBlock = (contnrType, contnrClass, imgID, imgClass,
-                                    imgSrc, inputClass, fileName) => {
-    let contnrTag  = document.createElement(contnrType);
-    let imgTag     = document.createElement("IMG");
-    let inputTag   = document.createElement("INPUT");
-
-    contnrTag.className  = contnrClass;
-    contnrTag.title      = fileName;
-    contnrTag.tabIndex   = "1";
-    imgTag.id            = imgID;
-    imgTag.className     = imgClass ;
-    imgTag.src           = imgSrc;
-    imgTag.alt           = fileName;
-    inputTag.type        = "text";
-    inputTag.id          = "titleID";
-    inputTag.className   = inputClass;
-    inputTag.readOnly    = "true";
-    inputTag.value       = fileName;
+const createElmBlock = (elm, imgSrc, fileName) => {
+    contnrTag       = elm.firstElementChild;
+    let imgTag      = elm.querySelector("img");
+    let inputTag    = elm.querySelector("input");
+    contnrTag.title = fileName;
+    imgTag.src      = imgSrc;
+    imgTag.alt      = fileName;
+    inputTag.value  = fileName;
     inputTag.addEventListener("focusout", disableEdits);
-
-    contnrTag.appendChild(imgTag);
-    contnrTag.appendChild(inputTag);
-    insertArea.appendChild(contnrTag);
+    insertArea.appendChild(elm);
 }
 
 const setFileIconType = (fileName) => {

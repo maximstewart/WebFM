@@ -60,10 +60,32 @@
     </center>
     </div>
 
-
     <!-- Uploader processor -->
-    <div id="serverMsgView" style="display:none;">
-    </div>
+    <div id="serverMsgView" style="display:none;"> </div>
+
+
+    <!--  Templates  -->
+    <template id="dirTemplate">
+        <div class="dirStyle" tabindex="1">
+            <img id="dirID" class="systemIcon" src="" />
+            <input id="titleID" class="dirTitle" type="text" value="" readonly="true" />
+        </div>
+    </template>
+    <template id="vidTemplate">
+        <span class="movieStyle" tabindex="1">
+            <img id="movieID" class="thumbnail" src="" />
+            <input id="titleID" class="movieTitle" type="text" value="" readonly="true" />
+        </span>
+    </template>
+    <template id="imgTemplate">
+        <img id="imageID" class="iconImg" src="" alt="">
+    </template>
+    <template id="filTemplate">
+        <div class="fileStyle">
+            <img id="fileID" class="systemIcon" src="" />
+            <input id="titleID" class="fileTitle" type="text" value="" readonly="true" />
+        </div>
+    </template>
 
 
     <script type="text/javascript">
