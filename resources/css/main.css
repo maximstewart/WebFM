@@ -50,6 +50,7 @@
     padding: 1.5em;
     max-height: 632px;
     color: #ffffff;
+    z-index: 888;
 }
 
 #favesList > li:hover {
@@ -122,6 +123,7 @@
     background: radial-gradient(circle,#3f3f3f,#000000);
     color: #ffffff;
     text-align: center;
+    z-index: 999;
 }
 
 #serverMsgView {
@@ -131,6 +133,7 @@
     overflow-y: scroll;
     width: 100%;
     background-color: rgba(0,0,0,0.64);
+    z-index: 999;
 }
 
 #searchField {
