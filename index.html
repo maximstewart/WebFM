@@ -54,9 +54,8 @@
             <input type="button" value="New File" onclick="createItem('file')"/>
             <input type="button" value="Show Server Messages" onclick="tgglElmView('serverMsgView')"/>
         <br/>
-        <label target="MergeType" onclick="getDir('./')">
-            <input id="MergeType" type="checkbox">Show seassons in same list.
-        </label>
+            <input id="MergeType" type="checkbox" onchange="getDir('./')" />
+            <label for="MergeType">Show seassons in same list.</label>
     </center>
     </div>
 
