@@ -39,13 +39,11 @@ const enableEdit = (obj) => {
     formerFileName             = obj.value;
 }
 
-const disableEdits = () => {
-    // this references the passed object from
-    // addEventListener than us passing it
-    this.style.backgroundColor  = "#ffffff00";
-    this.style.color            = '#ffffff';
-    this.value                  = formerFileName;
-    this.readOnly               = "true";
+const disableEdits = (elm) => {
+    elm.style.backgroundColor  = "";
+    elm.style.color            = '';
+    elm.value                  = formerFileName;
+    elm.readOnly               = "true";
 }
 
 const showMedia = async (mediaLoc, type) => {

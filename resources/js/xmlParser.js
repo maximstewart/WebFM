@@ -92,7 +92,7 @@ const updateHTMLDirList = async (data) => {
         thumbnail     = videos[i].children[1].innerHTML;
         let vidClone  = document.importNode(vidTemplate.content, true);
 
-        createElmBlock(vidClone, thumbnail, vidNme);
+        createElmBlock(vidClone, thumbnail, vidNme, true);
     }
 
     // Insert images
@@ -141,15 +141,25 @@ const sortElms = (obj) => {
     });
 }
 
-const createElmBlock = (elm, imgSrc, fileName) => {
+const createElmBlock = (elm, imgSrc, fileName, isVideo = null) => {
     contnrTag       = elm.firstElementChild;
-    let imgTag      = elm.querySelector("img");
+    let imgTag      = null;
     let inputTag    = elm.querySelector("input");
+
+    if (isVideo) {
+        contnrTag.style = "background-image: url('" + imgSrc + "')";
+        inputTag.className = "videoInputField";
+    } else {
+        imgTag      = elm.querySelector("img");
+        imgTag.src  = imgSrc;
+        imgTag.alt  = fileName;
+    }
+
     contnrTag.title = fileName;
-    imgTag.src      = imgSrc;
-    imgTag.alt      = fileName;
     inputTag.value  = fileName;
-    inputTag.addEventListener("focusout", disableEdits);
+    inputTag.addEventListener("focusout", function (eve) {
+        disableEdits(eve.target);
+    });
     insertArea.appendChild(elm);
 }
 

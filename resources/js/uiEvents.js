@@ -1,5 +1,6 @@
 let itemObj = undefined;
 
+// For context menu to have element
 document.onclick = (event) => {
     let obj       = event.target;
     let callingID = obj.id;
@@ -19,7 +20,7 @@ document.onclick = (event) => {
        }
     }
 }
-
+// Actions for content
 document.ondblclick = (event) => {
     let obj       = event.target;
     let callingID = obj.id;
