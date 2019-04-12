@@ -64,6 +64,7 @@
 #controls {
     display: block;
     position: fixed;
+    z-index: 999;
 }
 
 #controls { top: 0em; }
