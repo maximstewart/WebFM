@@ -34,7 +34,7 @@ document.ondblclick = (event) => {
             if (classNM === "dirStyle") {
                 getDir(obj.children[1].value);
             } else if (classNM === "movieStyle") {
-                showMedia(obj.children[1].value, "video");
+                showMedia(obj.children[0].value, "video");
             } else {
                 showMedia(obj.children[1].value, "file");
             }
