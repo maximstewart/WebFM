@@ -4,6 +4,7 @@ let pathNodes = [];
 const lockFolders = () => {
     const data = "lockFolders=true";
     doAjax("resources/php/lockedFolders.php", data);
+    getDir("./");
 }
 
 const getDir = (query) => {
