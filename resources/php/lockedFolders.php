@@ -6,14 +6,14 @@
         $LOCKS = explode("::::", $LOCKEDFOLDERS);
         $size  = sizeof($LOCKS);
 
-        if (isset($_SESSION["unlockTime"]) && $_SESSION["unlockTime"] > 0) {
+        if (isset($_SESSION["unlockState"]) && $_SESSION["unlockState"] == true) {
             return false;
         }
 
         for ($i = 0; $i < $size; $i++) {
             if (strpos($NEWPATH, $LOCKS[$i]) !== false) {
                 if ($PASSWD === $LOCKPASSWORD) {
-                    $_SESSION["unlockTime"] = $UNLOCKTIME;
+                    $_SESSION["unlockState"] = true;
                     return false;
                 } else {
                     return true;
@@ -27,13 +27,13 @@
         session_start();
         include 'serverMessenger.php';
 
-        if (isset($_SESSION["unlockTime"]) && $_SESSION["unlockTime"] > 0) {
-            $_SESSION["unlockTime"] = -1;
+        if (isset($_SESSION["unlockState"]) && $_SESSION["unlockState"] == true) {
+            $_SESSION["unlockState"] = false;
             $message = "Server: [Success] --> Folders unlocked!";
             serverMessage("success", $message);
         } else {
             $message = "Server: [Warning] --> Folders aren't unlocked!"
-                     . "\n" . $_SESSION["unlockTime"];
+                     . "\n" . $_SESSION["unlockState"];
             serverMessage("warning", $message);
         }
     }

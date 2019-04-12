@@ -9,8 +9,6 @@
     $FILEMANAGER     = "spacefm";
     $LOCKPASSWORD    = "1234";
     $TMPFOLDERSIZE   = 8000; // tmp folder size check for cleanup if above 8GB used.
-    $UNLOCKTIME      = 80;  // Every ~3 sec this ticks down
-                            // Ex: 3*60 == 180 sec or 3 minutes
     // NOTE:  Split folders with ::::
     $LOCKEDFOLDERS   = "./dirLockCheck/";
 
