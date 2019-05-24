@@ -11,7 +11,7 @@ const tgglElmView = (id) => {
 
 const searchPage = (elm) => {
     let query = elm.value.toLowerCase();
-    let list  = document.getElementById("dynDiv").childNodes;
+    let list  = document.getElementById("dynDiv").querySelectorAll("div");
     let size  = list.length;
 
     for (var i = 0; i < size; i++) {
