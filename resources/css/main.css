@@ -190,9 +190,11 @@
     border-radius: 0.5em;
 }
 
-
-.movieStyle:focus, .fileStyle:focus, .fileStyle:focus {
-    background-color: rgb(114,184,199);
+.dirStyle:focus, .movieStyle:focus, .fileStyle:focus {
+    background-color: rgba(0, 139, 35, 0.76);
+    cursor: pointer;
+    box-shadow: 0px 0px 25px rgb(114, 199, 120);
+    border-radius: 0.5em;
 }
 
 .dirTitle, .fileTitle, .movieTitle {
