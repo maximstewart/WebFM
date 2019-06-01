@@ -149,6 +149,11 @@ const createElmBlock = (elm, imgSrc, fileName, isVideo = null) => {
     if (isVideo) {
         contnrTag.style = "background-image: url('" + imgSrc + "')";
         inputTag.className = "videoInputField";
+        let path         = document.getElementById("path").innerHTML;
+        let fullMedia    = path + fileName;
+        elm.querySelector("div").addEventListener("click", function (eve) {
+            openInLocalProg(fullMedia);
+        });
     } else {
         imgTag      = elm.querySelector("img");
         imgTag.src  = imgSrc;

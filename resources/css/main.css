@@ -175,8 +175,8 @@
     width: 100%;
     bottom: 0.64em;
     left: 0em;
-	background-color: rgba(0, 0, 0, 0.64);
-	color: rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0.64);
+    color: rgb(255, 255, 255);
     text-align: center;
     border-top: 1px solid rgb(255, 255, 255);
     border-bottom: 1px solid rgb(255, 255, 255);
@@ -246,6 +246,19 @@
     border-color: rgb(255,255,255);
 }
 
+.popOutBttnInner {
+    float: right;
+    z-index: 2;
+    width: 2em;
+    height: 2em;
+    text-align: center;
+    background-color: rgba(0,0,0, 0.85);
+    color: rgb(255,255,255);
+    border-style:solid;
+    border-color: rgb(255,255,255);
+}
+
+
 .completionBar {
     float:left;
     clear:left;
@@ -257,11 +270,14 @@
 .dirTitle:hover,
 .iconImg:hover,
 .closeBttn:hover,
+.popOutBttnInner:hover,
 .popOutBttn:hover {
     cursor: pointer;
 }
 
-.closeBttn:hover, .popOutBttn:hover {
+.popOutBttnInner:hover,
+.popOutBttn:hover,
+.closeBttn:hover {
     background-color: rgba(255,255,255, 0.85);
     color: #000000;
     border-color: #000000;
