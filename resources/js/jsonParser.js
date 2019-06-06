@@ -112,10 +112,10 @@ const updateHTMLDirList = async (data) => {
     }
 
     // Insert files
-    let filClone = document.importNode(filTemplate.content, true);
-    size         = files.length;
+    let fileClone = document.importNode(filTemplate.content, true);
+    size          = files.length;
     for (i = 0; i < size; i++) {
-        const clone  = imgClone.cloneNode(true);
+        const clone  = fileClone.cloneNode(true);
         let fileName = files[i].file;
         createElmBlock(clone, setFileIconType(fileName), fileName);
     }
@@ -127,9 +127,9 @@ const createElmBlock = (elm, imgSrc, fileName, isVideo = null, path = null) => {
     let inputTag    = elm.querySelector("input");
 
     if (isVideo) {
-        contnrTag.style = "background-image: url('/resources/images/thumbnails/" + imgSrc + "')";
+        contnrTag.style    = "background-image: url('/resources/images/thumbnails/" + imgSrc + "')";
         inputTag.className = "videoInputField";
-        let fullMedia    = path + fileName;
+        let fullMedia      = path + fileName;
         elm.querySelector("div").addEventListener("click", function (eve) {
             openInLocalProg(fullMedia);
         });
