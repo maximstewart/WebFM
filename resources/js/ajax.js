@@ -20,8 +20,8 @@ const doAjax = async (actionPath, data) => {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             // Send the returned data to further process
-            if (this.responseXML != null) {
-                handleXMLReturnData(this.responseXML);
+            if (this.responseText != null) {
+                handleJSONReturnData(JSON.parse(this.responseText));
             } else {
                 document.getElementById('dynDiv').innerHTML =
                 "<p class=\"error\" style=\"width:100%;text-align:center;\"> "
@@ -32,7 +32,7 @@ const doAjax = async (actionPath, data) => {
 
     xhttp.open("POST", actionPath, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.overrideMimeType('application/xml'); // Force return to be XML
+    xhttp.overrideMimeType('application/json'); // Force return to be JSON
     xhttp.send(data);
 }
 

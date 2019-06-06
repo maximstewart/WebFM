@@ -56,7 +56,7 @@ const getDir = (query) => {
     data            = "dirQuery=" + encodeURIComponent(data);
     document.cookie = data + "; expires=Sun, 31 Dec 2034 12:00:00 UTC";
     data            +="&mergeType=" + mergeType.checked
-                    + "Here&passwd=" + passwd;
+                    + "&passwd=" + passwd;
 
     doAjax("resources/php/getDirList.php", data);
 }

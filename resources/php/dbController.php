@@ -4,13 +4,14 @@ include_once 'serverMessenger.php';
 
 function getTabLinks() {
     GLOBAL $db;
-    $res = $db->query('Select * FROM faves');
-    $GeneratedXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FAVES_LIST>";
+
+    $res           = $db->query('Select * FROM faves');
+    $GeneratedJSON = array('FAVES_LIST' => array());
     while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-        $GeneratedXML .= "<FAVE_LINK>" . $row['link'] . "</FAVE_LINK>";
+        $GeneratedJSON['FAVES_LIST'][] = $row['link'];
     }
-    $GeneratedXML .= "</FAVES_LIST>";
-    echo $GeneratedXML;
+
+    echo json_encode($GeneratedJSON);
 }
 
 function manageLink($ACTION, $PATH) {

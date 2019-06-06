@@ -1,4 +1,4 @@
-const createPassField = (data) => {
+const createPassField = () => {
     let passField         = document.createElement("INPUT");
     let submitBttn        = document.createElement("BUTTON");
     passField.id          = "PASSWD";
