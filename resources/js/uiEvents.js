@@ -34,7 +34,8 @@ document.ondblclick = (event) => {
             if (classNM === "dirStyle") {
                 getDir(obj.children[1].value);
             } else if (classNM === "movieStyle") {
-                showMedia(obj.children[0].value, "video");
+                console.log(obj);
+                showMedia(obj.title, "video");
             } else {
                 showMedia(obj.children[1].value, "file");
             }
@@ -44,9 +45,6 @@ document.ondblclick = (event) => {
         } else if (callingID === "movieID") {   // If clicking on movie thumbnail
             let node = obj.parentNode;
             showMedia(node.children[1].value, "video");
-        } else if (callingID === "fileID") {    // If clicking on file icon
-            let node = obj.parentNode;
-            showMedia(node.children[1].value, "file");
         } else if (callingID === "imageID") {   // If clicking on image
             showMedia(obj.alt, "image");
         } else if (callingID === "titleID") {   // If clicking on text title
