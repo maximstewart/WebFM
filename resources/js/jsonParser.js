@@ -1,4 +1,4 @@
-const insertArea = document.getElementById('dynDiv');
+const insertArea = document.getElementById('dynUl');
 
 
 const handleJSONReturnData = (data) => {
@@ -130,7 +130,7 @@ const createElmBlock = (elm, imgSrc, fileName, isVideo = null, path = null) => {
         contnrTag.style    = "background-image: url('/resources/images/thumbnails/" + imgSrc + "')";
         inputTag.className = "videoInputField";
         let fullMedia      = path + fileName;
-        elm.querySelector("div").addEventListener("click", function (eve) {
+        elm.querySelector("span").addEventListener("click", function (eve) {
             openInLocalProg(fullMedia);
         });
     } else {

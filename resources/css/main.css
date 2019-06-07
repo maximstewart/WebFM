@@ -14,6 +14,7 @@
     height: 100%;
     z-index: -999;
 }
+
 #bg img {
     position: absolute;
     top: 0;
@@ -25,7 +26,7 @@
     z-index: -999;
 }
 
-#controls, #fullPathHeader, #dynDiv,
+#controls, #fullPathHeader, #dynUl,
 .errorStyling, .dirStyle, .movieStyle, .fileStyle {
     display: block;
     width: 100%;
@@ -69,7 +70,16 @@
 
 #controls { top: 0em; }
 #fullPathHeader { top: 2em; }
-#dynDiv { margin-top: 5em; }
+
+#dynUl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15em, auto));
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    margin: 5em auto;
+    width: 85%;
+    padding: 2em;
+}
 
 #imgView, #imgArea, #fileView {
    width: 800px;
@@ -159,22 +169,15 @@
 .movieStyle, .fileStyle { background-color: rgba(101, 101, 101, 0.56); }
 
 .movieStyle {
-    position: relative;
-    float: left;
-    width: 15em;
-    height: 8.5em;
+    min-height: 6.5em;
     overflow: hidden;
-    margin: 0.5em;
-    padding: 0.5em;
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
 .videoInputField {
-    position: absolute;
     width: 100%;
-    bottom: 0.64em;
-    left: 0em;
+    margin-top: 5.5em;
     background-color: rgba(0, 0, 0, 0.64);
     color: rgb(255, 255, 255);
     text-align: center;

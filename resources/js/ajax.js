@@ -23,7 +23,7 @@ const doAjax = async (actionPath, data) => {
             if (this.responseText != null) {
                 handleJSONReturnData(JSON.parse(this.responseText));
             } else {
-                document.getElementById('dynDiv').innerHTML =
+                document.getElementById('dynUl').innerHTML =
                 "<p class=\"error\" style=\"width:100%;text-align:center;\"> "
                 + "No content returned. Check the folder path.</p>";
             }
