@@ -25,8 +25,9 @@ Notes:
 
 
 # Images
-![1 Home](Images/1.png)
-![2 Images Listed](Images/2.png)
-![3 Image Open](Images/3.png)
-![4 Image Open And Video Playing](Images/4.png)
-![5 Alternate Background](Images/5.png)
+![1 Home](Images/pic1.png)
+![2 Images Listed](Images/pic2.png)
+![3 Videos Listed](Images/pic3.png)
+![4 Image Open](Images/pic4.png)
+![5 Image Open And Video Playing](Images/pic5.png)
+![6 Alternate Background](Images/pic6.png)
