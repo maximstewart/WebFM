@@ -6,6 +6,7 @@
     height: 1px;
 }
 
+#video,
 #bg {
     position: fixed;
     top: 0%;
@@ -15,6 +16,7 @@
     z-index: -999;
 }
 
+#video,
 #bg img {
     position: absolute;
     top: 0;
@@ -24,6 +26,11 @@
     width: 100%;
     height: 100%;
     z-index: -999;
+}
+
+#video {
+    display: none;
+    background-color: rgba(0, 0, 0, 1);
 }
 
 #controls, #dynUl,

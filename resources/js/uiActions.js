@@ -47,8 +47,62 @@ const disableEdits = (elm) => {
 }
 
 const showMedia = async (mediaLoc, type) => {
+    let path         = document.getElementById("path").innerHTML;
+    let tempRef      = mediaLoc.toLowerCase();
+    let fullMedia    = path + mediaLoc;
+
+    if (type === "video") {
+        setupVideo(type, fullMedia, tempRef);
+    } else {
+        createFloatingPane(type, fullMedia);
+    }
+}
+
+const setupVideo = async (type, fullMedia, tempRef) => {
+    try {
+        let video      = document.getElementById("video");
+        video.autoplay = true;
+        video.poster   = "resources/images/loading.gif";
+
+        if ((/\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|mp3|webm|flac|ogg|pdf)$/i).test(tempRef)) {
+            if ((/\.(mkv|avi|wmv)$/i).test(tempRef)) {
+                const params = "remuxVideo=true&mediaPth=" + fullMedia;
+                let response = await  fetch("resources/php/filesystemActions.php",
+                                            {method: "POST", body: new URLSearchParams(params)});
+                let xml      = new window.DOMParser().parseFromString(await response.text(), "text/xml");
+
+                if (xml.getElementsByTagName("REMUX_PATH")[0]) {
+                    fullMedia = xml.getElementsByTagName("REMUX_PATH")[0].innerHTML;
+                } else {
+                    return ;
+                }
+            } else if ((/\.(avi|flv|mov|m4v|mpg|wmv)$/i).test(tempRef)) {
+                openInLocalProg(fullMedia);
+                return ;
+            }
+        }
+
+        // This is questionable in usage since it loads the full video
+        // before showing; but, seeking doesn't work otherwise...
+        let response = await fetch(fullMedia, {method: "GET"});
+        var vidSrc   = URL.createObjectURL(await response.blob()); // IE10+
+        video.src    = vidSrc;
+
+        document.getElementById("controls").style.opacity = "0";
+        document.getElementById("video").style.display    = "block";
+        document.getElementById("dynUl").style.display    = "none";
+    } catch (e) {
+        document.getElementById("controls").style.opacity = "1";
+        document.getElementById("dynUl").style.display    = "grid";
+        document.getElementById("video").src              = "#";
+        document.getElementById("video").style.display    = "none";
+        console.log(e);
+    }
+}
+
+
+const createFloatingPane = (type, fullMedia) => {
     let iframe       = document.createElement("IFRAME");
-    let video        = document.createElement("VIDEO");
     let outterDiv    = document.createElement("DIV");
     let popOutDiv    = document.createElement("DIV");
     let closeDiv     = document.createElement("DIV");
@@ -57,9 +111,6 @@ const showMedia = async (mediaLoc, type) => {
     let aTag         = document.createElement("A");
     let imgTag       = document.createElement("IMG");
     let closeText    = document.createTextNode("X");
-    let path         = document.getElementById("path").innerHTML;
-    let tempRef      = mediaLoc.toLowerCase();
-    let fullMedia    = path + mediaLoc;
 
     closeDiv.className  = "closeBttn";
     closeDiv.title      = "Close";
@@ -84,31 +135,8 @@ const showMedia = async (mediaLoc, type) => {
     imgTag.src          = fullMedia;
     imgDiv.appendChild(imgTag);
 
-    if ((/\.(mkv|avi|flv|mov|m4v|mpg|wmv|mpeg|mp4|mp3|webm|flac|ogg|pdf)$/i).test(tempRef)) {
-        if ((/\.(mkv|avi|wmv)$/i).test(tempRef)) {
-            const params = "remuxVideo=true&mediaPth=" + fullMedia;
-            let response = await  fetch("resources/php/filesystemActions.php",
-                                        {method: "POST", body: new URLSearchParams(params)});
-            let xml      = new window.DOMParser().parseFromString(await response.text(), "text/xml");
-
-            if (xml.getElementsByTagName("REMUX_PATH")[0]) {
-                fullMedia = xml.getElementsByTagName("REMUX_PATH")[0].innerHTML;
-            } else {
-                return ;
-            }
-        } else if ((/\.(avi|flv|mov|m4v|mpg|wmv)$/i).test(tempRef)) {
-            openInLocalProg(fullMedia);
-            return ;
-        }
-    }
-
     iframe.id           = "fileViewInner";
     iframe.src          = fullMedia;
-
-    video.controls      = true
-    video.autoplay      = true;
-    video.style         = "width: 100%; height: auto;";
-    video.poster        = "resources/images/loading.gif";
 
     outterDiv.appendChild(closeDiv);
     outterDiv.appendChild(aTag);
@@ -117,9 +145,6 @@ const showMedia = async (mediaLoc, type) => {
     if (type === "image") {
         outterDiv.id = "imgView";
         outterDiv.appendChild(imgDiv);
-    } else if (type === "video") {
-        outterDiv.id = "fileView";
-        outterDiv.appendChild(video);
     } else {
         outterDiv.id = "fileView";
         outterDiv.appendChild(iframe);
@@ -127,15 +152,6 @@ const showMedia = async (mediaLoc, type) => {
 
     document.body.appendChild(outterDiv);
     dragContainer(outterDiv);  // Set for dragging events
-
-    if (type === "video") {
-        // This is questionable in usage since it loads the full video
-        // before showing; but, seeking doesn't work otherwise...
-        // video.src    = fullMedia;
-        let response = await fetch(fullMedia, {method: "GET"});
-        var vidSrc   = URL.createObjectURL(await response.blob()); // IE10+
-        video.src    = vidSrc;
-    }
 }
 
 const closeContainer = (elm) => {

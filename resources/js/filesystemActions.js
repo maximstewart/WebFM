@@ -8,6 +8,11 @@ const lockFolders = () => {
 }
 
 const getDir = (query) => {
+    document.getElementById("controls").style.opacity = "1";
+    document.getElementById("dynUl").style.display    = "grid";
+    document.getElementById("video").src              = "#";
+    document.getElementById("video").style.display    = "none";
+
     let formUlPth  = document.getElementById("DIRPATHUL");
     let mergeType  = document.getElementById("MergeType");
     let passwd     = undefined;

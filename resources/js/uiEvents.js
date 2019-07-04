@@ -1,4 +1,33 @@
-let itemObj = undefined;
+let itemObj  = undefined;
+let interval = undefined;
+let cursorX;
+let cursorY;
+
+document.getElementById("controls").onmouseover = (eve) => {
+    let source = document.getElementById("video").src;
+    let target = eve.target
+
+    if (interval)
+        clearInterval(interval);
+
+    if (source !== "#") {
+        eve.target.style.opacity = "1";
+        document.getElementById("dynUl").style.display = "grid";
+    }
+}
+
+document.getElementById("video").onmouseover = (eve) => {
+    interval = setInterval(function () {
+        elementMouseIsOver = document.elementFromPoint(cursorX, cursorY);
+        if (elementMouseIsOver.tagName == "BODY" ||
+            elementMouseIsOver.id == "video") {
+                let controls = document.getElementById("controls");
+                controls.style.opacity = "0";
+                document.getElementById("dynUl").style.display = "none";
+                clearInterval(interval);
+        }
+    }, 2500);
+}
 
 // For context menu to have element
 document.onclick = (event) => {
@@ -34,7 +63,6 @@ document.ondblclick = (event) => {
             if (classNM === "dirStyle") {
                 getDir(obj.children[1].value);
             } else if (classNM === "movieStyle") {
-                console.log(obj);
                 showMedia(obj.title, "video");
             } else {
                 showMedia(obj.children[1].value, "file");
@@ -112,4 +140,16 @@ const dragContainer = (elmnt) => {
         e.returnValue=false;
     return false;
     }
+}
+
+
+// Mouse position detection for control show/hide setup
+document.onmousemove = function(e){
+    cursorX = e.pageX;
+    cursorY = e.pageY;
+}
+
+setInterval(checkCursor, 2000);
+function checkCursor() {
+    return "";
 }
