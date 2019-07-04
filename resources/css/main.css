@@ -26,7 +26,7 @@
     z-index: -999;
 }
 
-#controls, #fullPathHeader, #dynUl,
+#controls, #dynUl,
 .errorStyling, .dirStyle, .movieStyle, .fileStyle {
     display: block;
     width: 100%;
@@ -61,19 +61,16 @@
     padding-right: 1em;
 }
 
-#fullPathHeader,
 #controls {
     display: block;
     position: fixed;
     z-index: 999;
+    top: 0em;
 }
-
-#controls { top: 0em; }
-#fullPathHeader { top: 2em; }
 
 #dynUl {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15em, auto));
+    grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
     grid-column-gap: 1em;
     grid-row-gap: 1em;
     margin: 5em auto;

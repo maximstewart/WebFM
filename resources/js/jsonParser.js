@@ -104,7 +104,6 @@ const updateHTMLDirList = async (data) => {
                              !thumbnail.includes("favicon.png")) {
             const clone  = imgClone.cloneNode(true);
             let imgTag   = clone.firstElementChild;
-            console.log(imgTag);
             imgTag.src   = dirPath + '/' + thumbnail;
             imgTag.alt   = thumbnail;
             insertArea.appendChild(clone);
