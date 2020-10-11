@@ -13,8 +13,8 @@ const loadFavoriteLink = async (id) => {
     doAjax("load-favorite", data, "load-favorite");
 }
 
-const manageFavoritesAjax = async (action, path) => {
-    const data = "action=" + action + "&path=" + path;
+const manageFavoritesAjax = async (action) => {
+    const data = "action=" + action;
     doAjax("manage-favorites", data, "manage-favorites");
 }
 

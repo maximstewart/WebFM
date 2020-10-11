@@ -11,7 +11,6 @@ const postAjaxController = (data, action) => {
         generateFavesList(data.faves_list);
     if (data.hasOwnProperty("refresh")) {
         if (data.refresh == "true") {
-            console.log("here");
             reloadDirectory();
         }
     }

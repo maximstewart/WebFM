@@ -9,8 +9,7 @@ const manageFavorites = (elm) => {
         action = "add";
     }
 
-    let path = document.getElementById("path").innerHTML;
-    manageFavoritesAjax(action, path);
+    manageFavoritesAjax(action);
 }
 
 

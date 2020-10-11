@@ -69,9 +69,8 @@ def getAllFavoritesRoute():
 @app.route('/load-favorite', methods=['GET', 'POST'], subdomain='webfm')
 def loadFavorite():
     if request.method == 'POST':
-        ID = str(request.values['id']).strip()
         try:
-            ID   = int(ID)
+            ID   = int(str(request.values['id']).strip())
             fave = db.session.query(Favorites).filter_by(id=ID).first()
             file_manager.setNewPathFromFavorites(fave.link)
             file_manager.loadPreviousPath()
@@ -90,19 +89,18 @@ def loadFavorite():
 def manageFavoritesRoute():
     if request.method == 'POST':
         ACTION = str(request.values['action']).strip()
-        PATH   = str(request.values['path']).strip()
+        path   = file_manager.getPath()
 
         if ACTION == "add":
-            fave = Favorites(link=PATH)
+            fave = Favorites(link=path)
             db.session.add(fave)
-            msg = "Added to Favorites successfully..."
+            msg  = "Added to Favorites successfully..."
         else:
-            fave = db.session.query(Favorites).filter_by(link=PATH).first()
+            fave = db.session.query(Favorites).filter_by(link=path).first()
             db.session.delete(fave)
-            msg = "Deleted from Favorites successfully..."
+            msg  = "Deleted from Favorites successfully..."
 
         db.session.commit()
-
         return msgHandler.createMessageJSON("success", msg)
     else:
         msg = "Can't manage the request type..."
