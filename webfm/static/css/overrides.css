@@ -1,0 +1,14 @@
+.modal-content {
+    background-color: #32383e74;
+    border-color: #f8940674;
+}
+
+.sticky-top,
+.card {
+    background-color: rgba(50, 56, 62, 0.84);
+}
+
+.label-as-badge {
+    border-radius: 1em;
+    cursor: pointer;
+}

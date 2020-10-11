@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    {% if title %}
+        <title>{{title}}</title>
+    {% else %}
+        <title>App</title>
+    {% endif %}
+
+    {% block header_css %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-datepicker.css')}}">
+
+        {% block header_css_additional %}
+        {% endblock header_css_additional %}
+    {% endblock %}
+
+
+    {% block header_scripts %}
+        {% block header_scripts_additional %}
+        {% endblock header_scripts_additional %}
+    {% endblock %}
+</head>
+<body>
+
+{% block body_header %}
+    {% block body_header_additional %}
+    {% endblock body_header_additional%}
+{% endblock %}
+
+<!-- System flashed messages! -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class=flashes>
+            {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+{% block body_content %}
+    {% block body_content_additional %}
+    {% endblock body_content_additional%}
+{% endblock %}
+
+
+{% block body_footer %}
+    {% block body_footer_additional %}
+    {% endblock body_footer_additional%}
+{% endblock %}
+
+
+{% block body_scripts %}
+<!-- For Bootstrap in this exact order... -->
+    <script src="{{ url_for('static', filename='js/libs/bootstrap/jquery-3.3.1.slim.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/libs/bootstrap/popper.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap.min.js')}}"></script>
+
+    <!-- For DatePicker -->
+    <script src="{{ url_for('static', filename='js/libs/bootstrap/moment.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap-datepicker.min.js')}}"></script>
+    {% block body_scripts_additional %}
+    {% endblock body_scripts_additional%}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+{% extends "layout.html" %}
+
+{% block body_header_additional %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/overrides.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-table.min.css')}}">
+{% endblock body_header_additional%}
+
+<!-- System flashed messages! -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class=flashes>
+            {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+{% block body_content %}
+<div class="container-fluid">
+
+    <div class="row sticky-top">
+        <div class="col">
+            <!-- Server messages -->
+            <div class="row">
+                <div id="page-alert-zone" class="col">
+                </div>
+            </div>
+            <!-- Controls -->
+            <div class="row">
+                <div class="col text-center justify-content-center">
+
+                    <div class="input-group input-group-sm justify-content-center">
+                        <button title="Other Options..." class="btn btn-secondary btn-sm"
+                        data-toggle="modal" data-target="#options-modal">&#9881;</button>
+                        <button title="Refresh..." id="refresh-btn" class="btn btn-sm btn-secondary" hash="{{dHash}}">&#8635;</button>
+                        <button title="Back..." id="back-btn" class="btn btn-sm btn-secondary" hash="{{ddHash}}">&lArr;</button>
+
+                        <input id="search-files-field" type="text" class="form-control"
+                        aria-label="Search..." placeholder="Search..." style="max-width: 260px">
+                        <div class="input-group-prepend">
+                            <!-- <button title="Clears search..." id="clear-search-btn" class="btn btn-sm btn-secondary">X</button>                             -->
+                            <span id="clear-search-btn" class="input-group-text" title="Clears search..." >X</span>
+                        </div>
+
+                        <button title="File viewer..." class="btn btn-secondary btn-sm"
+                        data-toggle="modal" data-target="#file-view-modal">🖼</button>
+
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row text-center justify-content-center">
+                <div class="col-auto">
+                    <button class="btn btn-sm btn-secondary" data-toggle="modal"
+                    data-target="#favorites-modal">Faves List &#8597;</button>
+                    <button id="tggl-faves-btn" class="btn btn-sm btn-secondary" title="Add/Delete from favorites..." >&#9734;</button>
+                    <button id="lock-folders-btn" class="btn btn-sm btn-secondary" title="Lock unlocked folders..." >&#x1F512;</button>
+                    <button id="scroll-files-to-top-btn" class="btn btn-sm btn-secondary" title="Lock unlocked folders..." >Scroll Files To Top</button>
+                </div>
+                <div class="col-auto">
+                    <h3 id="path" ></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <ul id="file-grid">
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- Favorites modal -->
+<div class="modal fade" id="favorites-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Favorites:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col scroller" style="max-height: 30em; overflow: auto;">
+                        <ul id="faves-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File viewer modal -->
+<div class="modal fade" id="file-view-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>File Viewer:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body text-center justify-content-center">
+                <div class="row">
+                    <div class="col scroller" style="max-height: 30em; overflow: auto;">
+                        <!-- For video -->
+                        <video id="video-viewer"
+                            src=""
+                            controls="" style="width: 30em;" autoplay=""
+                            poster="{{ url_for('static', filename='imgs/icons/loading.gif')}}">
+                        </video>
+
+                        <!-- For image -->
+                        <img id="image-viewer"
+                            style="width: 40em; height: auto; display: none;"
+                            src="" alt="" />
+
+                        <!-- For pdf -->
+                        <iframe id="pdf-viewer"
+                            src=""
+                            width="720" height="460"
+                            style="display: none;"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen="allowfullscreen"
+                            mozallowfullscreen="mozallowfullscreen"
+                            msallowfullscreen="msallowfullscreen"
+                            oallowfullscreen="oallowfullscreen"
+                            webkitallowfullscreen="webkitallowfullscreen">
+                        </iframe>
+
+                        <!-- For text -->
+                        <pre id="text-viewer"
+                            style="width: 45em; height: auto; display: none;">
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Other Options modal -->
+<div class="modal fade" id="options-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col scroller" style="max-height: 30em; overflow: auto;">
+
+                        <!-- <center>
+                            <form>
+                                <input class="ulFile" type="file" title="files To Upload" name="filesToUpload[]" data-multiple-caption="{count} files selected" multiple />
+                                <input type="button" onclick="uploadFiles()" name="UploadFiles" title="Upload File(s)" value="Upload File(s)" />
+                                <input type="reset" title="Clear" id="CLEARBTTN" value="Clear" style="display:none;">
+                                <input type="text" id="DIRPATHUL" name="DIRPATHUL" value="">
+                            </form>
+                            <br/>
+                            <input type="text" id="NewItem" value=""/>
+                            <input type="button" value="New Dir" onclick="createItem('dir')"/>
+                            <input type="button" value="New File" onclick="createItem('file')"/>
+                            <input type="button" value="Show Server Messages" onclick="tgglElmView('serverMsgView')"/>
+                            <br/>
+                            <input id="MergeType" type="checkbox" onchange="getDir('./')" />
+                            <label for="MergeType">Show seassons in same list.</label>
+                        </center> -->
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--  Templates  -->
+<template id="dirTemplate">
+    <li class="dir-style" tabindex="1" style="background-image: url('')" hash="">
+        <input class="dir-title" type="text" value="" readonly="true" />
+    </li>
+</template>
+<template id="vidTemplate">
+    <li class="video-style" tabindex="1" style="background-image: url('')" hash="">
+        <span class="card-popout-btn" title="Open In Local Program">&#8765;</span>
+        <input class="video-title" type="text" value="" readonly="true" />
+    </li>
+</template>
+<template id="imgTemplate">
+    <li class="image-style" tabindex="1" style="background-image: url('')" hash="">
+    </li>
+</template>
+<template id="filTemplate">
+    <li class="file-style" style="background-image: url('')" hash="">
+        <input class="file-title" type="text" value="" readonly="true" />
+    </li>
+</template>
+
+<!-- Background -->
+<img id="bg" src="{{ url_for('static', filename='imgs/backgrounds/000.jpg')}}" />
+
+    {% block body_content_additional %}
+    {% endblock body_content_additional%}
+{% endblock %}
+
+
+{% block body_footer_additional %}
+{% endblock body_footer_additional%}
+
+
+{% block body_scripts_additional %}
+    <!-- Table scripts -->
+    <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap-table.min.js')}}"></script>
+
+    <!-- Created scripts -->
+    <script src="{{ url_for('static', filename='js/libs/js.cookie.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/favorites.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/cookie-manager.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/post-ajax.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/ajax.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/ui-logic.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/events.js')}}"></script>
+{% endblock body_scripts_additional %}
