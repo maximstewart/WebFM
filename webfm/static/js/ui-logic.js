@@ -175,9 +175,17 @@ const disableEdit = (elm) => {
     elm.readOnly               = "true";
 }
 
-const updateBackground = (img_src) => {
+const updateBackground = (srcLink, isvideo = true) => {
     try {
-        document.getElementById("bg").src = img_src;
+        if (isvideo) {
+            let elm = document.getElementById("bg");
+            if (elm.getAttribute('src') === "") {
+                elm.src = srcLink;
+            }
+        } else {
+            document.getElementById("bg").src = "";
+            document.getElementById("bg").setAttribute("poster", srcLink);
+        }
     } catch (e) { }
 }
 

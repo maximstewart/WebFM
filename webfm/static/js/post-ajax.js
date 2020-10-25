@@ -73,9 +73,9 @@ const updateHTMLDirList = async (data) => {
     // Setup background if there is a 000.* in selection
     if (background_image.match(/000\.(jpg|png|gif)\b/) != null) {
         background_image = formatURL("files/" + images[i][1]);
-        updateBackground(background_image);
+        updateBackground(background_image, false);
     } else {
-        background_image = formatURL("static/imgs/backgrounds/000.jpg");
+        background_image = formatURL("static/imgs/backgrounds/particles.mp4");
         updateBackground(background_image);
     }
 

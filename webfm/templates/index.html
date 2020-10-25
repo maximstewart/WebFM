@@ -48,7 +48,19 @@
 
                         <button title="File viewer..." class="btn btn-secondary btn-sm"
                         data-toggle="modal" data-target="#file-view-modal">🖼</button>
-
+                        {% if isLoggedIn %}
+                            <a href="/logout">
+                                <button title="Logout..." class="btn btn-danger btn-sm">
+                                    Logout
+                                </button>
+                            </a>
+                        {% else %}
+                            <a href="/login">
+                                <button title="Login..." class="btn btn-success btn-sm">
+                                    Login
+                                </button>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -228,7 +240,13 @@
 </template>
 
 <!-- Background -->
-<img id="bg" src="{{ url_for('static', filename='imgs/backgrounds/000.jpg')}}" />
+<!-- <img id="bg" src="{{ url_for('static', filename='imgs/backgrounds/000.png')}}" /> -->
+
+<video id="bg" src="{{ url_for('static', filename='imgs/backgrounds/particles.mp4')}}"
+    poster="{{ url_for('static', filename='imgs/backgrounds/000.png')}}"
+    autoplay loop>
+</video>
+
 
     {% block body_content_additional %}
     {% endblock body_content_additional%}
