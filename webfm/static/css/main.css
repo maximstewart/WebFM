@@ -22,12 +22,11 @@
 
 #file-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
     grid-column-gap: 1em;
     grid-row-gap: 1em;
-    margin: 5em auto;
+    margin: 2em auto;
     width: 85%;
-    padding: 2em;
     overflow-y: auto;
     max-height: 25em;
 }
@@ -35,12 +34,33 @@
 #path { max-width: inherit; }
 #faves-list > li { width: 100%; }
 
+#video-container {
+    width: 30em;
+    position: relative;
+}
+
+#video-viewer {
+    width: inherit;
+    height: inherit;
+    vertical-align: top;
+}
+
+#video-controls {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0.5em;
+	background-color: rgba(0, 0, 0, 0.64);
+	width: inherit;
+	margin: 0 auto;
+}
+
 
 
 /* CLASSES */
 .scroller {
-  scrollbar-color: #00000084 #ffffff64;
-  scrollbar-width: thin;
+	scrollbar-color: #00000084 #ffffff64;
+	scrollbar-width: thin;
 }
 
 .dir-style, .video-style, .file-style {

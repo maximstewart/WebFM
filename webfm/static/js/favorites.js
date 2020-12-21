@@ -15,4 +15,7 @@ const manageFavorites = (elm) => {
 
 const loadFave = (id) => {
     loadFavoriteLink(id);
+    document.getElementById("favorites-modal")
+            .getElementsByClassName("modal-footer")[0]
+            .children[0].click()
 }

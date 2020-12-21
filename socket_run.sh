@@ -9,9 +9,9 @@ function main() {
     SCRIPTPATH="$( cd "$(dirname "")" >/dev/null 2>&1 ; pwd -P )"
     cd "${SCRIPTPATH}"
     echo "Working Dir: " $(pwd)
+    source "./venv/bin/activate"
     mkdir /tmp/apps
-    ./venv/bin/gunicorn \
-        --bind unix:/tmp/apps/webfm.sock wsgi:app
+    gunicorn --bind unix:/tmp/apps/webfm.sock wsgi:app -p app.pid
 
 }
 main $@;

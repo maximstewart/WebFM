@@ -30,12 +30,7 @@ const doAjax = (actionPath, data, action) => {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             if (this.responseText != null) {  // this.responseXML if getting XML data
-                if (xhttp.responseURL.includes("/register") ||
-                    xhttp.responseURL.includes("/login")) {
-                        window.location.href = xhttp.responseURL;
-                } else {
-                    postAjaxController(JSON.parse(this.responseText), action);
-                }
+                postAjaxController(JSON.parse(this.responseText), action);
             } else {
                 let type = "danger"
                 let msg  = "No content returned. Check the target path.";

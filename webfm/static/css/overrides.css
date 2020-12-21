@@ -1,3 +1,14 @@
+#video-container::-webkit-media-controls {
+  display:none !important;
+}
+
+#video-container::-webkit-media-controls-enclosure {
+  display:none !important;
+}
+
+
+
+
 .modal-content {
     background-color: #32383e74;
     border-color: #f8940674;

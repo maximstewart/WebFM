@@ -10,7 +10,6 @@ from ...utils import MessageHandler   # Get simple message processor
 
 
 msgHandler = MessageHandler()
-TITLE      = app.config['TITLE']
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -27,5 +26,4 @@ def register():
         return redirect("/login")
 
     return render_template('register.html',
-                            title=TITLE,
-                            form=_form)
+                            form = _form)

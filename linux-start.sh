@@ -10,6 +10,6 @@ function main() {
     cd "${SCRIPTPATH}"
     echo "Working Dir: " $(pwd)
     source "./venv/bin/activate"
-    gunicorn wsgi:app -b 0.0.0.0:8080 # <module>:<app>   IE <file>:<flask app variable>
+    gunicorn wsgi:app -b 0.0.0.0:8080 -p app.pid # <module>:<app>   IE <file>:<flask app variable>
 }
 main $@;

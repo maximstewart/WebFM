@@ -2,26 +2,14 @@
 
 {% block body_header_additional %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/overrides.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-table.min.css')}}">
 {% endblock body_header_additional%}
 
-<!-- System flashed messages! -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class=flashes>
-            {% for category, message in messages %}
-                <li class="alert alert-{{ category }}">{{ message }}</li>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+
 
 {% block body_content %}
-<div class="container-fluid">
-
     <div class="row sticky-top">
         <div class="col">
             <!-- Server messages -->
@@ -48,7 +36,7 @@
 
                         <button title="File viewer..." class="btn btn-secondary btn-sm"
                         data-toggle="modal" data-target="#file-view-modal">🖼</button>
-                        {% if isLoggedIn %}
+                        {% if current_user.is_authenticated or oidc_loggedin() %}
                             <a href="/logout">
                                 <button title="Logout..." class="btn btn-danger btn-sm">
                                     Logout
@@ -83,11 +71,10 @@
 
     <div class="row">
         <div class="col">
-            <ul id="file-grid">
+            <ul id="file-grid" class="scroller">
             </ul>
         </div>
     </div>
-</div>
 
 
 <!-- Favorites modal -->
@@ -132,11 +119,18 @@
                 <div class="row">
                     <div class="col scroller" style="max-height: 30em; overflow: auto;">
                         <!-- For video -->
-                        <video id="video-viewer"
-                            src=""
-                            controls="" style="width: 30em;" autoplay=""
-                            poster="{{ url_for('static', filename='imgs/icons/loading.gif')}}">
-                        </video>
+                        <div id="video-container" style="display: contents;">
+                            <video id="video-viewer"
+                                src=""
+                                autoplay=""
+                                loop
+                                poster="{{ url_for('static', filename='imgs/icons/loading.gif')}}">
+                            </video>
+                              <div id="video-controls">
+                                  <input id="seek-slider" type="range" min="0" max="100" step="1">
+                              </div>
+                        </div>
+
 
                         <!-- For image -->
                         <img id="image-viewer"

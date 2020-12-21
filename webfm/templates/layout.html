@@ -5,7 +5,7 @@
     {% if title %}
         <title>{{title}}</title>
     {% else %}
-        <title>App</title>
+        <title>{{TITLE}}</title>
     {% endif %}
 
     {% block header_css %}
@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-datepicker.css')}}">
 
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/overrides.css')}}">
         {% block header_css_additional %}
         {% endblock header_css_additional %}
     {% endblock %}
@@ -26,10 +27,7 @@
 </head>
 <body>
 
-{% block body_header %}
-    {% block body_header_additional %}
-    {% endblock body_header_additional%}
-{% endblock %}
+<div class="container-fluid">
 
 <!-- System flashed messages! -->
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -42,6 +40,11 @@
     {% endif %}
 {% endwith %}
 
+{% block body_header %}
+    {% block body_header_additional %}
+    {% endblock body_header_additional%}
+{% endblock %}
+
 {% block body_content %}
     {% block body_content_additional %}
     {% endblock body_content_additional%}
@@ -53,6 +56,7 @@
     {% endblock body_footer_additional%}
 {% endblock %}
 
+</div>
 
 {% block body_scripts %}
 <!-- For Bootstrap in this exact order... -->
