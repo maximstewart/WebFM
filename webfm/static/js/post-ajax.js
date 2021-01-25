@@ -72,7 +72,8 @@ const updateHTMLDirList = async (data) => {
 
     // Setup background if there is a 000.* in selection
     if (background_image.match(/000\.(jpg|png|gif)\b/) != null) {
-        background_image = formatURL("files/" + images[i][1]);
+        // Due to same hash for 000 we add date to make link unique for each run to bypass cache issues...
+        background_image = formatURL("files/" + images[i][1] + '?d=' + Date.now());
         updateBackground(background_image, false);
     } else {
         background_image = formatURL("static/imgs/backgrounds/particles.mp4");
@@ -119,7 +120,7 @@ const updateHTMLDirList = async (data) => {
         hash      = images[i][1];
 
         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
-                             !thumbnail.includes("favicon.png")) {
+            !thumbnail.includes("favicon.png") && !thumbnail.includes("000")) {
             const clone  = imgClone.cloneNode(true);
             createElmBlock(insertArea, clone, thumbnail, title, hash);
         }

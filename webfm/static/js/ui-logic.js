@@ -19,10 +19,11 @@ const scrollFilesToTop = () => {
 
 
 const showMedia = async (hash, extension, type) => {
-    document.getElementById("image-viewer").style.display = "none";
-    document.getElementById("text-viewer").style.display  = "none";
-    document.getElementById("video-viewer").style.display = "none";
-    document.getElementById("pdf-viewer").style.display   = "none";
+    document.getElementById("image-viewer").style.display   = "none";
+    document.getElementById("text-viewer").style.display    = "none";
+    document.getElementById("pdf-viewer").style.display     = "none";
+    document.getElementById("video-viewer").style.display   = "none";
+    document.getElementById("video-controls").style.display = "none";
 
     if (type === "video") {
         setupVideo(hash, extension);
@@ -34,9 +35,10 @@ const showMedia = async (hash, extension, type) => {
 
 const setupVideo = async (hash, extension) => {
     let video           = document.getElementById("video-viewer");
+    let controls        = document.getElementById("video-controls");
     video.poster        = "static/imgs/icons/loading.gif";
-    video.autoplay      = true;
     video.style.display = "";
+    video.src           = "#"
     video_path          = "files/" + hash;
 
     try {
@@ -46,7 +48,7 @@ const setupVideo = async (hash, extension) => {
                 if ( data.hasOwnProperty('path') ) {
                     video_path = data.path;
                 } else {
-                    displayMessage(data.message.text, data.message.type)
+                    displayMessage(data.message.text, data.message.type);
                     return ;
                 }
             } else if ((/\.(flv|mov|m4v|mpg|mpeg)$/i).test(extension)) {
@@ -56,19 +58,20 @@ const setupVideo = async (hash, extension) => {
             }
         }
 
-        if ((/\.(flv|f4v)$/i).test(extension)) {
-            $('#file-view-modal').modal({"focus": true, "show": true});
-            video.src    = video_path;
-        } else {
-            // This is questionable in usage since it loads the full video before
-            // showing; but, seeking doesn't work otherwise...
-            $('#file-view-modal').modal({"focus": true, "show": true});
-            let response = await fetch(formatURL(video_path));
-            let vid_src  = URL.createObjectURL(await response.blob()); // IE10+
-            video.src    = vid_src;
-        }
+        $('#file-view-modal').modal({"focus": true, "show": true});
+        controls.style.display = "none";
+        video.src              = video_path;
+        // if ((/\.(flv|f4v)$/i).test(extension)) {
+        //     video.src              = video_path;
+        // } else {
+        //     // This is questionable in usage since it loads the full video before
+        //     showing; but, seeking doesn't work otherwise...
+        //     let response           = await fetch(formatURL(video_path));
+        //     let vid_src            = URL.createObjectURL(await response.blob()); // IE10+
+        //     video.src              = vid_src;
+        //     video.src              = video_path;
+        // }
     } catch (e) {
-        video.src           = "#";
         video.style.display = "none";
         console.log(e);
     }
@@ -103,9 +106,8 @@ const setupFile = async (hash, extension) => {
     }
 
     if (type == "text") {
-        console.log(hash);
-        let response = await fetch(formatURL("files/" + hash));
-        let textData = await response.text(); // IE10+
+        let response     = await fetch(formatURL("files/" + hash));
+        let textData     = await response.text(); // IE10+
         viewer.innerText = textData;
     }
 
@@ -177,14 +179,16 @@ const disableEdit = (elm) => {
 
 const updateBackground = (srcLink, isvideo = true) => {
     try {
+        let elm = document.getElementById("bg");
+
+        console.log(srcLink);
         if (isvideo) {
-            let elm = document.getElementById("bg");
             if (elm.getAttribute('src') === "") {
                 elm.src = srcLink;
             }
         } else {
-            document.getElementById("bg").src = "";
-            document.getElementById("bg").setAttribute("poster", srcLink);
+            elm.src = "";
+            elm.setAttribute("poster", srcLink);
         }
     } catch (e) { }
 }
@@ -221,5 +225,36 @@ const displayMessage = (message, type, timeout = 0, msgWindow = "page-alert-zone
 const clearChildNodes = (parent) => {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
+    }
+}
+
+//Cache Buster
+const clearCache = () => {
+    var rep = /.*\?.*/,
+    links   = document.getElementsByTagName('link'),
+    scripts = document.getElementsByTagName('script'),
+    links   = document.getElementsByTagName('video'),
+    process_scripts = false;
+
+    for (var i=0; i<links.length; i++) {
+        var link = links[i],
+        href = link.href;
+        if(rep.test(href)) {
+            link.href = href+'&'+Date.now();
+        } else {
+            link.href = href+'?'+Date.now();
+        }
+
+    }
+    if(process_scripts) {
+        for (var i=0; i<scripts.length; i++) {
+            var script = scripts[i],
+            src = script.src;
+            if(rep.test(src)) {
+                script.src = src+'&'+Date.now();
+            } else {
+                script.src = src+'?'+Date.now();
+            }
+        }
     }
 }

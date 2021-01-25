@@ -22,20 +22,20 @@
 
 #file-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(22em, 1fr));
     grid-column-gap: 1em;
     grid-row-gap: 1em;
     margin: 2em auto;
     width: 85%;
     overflow-y: auto;
-    max-height: 25em;
+    height: 80vh;
 }
 
 #path { max-width: inherit; }
 #faves-list > li { width: 100%; }
 
 #video-container {
-    width: 30em;
+    width: inherit;
     position: relative;
 }
 
@@ -56,11 +56,28 @@
 }
 
 
+#volumeIcon {
+    border-style: solid;
+    border-width: thin;
+    border-color: #ffffff;
+}
+
+#volumeIcon:hover {
+    cursor: pointer;
+}
+
 
 /* CLASSES */
 .scroller {
 	scrollbar-color: #00000084 #ffffff64;
 	scrollbar-width: thin;
+}
+
+.volume-control-positioner {
+    position: absolute;
+    bottom: 2em;
+    right: 50%;
+    left: 50%;
 }
 
 .dir-style, .video-style, .file-style {
@@ -84,6 +101,7 @@
 
 .image-style,
 .video-style {
+    position: relative;
     min-height: 6.5em;
     width: auto;
     overflow: hidden;
@@ -151,7 +169,10 @@
 }
 
 .video-title {
+    position: absolute;
 	width: 100%;
+    left: 0em;
+    bottom: 1em;
 	margin-top: 5.5em;
 	background-color: rgba(0, 0, 0, 0.64);
 	color: rgb(255, 255, 255);

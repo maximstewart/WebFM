@@ -2,11 +2,10 @@
 import os, json, secrets
 from datetime import timedelta
 
+
 # Lib imports
 from flask import Flask
 from flask_oidc import OpenIDConnect
-from flask_login import current_user, login_user, logout_user, LoginManager
-from flask_bcrypt import Bcrypt
 
 
 # Apoplication imports
@@ -41,10 +40,7 @@ app.config.update({
                 'OIDC_TOKEN_TYPE_HINT': 'access_token'
                 })
 
-
-login_manager = LoginManager(app)
-bcrypt        = Bcrypt(app)
-oidc          = OpenIDConnect(app)
+oidc = OpenIDConnect(app)
 def oidc_loggedin():
     return oidc.user_loggedin
 app.jinja_env.globals['oidc_loggedin'] = oidc_loggedin
@@ -66,9 +62,7 @@ def retrieveSettings():
 config = retrieveSettings()
 
 
-from .forms import LoginForm, RegisterForm
-from .models import db, Favorites, Settings, User
-
+from .models import db, Favorites, Settings
 db.init_app(app)
 with app.app_context(): db.create_all()
 from webfm import routes

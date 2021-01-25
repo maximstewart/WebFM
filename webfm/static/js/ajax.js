@@ -43,6 +43,13 @@ const doAjax = (actionPath, data, action) => {
     // xhttp.open("POST", formatURL(actionPath), true);
     xhttp.open("POST", actionPath, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    if (action === "list-files") {
+        xhttp.setRequestHeader("Cache-Control", "no-cache, no-store");
+        xhttp.setRequestHeader("Pragma", "no-cache");
+        xhttp.setRequestHeader("Expires", "0");
+    }
+
     // Force return to be JSON NOTE: Use application/xml to force XML
     xhttp.overrideMimeType('application/json');
     xhttp.send(data);

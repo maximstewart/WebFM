@@ -1,9 +1,20 @@
+/* Vertical slider */
+input[type=range][orient=vertical] {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 175px;
+    padding: 0 5px;
+}
+
+
+
 #video-container::-webkit-media-controls {
-  display:none !important;
+  display: none !important;
 }
 
 #video-container::-webkit-media-controls-enclosure {
-  display:none !important;
+  display: none !important;
 }
 
 

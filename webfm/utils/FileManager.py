@@ -126,7 +126,6 @@ class FileManager:
 
     def returnPathPartFromHash(self, partHash):
         hashes   = [self.dotHash, self.dotdotHash]
-        print(self.pathParts)
         path     = "/".join(self.pathParts)
         pathPart = None
         for f in listdir(path):

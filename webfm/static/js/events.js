@@ -1,6 +1,8 @@
 let fullScreenState = 0;
-let shouldPlay      = null;
 let clicktapwait    = 200;
+let shouldPlay      = null;
+let controlsTimeout = null;
+let canHideControls = true;
 
 
 document.body.onload = (eve) => {
@@ -20,102 +22,6 @@ document.body.onload = (eve) => {
         }, 500);
     }
 }
-
-
-function togglePlay(video) {
-    shouldPlay = setTimeout(function () {
-        shouldPlay = null;
-        if (video.paused) {
-            video.play();
-        } else {
-            video.pause();
-        }
-    }, 300);
-}
-
-function toggleFullscreen(video) {
-    containerElm = document.getElementById("video-container");
-    parentElm    = video.parentElement;
-
-
-    if (video.requestFullscreen) {
-        parentElm.requestFullscreen();
-        containerElm.style.display = "block";
-    } else if (video.webkitRequestFullscreen) { /* Safari */
-        parentElm.webkitRequestFullscreen();
-        containerElm.style.display = "block";
-    } else if (video.msRequestFullscreen) {     /* IE11 */
-        parentElm.msRequestFullscreen();
-        containerElm.style.display = "block";
-    }
-
-    if (fullScreenState == 2) {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-            containerElm.style.display = "contents";
-        } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-            containerElm.style.display = "contents";
-        } else if (document.msExitFullscreen) {     /* IE11 */
-            document.msExitFullscreen();
-            containerElm.style.display = "contents";
-        }
-
-        fullScreenState = 0;
-    }
-
-    fullScreenState += 1;
-}
-
-$("#video-viewer").on("click", function(eve){
-    const video = eve.target;
-
-    if(!shouldPlay) {
-        shouldPlay = setTimeout( function() {
-            shouldPlay = null;
-            togglePlay(video);
-        }, clicktapwait);
-    } else {
-        clearTimeout(shouldPlay); // Stop single tap callback
-        shouldPlay = null;
-        toggleFullscreen(video);
-    }
-    eve.preventDefault();
-});
-
-$("#video-viewer").on("touchend", function(eve){
-    const video = eve.target;
-
-    if(!shouldPlay) {
-        shouldPlay = setTimeout( function() {
-            shouldPlay = null;
-            togglePlay(video);
-        }, clicktapwait);
-    } else {
-        clearTimeout(shouldPlay); // Stop single tap callback
-        shouldPlay = null;
-        toggleFullscreen(video);
-    }
-    eve.preventDefault();
-});
-
-$( "#video-viewer" ).bind( "timeupdate", async function(eve) {
-    const video  = eve.target;
-    const seekto = document.getElementById("seek-slider");
-    const vt     = video.currentTime * (100 / video.duration);
-    seekto.value = vt;
-});
-
-$( "#seek-slider" ).bind( "change", async function(eve) {
-    const slider = eve.target;
-    let video    = document.getElementById("video-viewer");
-    let seekto   = video.duration * (slider.value / 100);
-    video.currentTime = seekto;
-
-});
-
-
-
 
 $( "#search-files-field" ).bind( "keyup", async function(eve) {
     searchPage();
