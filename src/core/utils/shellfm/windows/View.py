@@ -8,10 +8,10 @@ from os.path import isdir, isfile, join
 
 
 # Application imports
-from . import Path, Filters
+from . import Path, Filters, Launcher
 
 
-class View(Filters, Path):
+class View(Filters, Path, Launcher):
     def __init__(self):
         self.hideHiddenFiles = True
         self.files     = []
@@ -20,9 +20,7 @@ class View(Filters, Path):
         self.images    = []
         self.desktop   = []
         self.ungrouped = []
-
         self.set_to_home()
-
 
     def load_directory(self):
         path           = self.get_path()
@@ -72,6 +70,13 @@ class View(Filters, Path):
         for arr in arry:
             data.append([arr, self.hashText(arr)])
         return data
+
+    def returnPathPartFromHash(self, hash):
+        files = self.get_files()
+        for file in files:
+            if hash == file[1]:
+                return file[0]
+        return None
 
     def get_files(self):
         return self.hashSet(self.files)

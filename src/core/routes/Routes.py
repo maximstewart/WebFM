@@ -2,7 +2,7 @@
 import secrets
 
 # Lib imports
-from flask import request, session, render_template
+from flask import request, session, render_template, send_from_directory, redirect
 from flask_login import current_user
 
 
@@ -22,18 +22,15 @@ def get_window_controller():
         session['win_controller_id'] = id
         window_controllers.update( {id: WindowController() } )
 
-        return window_controllers[ session["win_controller_id"]  ]
+    return window_controllers[ session["win_controller_id"]  ]
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        view = get_window_controller().get_window(1).get_view(0)
-
-        view.push_to_path("LazyShare")
+        view   = get_window_controller().get_window(1).get_view(0)
         _path  = view.get_path()
         _files = view.get_files()
-
         return render_template('pages/index.html', path=_path, files=_files)
 
     return render_template('error.html',
@@ -128,35 +125,38 @@ def manageFavoritesRoute(_action):
 @app.route('/api/reset-path', methods=['GET', 'POST'])
 def resetPath():
     if request.method == 'GET':
-        file_manager.reset_path()
+        view = get_window_controller().get_window(1).get_view(0)
+        view.set_to_home()
         return redirect("/")
-
 
 # Used to get files from non gunicorn root path...
 # Allows us to pull images and stuff to user without simlinking.
 @app.route('/api/files/<hash>')
 def returnFile(hash):
-    path     = file_manager.getFullPath()
-    pathPart = file_manager.returnPathPartFromHash(hash)
-    return send_from_directory(path, pathPart)
+    view   = get_window_controller().get_window(1).get_view(0)
+    folder = view.get_path()
+    file   = view.returnPathPartFromHash(hash)
+    return send_from_directory(folder, file)
 
 @app.route('/api/remux/<hash>')
 def remuxRoute(hash):
-    folder  = file_manager.getFullPath()
-    file    = file_manager.returnPathPartFromHash(hash)
-    fpath   = os.path.join(folder, file)
+    view   = get_window_controller().get_window(1).get_view(0)
+    folder = view.get_path()
+    file   = view.returnPathPartFromHash(hash)
+    fpath  = os.path.join(folder, file)
 
     logging.debug(fpath)
-    return file_manager.remuxVideo(hash, fpath)
+    return view.remuxVideo(hash, fpath)
 
 @app.route('/api/run-locally/<hash>')
 def runLocallyRoute(hash):
-    path     = file_manager.getFullPath()
-    pathPart = file_manager.returnPathPartFromHash(hash)
-    fullpath = path + "/" + pathPart
+    view   = get_window_controller().get_window(1).get_view(0)
+    folder = view.get_path()
+    file   = view.returnPathPartFromHash(hash)
+    fpath  = os.path.join(folder, file)
 
-    logging.debug(fullpath)
-    file_manager.openFilelocally(fullpath)
+    logging.debug(fpath)
+    view.openFilelocally(fpath)
 
     msg = "Opened media..."
     return msgHandler.createMessageJSON("success", msg)

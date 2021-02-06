@@ -7,17 +7,34 @@
 
     <div id="navbarTogglerHeader" class="row collapse navbar-collapse">
         <div class="col-sm">
+            {% if files %}
+                <li class="nav-item">
+                    <div class="input-group input-group-sm justify-content-center">
+                        <button title="Other Options..." class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#options-modal">⚙</button>
+                        <button title="Refresh..." id="refresh-btn" class="btn btn-sm btn-secondary" hash="{{files[0][1]}}">↻</button>
+                        <button title="Back..." id="back-btn" class="btn btn-sm btn-secondary" hash="{{files[1][1]}}">⇐</button>
+
+                        <input id="search-files-field" type="text" class="form-control" aria-label="Search..." placeholder="Search..." style="max-width: 260px">
+                        <div class="input-group-prepend">
+                            <span id="clear-search-btn" class="input-group-text" title="Clears search...">X</span>
+                        </div>
+
+                        <button title="File viewer..." class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#file-view-modal">🖼</button>
+                    </div>
+                </li>
+            {% else %}
             <!-- Branding -->
             <div class="navbar-brand">
                 <div class="site-branding">
-                    <h1 class="site-title">
+                    <h4 class="site-title">
                         <a href="{{ url_for('home') }}" title="{{TITLE}} Home" rel="home">
-                            Hello World!
+                            {{TITLE}}
                         </a>
-                    </h1>
-                    <h2 class="site-description">Your Slogan...</h2>
+                    </h4>
+                    <h6 class="site-description">For the files!</h6>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         <div class="col col-lg-auto">
