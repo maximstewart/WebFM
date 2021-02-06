@@ -1,0 +1,178 @@
+# Python imports
+
+# Lib imports
+from flask import request, render_template
+from flask_login import current_user
+
+
+# App imports
+from core import app, logger, oidc, db  # Get from __init__
+from core.utils import MessageHandler   # Get simple message processor
+from core.utils.shellfm import WindowController   # Get file manager controller
+
+
+msgHandler     = MessageHandler()
+win_controller = WindowController()
+win_controller.pop_window()
+win_controller.list_windows()
+# win_controller.add_window()
+# win_controller.list_views_from_window(0)
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'GET':
+        _dHash  = file_manager.getDotHash()
+        _ddHash = file_manager.getDotDotHash()
+
+        return render_template('pages/index.html')
+
+    return render_template('error.html',
+                            title='Error!',
+                            message='Must use GET request type...')
+
+
+@app.route('/api/list-files', methods=['GET', 'POST'])
+def listFilesRoute():
+    if request.method == 'POST':
+        HASH          = str(request.values['hash']).strip()
+        pathPart      = file_manager.returnPathPartFromHash(HASH)
+        lockedFolders = config["settings"]["locked_folders"].split("::::")
+        path          = file_manager.getPath().split('/')
+        lockedFolderInPath = False
+
+        # Insure chilren folders are locked too.
+        for folder in lockedFolders:
+            if folder in path:
+                lockedFolderInPath = True
+                break
+
+        isALockedFolder = (pathPart in lockedFolders or lockedFolderInPath)
+        msg = "Log in with an Admin privlidged user to view the requested path!"
+        if isALockedFolder and not oidc.user_loggedin:
+            return msgHandler.createMessageJSON("danger", msg)
+        elif isALockedFolder and oidc.user_loggedin:
+            isAdmin = oidc.user_getfield("isAdmin")
+            if isAdmin != "yes" :
+                return msgHandler.createMessageJSON("danger", msg)
+
+        return listFiles(HASH)
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+
+@app.route('/api/get-favorites', methods=['GET', 'POST'])
+def getAllFavoritesRoute():
+    if request.method == 'POST':
+        list  = db.session.query(Favorites).all()
+        faves = []
+        for fave in list:
+            faves.append([fave.link, fave.id])
+
+        return '{"faves_list":' + json.dumps(faves) + '}'
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+@app.route('/api/load-favorite/<_id>', methods=['GET', 'POST'])
+def loadFavorite(_id):
+    if request.method == 'POST':
+        try:
+            ID   = int(_id)
+            fave = db.session.query(Favorites).filter_by(id=ID).first()
+            file_manager.setNewPathFromFavorites(fave.link)
+            file_manager.loadPreviousPath()
+
+            return '{"refresh":"true"}'
+        except Exception as e:
+            print(repr(e))
+            msg = "Incorrect Favorites ID..."
+            return msgHandler.createMessageJSON("danger", msg)
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+
+@app.route('/api/manage-favorites/<_action>', methods=['GET', 'POST'])
+def manageFavoritesRoute(_action):
+    if request.method == 'POST':
+        ACTION = _action.strip()
+        path   = file_manager.getPath()
+
+        if ACTION == "add":
+            fave = Favorites(link=path)
+            db.session.add(fave)
+            msg  = "Added to Favorites successfully..."
+        else:
+            fave = db.session.query(Favorites).filter_by(link=path).first()
+            db.session.delete(fave)
+            msg  = "Deleted from Favorites successfully..."
+
+        db.session.commit()
+        return msgHandler.createMessageJSON("success", msg)
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+
+@app.route('/api/reset-path', methods=['GET', 'POST'])
+def resetPath():
+    if request.method == 'GET':
+        file_manager.reset_path()
+        return redirect("/")
+
+
+# Used to get files from non gunicorn root path...
+# Allows us to pull images and stuff to user without simlinking.
+@app.route('/api/files/<hash>')
+def returnFile(hash):
+    path     = file_manager.getFullPath()
+    pathPart = file_manager.returnPathPartFromHash(hash)
+    return send_from_directory(path, pathPart)
+
+@app.route('/api/remux/<hash>')
+def remuxRoute(hash):
+    folder  = file_manager.getFullPath()
+    file    = file_manager.returnPathPartFromHash(hash)
+    fpath   = os.path.join(folder, file)
+
+    logging.debug(fpath)
+    return file_manager.remuxVideo(hash, fpath)
+
+@app.route('/api/run-locally/<hash>')
+def runLocallyRoute(hash):
+    path     = file_manager.getFullPath()
+    pathPart = file_manager.returnPathPartFromHash(hash)
+    fullpath = path + "/" + pathPart
+
+    logging.debug(fullpath)
+    file_manager.openFilelocally(fullpath)
+
+    msg = "Opened media..."
+    return msgHandler.createMessageJSON("success", msg)
+
+
+
+def listFiles(HASH):
+    state = file_manager.generateLists(HASH)
+    if "error" in state:
+        msg = "Listing files failed..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+    path    = file_manager.getPath()
+    fave    = db.session.query(Favorites).filter_by(link=path).first()
+    in_fave = "true" if fave else "false"
+
+    dirs    = json.dumps( file_manager.getDirs() )
+    vids    = json.dumps( file_manager.getVids() )
+    imgs    = json.dumps( file_manager.getImgs() )
+    files   = json.dumps( file_manager.getFiles() )
+
+    return '{"path_head":"' + path + '"' + \
+            ',"in_fave":"'   + in_fave + '"' + \
+            ',"list":{"dirs":'   + dirs + \
+                    ', "vids":'  + vids + \
+                    ', "imgs":'  + imgs + \
+                    ', "files":' + files + '}}'

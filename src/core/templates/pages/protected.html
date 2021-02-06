@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block header_meta_additional %}
+{% endblock header_meta_additional %}
+
+{% block header_css_additional %}
+{% endblock header_css_additional %}
+
+{% block header_scripts_additional %}
+{% endblock header_scripts_additional %}
+
+
+{% block body_header_additional %}
+{% endblock body_header_additional %}
+
+{% block body_content_additional %}
+    <div class="row">
+        <div class="col justify-content-center text-center">
+            <h1>{{secret}}</h1>
+        </div>
+    </div>
+{% endblock body_content_additional %}
+
+{% block body_footer_additional %}
+{% endblock body_footer_additional %}
+
+
+{% block body_scripts_additional %}
+    <script src="{{ url_for('static', filename='js/ui-logic.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/post-ajax.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/ajax.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/events.js')}}"></script>
+{% endblock body_scripts_additional %}

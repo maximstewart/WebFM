@@ -1,0 +1,16 @@
+{
+    "settings" : {
+        "media_app": "mpv",
+        "mplayer_options": "-quiet -really-quiet -xy 1600 -geometry 50%:50%",
+        "music_app": "/opt/deadbeef/bin/deadbeef",
+        "image_app": "mirage",
+        "office_app": "libreoffice",
+        "pdf_app": "evince",
+        "text_app": "leafpad",
+        "file_manager_app": "spacefm",
+        "do_refresh": "no",
+        "remux_folder_max_disk_usage": "8589934592",
+        "locked_folders": "Synced Backup::::flasks",
+        "folders_locked": "true"
+    }
+}
