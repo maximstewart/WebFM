@@ -67,7 +67,7 @@
     {% endblock %}
 
 
-    <div class="container bg-dark" style="height: 80vh;">
+    <div id="master-container" class="container scroller">
         <!-- System flashed messages! -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}

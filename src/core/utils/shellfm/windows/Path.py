@@ -26,7 +26,7 @@ class Path:
         self.load_directory()
 
     def set_to_home(self):
-        home = os.path.expanduser("~")
+        home = os.path.expanduser("~") + self.subpath
         path = list( filter(None, home.replace("\\", "/").split('/')) )
         self.path = path
         self.load_directory()

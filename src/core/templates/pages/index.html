@@ -14,13 +14,13 @@
 {% endblock body_header_additional %}
 
 {% block body_content_additional %}
-<div class="row" style="margin-bottom: 6em;">
+<div id="files" class="row">
         {% for file in files %}
-        <div class="col-sm-3">
+        <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card">
                 <div class="card-header">{{file[0]}}</div>
                 <div class="card-body">
-                    <img class="" src="" alt="" />
+                    <img class="image-style" src="/api/files/{{file[1]}}" alt="{{file[0]}}" />
                 </div>
                 <div class="card-footer">
                     <input app="{{file[1]}}" class="btn btn-secondary btn-sm" type="button" value="Launch"/>
@@ -41,4 +41,5 @@
     <script src="{{ url_for('static', filename='js/post-ajax.js')}}"></script>
     <script src="{{ url_for('static', filename='js/ajax.js')}}"></script>
     <script src="{{ url_for('static', filename='js/events.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/react-ui-logic.js')}}"></script>
 {% endblock body_scripts_additional %}

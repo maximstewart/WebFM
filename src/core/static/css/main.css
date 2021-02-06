@@ -18,6 +18,46 @@
     z-index: -999;
 }
 
+#master-container {
+    height: 85vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#files {
+    margin-bottom: 6em;
+}
+
+
+
+/* CLASSES */
+.scroller {
+	scrollbar-color: #00000084 #ffffff64;
+	scrollbar-width: thin;
+}
+
+.volume-control-positioner {
+    position: absolute;
+    bottom: 2em;
+    right: 50%;
+    left: 50%;
+}
+
+
+
+
+.dir-style, .video-style, .image-style, .file-style {
+	height: auto;
+	width: 24vw;
+	position: relative;
+	max-width: 20em;
+}
+
+
+
+
+
+
 /* Other message text colors */
 .errorTxt   { color: rgb(170, 18, 18); }
 .warningTxt { color: rgb(255, 168, 0); }

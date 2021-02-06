@@ -5,3 +5,5 @@ class Filters:
     ftext   = ('.txt', '.text', '.sh', '.cfg', '.conf')
     fmusic  = ('.psf', '.mp3', '.ogg', '.flac', '.m4a')
     fpdf    = ('.pdf')
+
+    subpath = "/LazyShare/Synced Backup/222_Photos/Backgrounds/HD-Wallpapers"
