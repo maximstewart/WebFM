@@ -15,32 +15,20 @@
 
 {% block body_content_additional %}
 <div class="row" style="margin-bottom: 6em;">
-        {% for app in deployments %}
+        {% for file in files %}
         <div class="col-sm-3">
-            <div app="<hash_here>" class="card">
-                <div class="card-header">file name.mp4</div>
+            <div class="card">
+                <div class="card-header">{{file[0]}}</div>
                 <div class="card-body">
                     <img class="" src="" alt="" />
                 </div>
                 <div class="card-footer">
-                    <input class="btn btn-secondary btn-sm" type="button" value="Launch"/>
-                    <input class="btn btn-secondary btn-sm" type="button" value="Launch Locally"/>
+                    <input app="{{file[1]}}" class="btn btn-secondary btn-sm" type="button" value="Launch"/>
+                    <input app="{{file[1]}}" class="btn btn-secondary btn-sm" type="button" value="Launch Locally"/>
                 </div>
             </div>
         </div>
         {% endfor %}
-        <div class="col-sm-3">
-            <div app="<hash_here>" class="card">
-                <div class="card-header">file name.mp4</div>
-                <div class="card-body">
-                    <img class="" src="" alt="" />
-                </div>
-                <div class="card-footer">
-                    <input class="btn btn-secondary btn-sm" type="button" value="Launch"/>
-                    <input class="btn btn-secondary btn-sm" type="button" value="Launch Locally"/>
-                </div>
-            </div>
-        </div>
 </div>
 {% endblock body_content_additional %}
 

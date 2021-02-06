@@ -1,7 +1,8 @@
 # Python imports
+import secrets
 
 # Lib imports
-from flask import request, render_template
+from flask import request, session, render_template
 from flask_login import current_user
 
 
@@ -11,32 +12,39 @@ from core.utils import MessageHandler   # Get simple message processor
 from core.utils.shellfm import WindowController   # Get file manager controller
 
 
-msgHandler     = MessageHandler()
-win_controller = WindowController()
-win_controller.pop_window()
-win_controller.list_windows()
-# win_controller.add_window()
-# win_controller.list_views_from_window(0)
+msgHandler         = MessageHandler()
+window_controllers = {}
 
+
+def get_window_controller():
+    if session.get('win_controller_id') is None:
+        id = secrets.token_hex(16)
+        session['win_controller_id'] = id
+        window_controllers.update( {id: WindowController() } )
+
+        return window_controllers[ session["win_controller_id"]  ]
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        _dHash  = file_manager.getDotHash()
-        _ddHash = file_manager.getDotDotHash()
+        view = get_window_controller().get_window(1).get_view(0)
 
-        return render_template('pages/index.html')
+        view.push_to_path("LazyShare")
+        _path  = view.get_path()
+        _files = view.get_files()
+
+        return render_template('pages/index.html', path=_path, files=_files)
 
     return render_template('error.html',
                             title='Error!',
                             message='Must use GET request type...')
 
 
-@app.route('/api/list-files', methods=['GET', 'POST'])
-def listFilesRoute():
+@app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
+def listFilesRoute(_hash):
     if request.method == 'POST':
-        HASH          = str(request.values['hash']).strip()
+        HASH          = _hash.strip()
         pathPart      = file_manager.returnPathPartFromHash(HASH)
         lockedFolders = config["settings"]["locked_folders"].split("::::")
         path          = file_manager.getPath().split('/')

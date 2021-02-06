@@ -1,9 +1,11 @@
 # Python imports
-from os.path import isdir, isfile, join
+import hashlib
 from os import listdir
+from os.path import isdir, isfile, join
 
 
 # Lib imports
+
 
 # Application imports
 from . import Path, Filters
@@ -62,21 +64,29 @@ class View(Filters, Path):
 
         self.files = self.dirs + self.vids + self.images + self.desktop + self.ungrouped
 
+    def hashText(self, text):
+        return hashlib.sha256(str.encode(text)).hexdigest()[:18]
+
+    def hashSet(self, arry):
+        data = []
+        for arr in arry:
+            data.append([arr, self.hashText(arr)])
+        return data
 
     def get_files(self):
-        return self.files
+        return self.hashSet(self.files)
 
     def get_dirs(self):
-        return self.dirs
+        return self.hashSet(self.dirs)
 
     def get_videos(self):
-        return self.vids
+        return self.hashSet(self.vids)
 
     def get_images(self):
-        return self.images
+        return self.hashSet(self.images)
 
     def get_desktops(self):
-        return self.desktop
+        return self.hashSet(self.desktop)
 
     def get_ungrouped(self):
-        return self.ungrouped
+        return self.hashSet(self.ungrouped)

@@ -10,7 +10,7 @@ function main() {
     echo "Working Dir: " $(pwd)
     source "../venv/bin/activate"
 
-    LOG_LEVEL=error
+    LOG_LEVEL=warn
     WORKER_COUNT=1
     ADDR=127.0.0.1
     PORT=6969
