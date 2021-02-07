@@ -1,29 +1,39 @@
+# System import
+import os, subprocess, threading
+
+
+# Lib imports
+
+
+# Apoplication imports
+
+
 class Launcher:
     def openFilelocally(self, file):
         lowerName = file.lower()
         command   = []
 
-        if lowerName.endswith(self.VEXTENSION):
-            player  = config["settings"]["media_app"]
-            options = config["settings"]["mplayer_options"].split()
+        if lowerName.endswith(self.fvideos):
+            player  = self.fm_config["settings"]["media_app"]
+            options = self.fm_config["settings"]["mplayer_options"].split()
             command = [player]
 
             if "mplayer" in player:
                 command += options
 
             command += [file]
-        elif lowerName.endswith(self.IEXTENSION):
-            command = [config["settings"]["image_app"], file]
-        elif lowerName.endswith(self.MEXTENSION):
-            command = [config["settings"]["music_app"], file]
-        elif lowerName.endswith(self.OEXTENSION):
-            command = [config["settings"]["office_app"], file]
-        elif lowerName.endswith(self.TEXTENSION):
-            command = [config["settings"]["text_app"], file]
-        elif lowerName.endswith(self.PEXTENSION):
-            command = [config["settings"]["pdf_app"], file]
+        elif lowerName.endswith(self.fimages):
+            command = [self.fm_config["settings"]["image_app"], file]
+        elif lowerName.endswith(self.fmusic):
+            command = [self.fm_config["settings"]["music_app"], file]
+        elif lowerName.endswith(self.foffice):
+            command = [self.fm_config["settings"]["office_app"], file]
+        elif lowerName.endswith(self.ftext):
+            command = [self.fm_config["settings"]["text_app"], file]
+        elif lowerName.endswith(self.fpdf):
+            command = [self.fm_config["settings"]["pdf_app"], file]
         else:
-            command = [config["settings"]["file_manager_app"], file]
+            command = [self.fm_config["settings"]["file_manager_app"], file]
 
         self.logging.debug(command)
         DEVNULL = open(os.devnull, 'w')
@@ -32,25 +42,10 @@ class Launcher:
 
     def remuxVideo(self, hash, file):
         remux_vid_pth = self.REMUX_FOLDER + "/" + hash + ".mp4"
-        message       = '{"path":"static/remuxs/' + hash + '.mp4"}'
-
         self.logging.debug(remux_vid_pth)
-        self.logging.debug(message)
 
         if not os.path.isfile(remux_vid_pth):
-            limit = config["settings"]["remux_folder_max_disk_usage"]
-            try:
-                limit = int(limit)
-            except Exception as e:
-                self.logging.debug(e)
-                return
-
-            usage = self.getRemuxFolderUsage(self.REMUX_FOLDER)
-            if usage > limit:
-                files = os.listdir(self.REMUX_FOLDER)
-                for file in files:
-                    fp = os.path.join(self.REMUX_FOLDER, file)
-                    os.unlink(fp)
+            self.check_remux_space()
 
             command = ["ffmpeg", "-i", file, "-hide_banner", "-movflags", "+faststart"]
             if file.endswith("mkv"):
@@ -67,11 +62,11 @@ class Launcher:
                 proc = subprocess.Popen(command)
                 proc.wait()
             except Exception as e:
-                message = '{"message": {"type": "danger", "text":"' + str( repr(e) ) + '"}}'
                 self.logging.debug(message)
                 self.logging.debug(e)
+                return False
 
-        return message
+        return True
 
 
     def generateVideoThumbnail(self, fullPath, hashImgPth):
@@ -81,13 +76,29 @@ class Launcher:
         except Exception as e:
             self.logging.debug(repr(e))
 
+
+    def check_remux_space(self):
+        limit = self.fm_config["settings"]["remux_folder_max_disk_usage"]
+        try:
+            limit = int(limit)
+        except Exception as e:
+            self.logging.debug(e)
+            return
+
+        usage = self.getRemuxFolderUsage(self.REMUX_FOLDER)
+        if usage > limit:
+            files = os.listdir(self.REMUX_FOLDER)
+            for file in files:
+                fp = os.path.join(self.REMUX_FOLDER, file)
+                os.unlink(fp)
+
+
     def getRemuxFolderUsage(self, start_path = "."):
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(start_path):
             for f in filenames:
                 fp = os.path.join(dirpath, f)
-                # skip if it is symbolic link
-                if not os.path.islink(fp):
+                if not os.path.islink(fp): # Skip if it is symbolic link
                     total_size += os.path.getsize(fp)
 
         return total_size

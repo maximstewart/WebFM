@@ -30,7 +30,7 @@ def home():
     if request.method == 'GET':
         view   = get_window_controller().get_window(1).get_view(0)
         _path  = view.get_path()
-        _files = view.get_files()
+        _files = view.get_files_formatted()
         return render_template('pages/index.html', path=_path, files=_files)
 
     return render_template('error.html',

@@ -8,10 +8,10 @@ from os.path import isdir, isfile, join
 
 
 # Application imports
-from . import Path, Filters, Launcher
+from . import Path, Settings, Launcher
 
 
-class View(Filters, Path, Launcher):
+class View(Settings, Launcher, Path):
     def __init__(self):
         self.hideHiddenFiles = True
         self.files     = []
@@ -20,7 +20,19 @@ class View(Filters, Path, Launcher):
         self.images    = []
         self.desktop   = []
         self.ungrouped = []
+        self.fm_config = self.getFileManagerSettings()
         self.set_to_home()
+
+
+    # Settings data
+    def getFileManagerSettings(self):
+        returnData = []
+        with open(self.CONFIG_FILE) as infile:
+            try:
+                return json.load(infile)
+            except Exception as e:
+                print(repr(e))
+                return ['', 'mplayer', 'xdg-open']
 
     def load_directory(self):
         path           = self.get_path()
@@ -77,6 +89,16 @@ class View(Filters, Path, Launcher):
             if hash == file[1]:
                 return file[0]
         return None
+
+    def get_files_formatted(self):
+        return {
+            'files': self.hashSet(self.files),
+            'dirs': self.hashSet(self.dirs),
+            'videos': self.hashSet(self.vids),
+            'images': self.hashSet(self.images),
+            'desktops': self.hashSet(self.desktop),
+            'ungrouped': self.hashSet(self.ungrouped)
+        }
 
     def get_files(self):
         return self.hashSet(self.files)

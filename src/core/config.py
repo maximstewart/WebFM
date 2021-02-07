@@ -1,5 +1,5 @@
 # System import
-import os, secrets, json
+import os, secrets
 from datetime import timedelta
 
 
@@ -12,19 +12,9 @@ from datetime import timedelta
 APP_NAME = 'WebFM'
 # Configs
 ROOT_FILE_PTH = os.path.dirname(os.path.realpath(__file__))
-CONFIG_FILE   = ROOT_FILE_PTH + "/webfm_config.json"
 # This path is submitted as the redirect URI in certain code flows.
 REDIRECT_LINK = "https%3A%2F%2Fwww.webfm.com%2F"
 
-# Settings data
-def retrieveSettings():
-    returnData = []
-    with open(CONFIG_FILE) as infile:
-        try:
-            return json.load(infile)
-        except Exception as e:
-            print(repr(e))
-            return ['', 'mplayer', 'xdg-open']
 
 
 
@@ -50,10 +40,14 @@ class Config(object):
                             'https://localhost:443/auth/realms/apps'
                         ]
 
-    WEBFM_CONFIG   = retrieveSettings()
     STATIC_FPTH    = ROOT_FILE_PTH + "/static"
-    REMUX_FOLDER   = STATIC_FPTH   + "/remuxs"
-    FFMPG_THUMBNLR = STATIC_FPTH   + "/ffmpegthumbnailer"
+    REMUX_FOLDER   = STATIC_FPTH   + "/remuxs"             # Remuxed files folder
+    FFMPG_THUMBNLR = STATIC_FPTH   + "/ffmpegthumbnailer"  # Thumbnail generator binary
+
+    ABS_THUMBS_PTH = STATIC_FPTH + "/imgs/thumbnails"      # Used for thumbnail generation
+    REL_THUMBS_PTH = "static/imgs/thumbnails"              # Used for flask thumbnail return
+
+
 
 
 class ProductionConfig(Config):

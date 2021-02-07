@@ -5,6 +5,7 @@
     width: 100%;
     height: 100%;
     z-index: -999;
+    object-fit: cover;
 }
 
 #bg img {
@@ -19,7 +20,7 @@
 }
 
 #master-container {
-    height: 85vh;
+    height: 90vh;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -47,9 +48,9 @@
 
 
 .dir-style, .video-style, .image-style, .file-style {
-	height: auto;
-	width: 24vw;
-	position: relative;
+	/* max-width: 24vw; */
+    /* height: auto;
+	position: relative; */
 	max-width: 20em;
 }
 

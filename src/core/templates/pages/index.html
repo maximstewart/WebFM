@@ -15,7 +15,7 @@
 
 {% block body_content_additional %}
 <div id="files" class="row">
-        {% for file in files %}
+        {% for file in files['files'] %}
         <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card">
                 <div class="card-header">{{file[0]}}</div>
