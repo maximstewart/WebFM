@@ -1,5 +1,5 @@
 # Python imports
-import hashlib
+import hashlib, json
 from os import listdir
 from os.path import isdir, isfile, join
 
@@ -15,7 +15,7 @@ class View(Settings, Launcher, Path):
     def __init__(self):
         self.hideHiddenFiles = True
         self.files     = []
-        self.dirs      = ['.', '..']
+        self.dirs      = []
         self.vids      = []
         self.images    = []
         self.desktop   = []
@@ -36,7 +36,7 @@ class View(Settings, Launcher, Path):
 
     def load_directory(self):
         path           = self.get_path()
-        self.dirs      = ['.', '..']
+        self.dirs      = []
         self.vids      = []
         self.images    = []
         self.desktop   = []
@@ -91,14 +91,30 @@ class View(Settings, Launcher, Path):
         return None
 
     def get_files_formatted(self):
+        files     = self.hashSet(self.files),
+        dirs      = self.hashSet(self.dirs),
+        videos    = self.hashSet(self.vids),
+        images    = self.hashSet(self.images),
+        desktops  = self.hashSet(self.desktop),
+        ungrouped = self.hashSet(self.ungrouped)
+
         return {
-            'files': self.hashSet(self.files),
-            'dirs': self.hashSet(self.dirs),
-            'videos': self.hashSet(self.vids),
-            'images': self.hashSet(self.images),
-            'desktops': self.hashSet(self.desktop),
-            'ungrouped': self.hashSet(self.ungrouped)
+            'path_head': self.get_path(),
+            'list': {
+                'files': files,
+                'dirs': dirs,
+                'videos': videos,
+                'images': images,
+                'desktops': desktops,
+                'ungrouped': ungrouped
+            }
         }
+
+    def get_current_directory(self):
+        return self.get_path()
+
+    def get_dot_dots(self):
+        return self.hashSet(['.', '..'])
 
     def get_files(self):
         return self.hashSet(self.files)

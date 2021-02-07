@@ -7,12 +7,12 @@
 
     <div id="navbarTogglerHeader" class="row collapse navbar-collapse">
         <div class="col-sm">
-            {% if files %}
+            {% if current_directory %}
                 <li class="nav-item">
                     <div class="input-group input-group-sm justify-content-center">
                         <button title="Other Options..." class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#options-modal">⚙</button>
-                        <button title="Refresh..." id="refresh-btn" class="btn btn-sm btn-secondary" hash="{{files['files'][0][1]}}">↻</button>
-                        <button title="Back..." id="back-btn" class="btn btn-sm btn-secondary" hash="{{files['files'][1][1]}}">⇐</button>
+                        <button title="Refresh..." id="refresh-btn" class="btn btn-sm btn-secondary" hash="{{dot_dots[0][1]}}">↻</button>
+                        <button title="Back..." id="back-btn" class="btn btn-sm btn-secondary" hash="{{dot_dots[1][1]}}">⇐</button>
 
                         <input id="search-files-field" type="text" class="form-control" aria-label="Search..." placeholder="Search..." style="max-width: 260px">
                         <div class="input-group-prepend">

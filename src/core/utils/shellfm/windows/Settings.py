@@ -1,5 +1,4 @@
 # System import
-import json
 from os import path
 
 

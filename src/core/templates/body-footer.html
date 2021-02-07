@@ -1,4 +1,4 @@
-{% if files %}
+{% if current_directory %}
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center text-center fixed-bottom">
     <button class="navbar-toggler" type="button" data-toggle="collapse"
         data-target="#navbarTogglerFooter" aria-controls="navbarTogglerFooter"
@@ -10,7 +10,7 @@
         <div class="col col-lg-auto">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <span id="currentDirectory">{{path}}</span>
+                    <span id="currentDirectory">{{current_directory}}</span>
                 </li>
             </ul>
         </div>

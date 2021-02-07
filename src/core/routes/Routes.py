@@ -29,43 +29,78 @@ def get_window_controller():
 def home():
     if request.method == 'GET':
         view   = get_window_controller().get_window(1).get_view(0)
-        _path  = view.get_path()
-        _files = view.get_files_formatted()
-        return render_template('pages/index.html', path=_path, files=_files)
+        _dot_dots          = view.get_dot_dots()
+        _current_directory = view.get_current_directory()
+        return render_template('pages/index.html', current_directory = _current_directory, dot_dots = _dot_dots)
 
-    return render_template('error.html',
-                            title='Error!',
-                            message='Must use GET request type...')
+    return render_template('error.html', title = 'Error!',
+                            message = 'Must use GET request type...')
 
 
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
 def listFilesRoute(_hash):
     if request.method == 'POST':
-        HASH          = _hash.strip()
-        pathPart      = file_manager.returnPathPartFromHash(HASH)
-        lockedFolders = config["settings"]["locked_folders"].split("::::")
-        path          = file_manager.getPath().split('/')
-        lockedFolderInPath = False
+        view    = get_window_controller().get_window(1).get_view(0)
+        files   = view.get_files_formatted()
 
-        # Insure chilren folders are locked too.
-        for folder in lockedFolders:
-            if folder in path:
-                lockedFolderInPath = True
-                break
+        _path  = view.get_path()
+        _files = view.get_files_formatted()
 
-        isALockedFolder = (pathPart in lockedFolders or lockedFolderInPath)
-        msg = "Log in with an Admin privlidged user to view the requested path!"
-        if isALockedFolder and not oidc.user_loggedin:
-            return msgHandler.createMessageJSON("danger", msg)
-        elif isALockedFolder and oidc.user_loggedin:
-            isAdmin = oidc.user_getfield("isAdmin")
-            if isAdmin != "yes" :
-                return msgHandler.createMessageJSON("danger", msg)
+        fave    = db.session.query(Favorites).filter_by(link=path).first()
+        in_fave = "true" if fave else "false"
+        files.update({'in_fave': in_fave})
+        return files
 
-        return listFiles(HASH)
+        # HASH          = _hash.strip()
+        # pathPart      = file_manager.returnPathPartFromHash(HASH)
+        # lockedFolders = config["settings"]["locked_folders"].split("::::")
+        # path          = file_manager.getPath().split('/')
+        # lockedFolderInPath = False
+        #
+        # # Insure chilren folders are locked too.
+        # for folder in lockedFolders:
+        #     if folder in path:
+        #         lockedFolderInPath = True
+        #         break
+        #
+        # isALockedFolder = (pathPart in lockedFolders or lockedFolderInPath)
+        # msg = "Log in with an Admin privlidged user to view the requested path!"
+        # if isALockedFolder and not oidc.user_loggedin:
+        #     return msgHandler.createMessageJSON("danger", msg)
+        # elif isALockedFolder and oidc.user_loggedin:
+        #     isAdmin = oidc.user_getfield("isAdmin")
+        #     if isAdmin != "yes" :
+        #         return msgHandler.createMessageJSON("danger", msg)
+        #
+        # return listFiles(HASH)
     else:
         msg = "Can't manage the request type..."
         return msgHandler.createMessageJSON("danger", msg)
+
+@app.route('/api/file-manager-action/<_type>/<_hash>')
+def file_manager_action(_type, _hash = None):
+    view = get_window_controller().get_window(1).get_view(0)
+
+    if _type == "reset-path" and _hash == None:
+        view.set_to_home()
+        return redirect("/")
+
+
+    folder = view.get_path()
+    file   = view.returnPathPartFromHash(hash)
+    fpath  = os.path.join(folder, file)
+    logging.debug(fpath)
+
+    if _type == "files":
+        return send_from_directory(folder, file)
+    if _type == "remux":
+        # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
+        # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
+        # I.E....this is stupid but for now works
+        return view.remuxVideo(hash, fpath)
+    if _type == "run-locally":
+        view.openFilelocally(fpath)
+        return msgHandler.createMessageJSON("success", msg)
 
 
 @app.route('/api/get-favorites', methods=['GET', 'POST'])
@@ -120,67 +155,3 @@ def manageFavoritesRoute(_action):
     else:
         msg = "Can't manage the request type..."
         return msgHandler.createMessageJSON("danger", msg)
-
-
-@app.route('/api/reset-path', methods=['GET', 'POST'])
-def resetPath():
-    if request.method == 'GET':
-        view = get_window_controller().get_window(1).get_view(0)
-        view.set_to_home()
-        return redirect("/")
-
-# Used to get files from non gunicorn root path...
-# Allows us to pull images and stuff to user without simlinking.
-@app.route('/api/files/<hash>')
-def returnFile(hash):
-    view   = get_window_controller().get_window(1).get_view(0)
-    folder = view.get_path()
-    file   = view.returnPathPartFromHash(hash)
-    return send_from_directory(folder, file)
-
-@app.route('/api/remux/<hash>')
-def remuxRoute(hash):
-    view   = get_window_controller().get_window(1).get_view(0)
-    folder = view.get_path()
-    file   = view.returnPathPartFromHash(hash)
-    fpath  = os.path.join(folder, file)
-
-    logging.debug(fpath)
-    return view.remuxVideo(hash, fpath)
-
-@app.route('/api/run-locally/<hash>')
-def runLocallyRoute(hash):
-    view   = get_window_controller().get_window(1).get_view(0)
-    folder = view.get_path()
-    file   = view.returnPathPartFromHash(hash)
-    fpath  = os.path.join(folder, file)
-
-    logging.debug(fpath)
-    view.openFilelocally(fpath)
-
-    msg = "Opened media..."
-    return msgHandler.createMessageJSON("success", msg)
-
-
-
-def listFiles(HASH):
-    state = file_manager.generateLists(HASH)
-    if "error" in state:
-        msg = "Listing files failed..."
-        return msgHandler.createMessageJSON("danger", msg)
-
-    path    = file_manager.getPath()
-    fave    = db.session.query(Favorites).filter_by(link=path).first()
-    in_fave = "true" if fave else "false"
-
-    dirs    = json.dumps( file_manager.getDirs() )
-    vids    = json.dumps( file_manager.getVids() )
-    imgs    = json.dumps( file_manager.getImgs() )
-    files   = json.dumps( file_manager.getFiles() )
-
-    return '{"path_head":"' + path + '"' + \
-            ',"in_fave":"'   + in_fave + '"' + \
-            ',"list":{"dirs":'   + dirs + \
-                    ', "vids":'  + vids + \
-                    ', "imgs":'  + imgs + \
-                    ', "files":' + files + '}}'
