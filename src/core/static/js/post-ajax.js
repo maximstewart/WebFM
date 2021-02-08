@@ -5,10 +5,8 @@ const postAjaxController = (data, action) => {
         return ;
     }
 
-    console.log(data);
     if (data.hasOwnProperty('path_head'))
-        console.log();
-        // updateHTMLDirList(data);
+        updateHTMLDirList(data);
     if (data.hasOwnProperty('faves_list'))
         // generateFavesList(data.faves_list);
         console.log("faves stub...");
@@ -47,39 +45,26 @@ const generateFavesList = (data) => {
 
 
 const updateHTMLDirList = async (data) => {
-    var dirTemplate = document.querySelector('#dirTemplate');
-    var vidTemplate = document.querySelector('#vidTemplate');
-    var imgTemplate = document.querySelector('#imgTemplate');
-    var filTemplate = document.querySelector('#filTemplate');
-    let insertArea  = document.getElementById('file-grid');
+    console.log(data);
     let pathElm     = document.getElementById("path");
-    let thumbnail   = formatURL("static/imgs/icons/folder.png");
-    let pathParts     = data.path_head.split("/");
-    let dirPath     = pathParts[pathParts.length - 1] + "/";
-
-    let title       = "";
-    let hash        = "";
-
-    // Can still set the path info if locked...
-    pathElm.innerText = dirPath;
-    // If locked return and create password field....
-
-    let dirs        = (data.list.dirs)  ? data.list.dirs  : [];
-    let videos      = (data.list.vids)  ? data.list.vids  : [];
-    let images      = (data.list.imgs)  ? data.list.imgs  : [];
-    let files       = (data.list.files) ? data.list.files : [];
+    let dirs        = (data.list.dirs)  ? data.list.dirs[0]  : [];
+    let videos      = (data.list.vids)  ? data.list.vids[0]  : [];
+    let images      = (data.list.images)  ? data.list.images[0]  : [];
+    let files       = (data.list.ungrouped) ? data.list.ungrouped[0] : [];
     let isInFaves   = data.in_fave;
-    let background_image = images[0] ? images[0][0] : "";
-    let i           = 0;
-    let size        = 0;
 
+    console.log(data.list.images);
+    let background_image = (images[0]) ? images[0][0] : "";
+    console.log(background_image);
+
+    pathElm.innerText = data.path_head; // Can still set the path info if locked...
     // Setup background if there is a 000.* in selection
     if (background_image.match(/000\.(jpg|png|gif)\b/) != null) {
         // Due to same hash for 000 we add date to make link unique for each run to bypass cache issues...
-        background_image = formatURL("files/" + images[i][1] + '?d=' + Date.now());
+        background_image = "api/file-manager-action/files/" + images[0][1] + '?d=' + Date.now();
         updateBackground(background_image, false);
     } else {
-        background_image = formatURL("static/imgs/backgrounds/particles.mp4");
+        background_image = "static/imgs/backgrounds/particles.mp4";
         updateBackground(background_image);
     }
 
@@ -90,89 +75,92 @@ const updateHTMLDirList = async (data) => {
     else
         elm.classList.remove("btn-info");
 
-    clearChildNodes(insertArea);
-    // Insert dirs
-    let dirClone  = document.importNode(dirTemplate.content, true);
-    let dir       = null;
-    size          = dirs.length;
-    for (; i < size; i++) {
-        const clone = dirClone.cloneNode(true);
-        title = dirs[i][0];
-        hash  = dirs[i][1];
-        createElmBlock(insertArea, clone, thumbnail, title, hash);
-    }
 
-    // Insert videos
-    let vidClone  = document.importNode(vidTemplate.content, true);
-    size          = videos.length;
-    for (i = 0; i < size; i++) {
-        const clone = vidClone.cloneNode(true);
-        title       = videos[i][0];
-        thumbnail   = formatURL(videos[i][1]);
-        hash        = videos[i][2];
-        createElmBlock(insertArea, clone, thumbnail, title, hash, true);
-    }
+    renderFilesList(data.list);
 
-    // Insert images
-    let imgClone  = document.importNode(imgTemplate.content, true);
-    thumbnail     = "";
-    size          = images.length;
-    for (i = 0; i < size; i++) {
-        title     = images[i][0];
-        thumbnail = formatURL("files/" + images[i][1]);
-        hash      = images[i][1];
-
-        if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
-            !thumbnail.includes("favicon.png") && !thumbnail.includes("000")) {
-            const clone  = imgClone.cloneNode(true);
-            createElmBlock(insertArea, clone, thumbnail, title, hash);
-        }
-    }
-
-    // Insert files
-    let fileClone = document.importNode(filTemplate.content, true);
-    size          = files.length;
-    for (i = 0; i < size; i++) {
-        const clone  = fileClone.cloneNode(true);
-        title     = files[i][0];
-        thumbnail = setFileIconType(files[i][0]);
-        hash      = files[i][1];
-        createElmBlock(insertArea, clone, thumbnail, title, hash);
-    }
-}
-
-const createElmBlock = (ulElm, clone, thumbnail, title, hash, isVideo=false) => {
-    let containerTag = clone.firstElementChild;
-    containerTag.setAttribute("style", "background-image: url('" + thumbnail + "')");
-    containerTag.setAttribute("title", title);
-    containerTag.setAttribute("hash", hash);
-
-    // If image tag this sink to oblivion since there are no input tags in the template
-    try {
-        let inputTag = clone.querySelector("input");
-        inputTag.setAttribute("value", title);
-        // NOTE: Keeping this just incase i do want to rename stuff...
-        //
-        // inputTag.addEventListener("dblclick", function (eve) {
-        //     enableEdit(eve.target);
-        // });
-        // inputTag.addEventListener("focusout", function (eve) {
-        //     disableEdit(eve.target);
-        // });
-    } catch (e) { }
-
-    if (isVideo) {
-        let popoutTag = clone.querySelector(".card-popout-btn");
-        popoutTag.setAttribute("hash", hash);
-        popoutTag.addEventListener("click", function (eve) {
-            let target = eve.target;
-            const hash = target.getAttribute("hash");
-            openWithLocalProgram(hash);
-        });
-    }
-
-
-    ulElm.appendChild(clone);
+//     clearChildNodes(insertArea);
+//     // Insert dirs
+//     let dirClone  = document.importNode(dirTemplate.content, true);
+//     let dir       = null;
+//     size          = dirs.length;
+//     for (; i < size; i++) {
+//         const clone = dirClone.cloneNode(true);
+//         title = dirs[i][0];
+//         hash  = dirs[i][1];
+//         createElmBlock(insertArea, clone, thumbnail, title, hash);
+//     }
+//
+//     // Insert videos
+//     let vidClone  = document.importNode(vidTemplate.content, true);
+//     size          = videos.length;
+//     for (i = 0; i < size; i++) {
+//         const clone = vidClone.cloneNode(true);
+//         title       = videos[i][0];
+//         thumbnail   = formatURL(videos[i][1]);
+//         hash        = videos[i][2];
+//         createElmBlock(insertArea, clone, thumbnail, title, hash, true);
+//     }
+//
+//     // Insert images
+//     let imgClone  = document.importNode(imgTemplate.content, true);
+//     thumbnail     = "";
+//     size          = images.length;
+//     for (i = 0; i < size; i++) {
+//         title     = images[i][0];
+//         thumbnail = formatURL("files/" + images[i][1]);
+//         hash      = images[i][1];
+//
+//         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
+//             !thumbnail.includes("favicon.png") && !thumbnail.includes("000")) {
+//             const clone  = imgClone.cloneNode(true);
+//             createElmBlock(insertArea, clone, thumbnail, title, hash);
+//         }
+//     }
+//
+//     // Insert files
+//     let fileClone = document.importNode(filTemplate.content, true);
+//     size          = files.length;
+//     for (i = 0; i < size; i++) {
+//         const clone  = fileClone.cloneNode(true);
+//         title     = files[i][0];
+//         thumbnail = setFileIconType(files[i][0]);
+//         hash      = files[i][1];
+//         createElmBlock(insertArea, clone, thumbnail, title, hash);
+//     }
+// }
+//
+// const createElmBlock = (ulElm, clone, thumbnail, title, hash, isVideo=false) => {
+//     let containerTag = clone.firstElementChild;
+//     containerTag.setAttribute("style", "background-image: url('" + thumbnail + "')");
+//     containerTag.setAttribute("title", title);
+//     containerTag.setAttribute("hash", hash);
+//
+//     // If image tag this sink to oblivion since there are no input tags in the template
+//     try {
+//         let inputTag = clone.querySelector("input");
+//         inputTag.setAttribute("value", title);
+//         // NOTE: Keeping this just incase i do want to rename stuff...
+//         //
+//         // inputTag.addEventListener("dblclick", function (eve) {
+//         //     enableEdit(eve.target);
+//         // });
+//         // inputTag.addEventListener("focusout", function (eve) {
+//         //     disableEdit(eve.target);
+//         // });
+//     } catch (e) { }
+//
+//     if (isVideo) {
+//         let popoutTag = clone.querySelector(".card-popout-btn");
+//         popoutTag.setAttribute("hash", hash);
+//         popoutTag.addEventListener("click", function (eve) {
+//             let target = eve.target;
+//             const hash = target.getAttribute("hash");
+//             openWithLocalProgram(hash);
+//         });
+//     }
+//
+//
+//     ulElm.appendChild(clone);
 }
 
 const setFileIconType = (fileName) => {

@@ -20,8 +20,6 @@ const scrollFilesToTop = () => {
 const updateBackground = (srcLink, isvideo = true) => {
     try {
         let elm = document.getElementById("bg");
-
-        console.log(srcLink);
         if (isvideo) {
             if (elm.getAttribute('src') === "") {
                 elm.src = srcLink;
@@ -30,7 +28,7 @@ const updateBackground = (srcLink, isvideo = true) => {
             elm.src = "";
             elm.setAttribute("poster", srcLink);
         }
-    } catch (e) { }
+    } catch (e) {}
 }
 
 

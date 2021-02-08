@@ -30,15 +30,14 @@ class FilesList extends React.Component {
     }
 }
 
-const renderFilesList = (data = {"files": ['Dir 1', 'Dir 2', 'Dir 3', 'Dir 4', 'Dir 5']}) => {
+const renderFilesList = (data = null) => {
     // Obtain the root
     const filesListElm = document.getElementById('files')
+    console.log(data);
 
-    // Use the ReactDOM.render to show our component on the browser
-    ReactDOM.render(
-        React.createElement(FilesList, data),
-        filesListElm
-    )
+    // // Use the ReactDOM.render to show our component on the browser
+    // ReactDOM.render(
+    //     React.createElement(FilesList, data),
+    //     filesListElm
+    // )
 }
-
-renderFilesList()
