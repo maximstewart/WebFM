@@ -1,5 +1,5 @@
 # Python imports
-import json, secrets
+import os, json, secrets
 
 # Lib imports
 from flask import request, session, render_template, send_from_directory, redirect
@@ -24,6 +24,7 @@ def get_window_controller():
         view.ABS_THUMBS_PTH = app.config['ABS_THUMBS_PTH']
         view.REMUX_FOLDER   = app.config['REMUX_FOLDER']
         view.FFMPG_THUMBNLR = app.config['FFMPG_THUMBNLR']
+        view.logger         = logger
 
         session['win_controller_id'] = id
         window_controllers.update( {id: controller } )
@@ -86,10 +87,10 @@ def fileManagerAction(_type, _hash = None):
         return redirect("/")
 
 
-    folder = view.get_path()
-    file   = view.returnPathPartFromHash(hash)
+    folder = view.get_current_directory()
+    file   = view.get_path_part_from_hash(_hash)
     fpath  = os.path.join(folder, file)
-    logging.debug(fpath)
+    logger.debug(fpath)
 
     if _type == "files":
         return send_from_directory(folder, file)
@@ -97,7 +98,7 @@ def fileManagerAction(_type, _hash = None):
         # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
         # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
         # I.E....this is stupid but for now works better than nothing
-        return view.remuxVideo(hash, fpath)
+        return view.remuxVideo(_hash, fpath)
     if _type == "run-locally":
         view.openFilelocally(fpath)
         return msgHandler.createMessageJSON("success", msg)

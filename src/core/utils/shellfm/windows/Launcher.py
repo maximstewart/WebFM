@@ -33,14 +33,14 @@ class Launcher:
         else:
             command = [self.file_manager_app, file]
 
-        self.logging.debug(command)
+            self.logger.debug(command)
         DEVNULL = open(os.devnull, 'w')
         subprocess.Popen(command, start_new_session=True, stdout=DEVNULL, stderr=DEVNULL, close_fds=True)
 
 
     def remuxVideo(self, hash, file):
         remux_vid_pth = self.REMUX_FOLDER + "/" + hash + ".mp4"
-        self.logging.debug(remux_vid_pth)
+        self.logger.debug(remux_vid_pth)
 
         if not os.path.isfile(remux_vid_pth):
             self.check_remux_space()
@@ -60,8 +60,8 @@ class Launcher:
                 proc = subprocess.Popen(command)
                 proc.wait()
             except Exception as e:
-                self.logging.debug(message)
-                self.logging.debug(e)
+                self.logger.debug(message)
+                self.logger.debug(e)
                 return False
 
         return True
@@ -72,7 +72,7 @@ class Launcher:
             proc = subprocess.Popen([self.FFMPG_THUMBNLR, "-t", "65%", "-s", "300", "-c", "jpg", "-i", fullPath, "-o", hashImgPth])
             proc.wait()
         except Exception as e:
-            self.logging.debug(repr(e))
+            self.logger.debug(repr(e))
 
 
     def check_remux_space(self):
@@ -80,7 +80,7 @@ class Launcher:
         try:
             limit = int(limit)
         except Exception as e:
-            self.logging.debug(e)
+            self.logger.debug(e)
             return
 
         usage = self.getRemuxFolderUsage(self.REMUX_FOLDER)

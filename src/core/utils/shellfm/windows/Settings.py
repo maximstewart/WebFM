@@ -10,6 +10,7 @@ from os import path
 
 
 class Settings:
+    logger            = None
     ABS_THUMBS_PTH    = None   # Used for thumbnail generation and is set by passing in
     REMUX_FOLDER      = None   # Used for Remuxed files and is set by passing in
     FFMPG_THUMBNLR    = None   # Used for thumbnail generator binary and is set by passing in

@@ -1,25 +1,33 @@
-const setFileIconType = (fileName) => {
-    let icoPath = "";
+let re = /(?:\.([^.]+))?$/;
 
-    if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null) {
+const setFileIconType = (fileName) => {
+    let icoPath = "static/imgs/icons/bin.png";
+    let ftype   = "file";
+
+    if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null)
         icoPath = "static/imgs/icons/doc.png";
-    } else if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null) {
+    if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null)
         icoPath = "resources/images/icons/arc.png";
-    } else if (fileName.match(/\.(pdf)\b/) != null) {
+    if (fileName.match(/\.(pdf)\b/) != null)
         icoPath = "static/imgs/icons/pdf.png";
-    } else if (fileName.match(/\.(html)\b/) != null) {
+    if (fileName.match(/\.(html)\b/) != null)
         icoPath = "static/imgs/icons/html.png";
-    } else if (fileName.match(/\.(txt|conf)\b/) != null) {
+    if (fileName.match(/\.(txt|conf)\b/) != null)
         icoPath = "static/imgs/icons/text.png";
-    } else if (fileName.match(/\.(iso|img)\b/) != null) {
+    if (fileName.match(/\.(iso|img)\b/) != null)
         icoPath = "static/imgs/icons/img.png";
-    } else if (fileName.match(/\.(sh|batch|exe)\b/) != null) {
+    if (fileName.match(/\.(sh|batch|exe)\b/) != null)
         icoPath = "static/imgs/icons/scrip.png";
-    } else {
-        icoPath = "static/imgs/icons/bin.png";
+    if (fileName.match(/\.(png|jpg|jpeg|gif|ico)\b/) != null)
+        ftype   = "image";
+    if (fileName.match(/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)\b/) != null)
+        ftype   = "video";
+    if (fileName.match(/\.(dir)\b/) != null) {
+        icoPath = "static/imgs/icons/folder.png";
+        ftype   = "dir"
     }
 
-    return icoPath
+    return [icoPath, ftype]
 }
 
 // Create a ES6 class component
@@ -47,19 +55,39 @@ class FilesList extends React.Component {
         let files = this.props.files[0];
 
         for (let file of files) {
+            const name    = file[0];
+            const hash    = file[1];
+            let extension = re.exec( name.toLowerCase() )[1] ? name : "file.dir";
+            let data      = setFileIconType(extension);
+            let icon      = data[0];
+            let filetype  = data[1];
+            let card_header = null;
+            let card_body   = null;
+
+            if (filetype === "video") {
+                card_header = name;
+                card_body   = <img class="image-style" src={"static/imgs/thumbnails/" + hash + ".jpg"} alt={name} />;
+            } else if (filetype === "image") {
+                card_header = name;
+                card_body   = <img class="image-style" src={"api/file-manager-action/files/" + hash} alt={name} />;
+            } else {
+                card_header = <img class="icon-style" src={icon} alt={name} />;
+                card_body = name;
+
+            }
+
             final.push(
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="card">
                         <div class="card-header">
-                            <img class="icon-style" src={ setFileIconType(file[0]) } alt={file[0]} />
-                            {file[0]}
+                            {card_header}
                         </div>
                         <div class="card-body">
-                        <img class="image-style" src={"api/file-manager-action/" + file[1]} alt={file[0]} />
+                            {card_body}
                         </div>
                         <div class="card-footer">
-                            <input app={file[1]} onClick={this.openThisLocally} class="btn btn-secondary btn-sm float-left" type="button" value="Open Locally"/>
-                            <input app={file[1]} onClick={this.openThis} class="btn btn-secondary btn-sm float-right" type="button" value="Open"/>
+                            <input app={hash} onClick={this.openThisLocally} ftype={filetype} class="btn btn-secondary btn-sm float-left" type="button" value="Open Locally"/>
+                            <input app={hash} onClick={this.openThis} ftype={filetype} class="btn btn-secondary btn-sm float-right" title={name} type="button" value="Open"/>
                         </div>
                     </div>
                 </div>

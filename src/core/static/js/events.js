@@ -20,6 +20,8 @@ document.body.onload = (eve) => {
     }
 }
 
+
+
 const openFile = (eve) => {
     let target = eve.target;
     let hash   = target.getAttribute("app");
@@ -31,6 +33,38 @@ const openFileLocally = (eve) => {
     let hash   = target.getAttribute("app");
     openWithLocalProgram(hash);
 }
+
+// Actions for content
+// document.getElementById('file-grid').ondblclick = (event) => {
+//     let target    = event.target;
+//     let className = target.className;
+//
+//     // Left click detect
+//     if (event.which == 1) {
+//         // If clicking on container
+//         if (className === "dir-style" || className === "video-style" ||
+//             className === "file-style" || className === "image-style") {
+//                 const title     = target.getAttribute("title");
+//                 const hash      = target.getAttribute("hash");
+//                 const parts     = title.split('.');
+//                 const extension = "." + parts[parts.length - 1].toLowerCase();
+//
+//                 if (className === "dir-style") {
+//                     listFilesAjax(hash);
+//                 } else if (className === "video-style") {
+//                     showMedia(hash, extension, "video");
+//                 } else {
+//                     showMedia(hash, extension, "file");
+//                 }
+//         }
+//     }
+// }
+
+
+
+
+
+
 
 $( "#search-files-field" ).bind( "keyup", async function(eve) {
     searchPage();

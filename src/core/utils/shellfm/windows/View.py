@@ -73,10 +73,14 @@ class View(Settings, Launcher, Path):
 
     def get_path_part_from_hash(self, hash):
         files = self.get_files()
-        for file in files:
-            if hash == file[1]:
-                return file[0]
-        return None
+        file  = None
+
+        for f in files:
+            if hash == f[1]:
+                file = f[0]
+                break
+
+        return file
 
     def get_files_formatted(self):
         files     = self.hashSet(self.files),
