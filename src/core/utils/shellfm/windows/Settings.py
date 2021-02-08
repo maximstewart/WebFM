@@ -14,21 +14,19 @@ class Settings:
     REMUX_FOLDER      = None   # Used for Remuxed files and is set by passing in
     FFMPG_THUMBNLR    = None   # Used for thumbnail generator binary and is set by passing in
     HIDE_HIDDEN_FILES = True
+    lock_folder       = True
+    go_past_home      = False
 
-    CONFIG_FILE       = path.dirname(__file__) + '/webfm_config.json'
     subpath           = "/LazyShare"  # modify 'home' folder path
-
-    locked_folders   = "Synced Backup::::venv::::flasks".split("::::")
-    mplayer_options  = "-quiet -really-quiet -xy 1600 -geometry 50%:50%".split()
-    music_app        = "/opt/deadbeef/bin/deadbeef"
-    media_app        = "mpv"
-    image_app        = "mirage"
-    office_app       = "libreoffice"
-    pdf_app          = "evince"
-    text_app         = "leafpad"
-    file_manager_app = "spacefm"
-    lock_folder      = True
-    go_past_home     = False
+    locked_folders    = "Synced Backup::::venv::::flasks".split("::::")
+    mplayer_options   = "-quiet -really-quiet -xy 1600 -geometry 50%:50%".split()
+    music_app         = "/opt/deadbeef/bin/deadbeef"
+    media_app         = "mpv"
+    image_app         = "mirage"
+    office_app        = "libreoffice"
+    pdf_app           = "evince"
+    text_app          = "leafpad"
+    file_manager_app  = "spacefm"
     remux_folder_max_disk_usage = "8589934592"
 
 

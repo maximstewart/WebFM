@@ -8,7 +8,7 @@ WebFM is a media and file viewer aspiring to become a full fledged file manager 
 5. Update client_secrets.json > 'client_secret' field with your Keycloak key. (Current one is local to me and not public)
 6. Place files or start uploading some to the folders.
 7. Place an image such as a jpg, png, or gif labeled "000.itsExtension" in a directory and the viewer will use it as the background image for that folder/directory.
-7. Password protect folder based on core/utils/shellfm/windows/webfm_config.json file settings.
+7. Password protect folder based on core/utils/shellfm/windows/Settings.py file settings.
 8. Save paths to favorites list for quick access.
 
 Notes:

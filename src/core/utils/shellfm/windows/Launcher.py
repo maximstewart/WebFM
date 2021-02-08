@@ -23,7 +23,7 @@ class Launcher:
         elif lowerName.endswith(self.fimages):
             command = [self.image_app, file]
         elif lowerName.endswith(self.fmusic):
-            command = [self.music_app], file]
+            command = [self.music_app, file]
         elif lowerName.endswith(self.foffice):
             command = [self.office_app, file]
         elif lowerName.endswith(self.ftext):
