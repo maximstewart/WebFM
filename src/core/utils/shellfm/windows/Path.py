@@ -19,7 +19,13 @@ class Path:
 
     def pop_from_path(self):
         self.path.pop()
+
+        if not self.go_past_home:
+            if self.get_home() not in self.get_path():
+                self.set_to_home()
+
         self.load_directory()
+
 
     def set_path(self, path):
         self.path = list( filter(None, path.replace("\\", "/").split('/')) )
@@ -30,3 +36,6 @@ class Path:
         path = list( filter(None, home.replace("\\", "/").split('/')) )
         self.path = path
         self.load_directory()
+
+    def get_home(self):
+        return os.path.expanduser("~") + self.subpath

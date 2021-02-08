@@ -1,5 +1,5 @@
 # Python imports
-import hashlib, json
+import hashlib
 from os import listdir
 from os.path import isdir, isfile, join
 
@@ -13,26 +13,14 @@ from . import Path, Settings, Launcher
 
 class View(Settings, Launcher, Path):
     def __init__(self):
-        self.hideHiddenFiles = True
         self.files     = []
         self.dirs      = []
         self.vids      = []
         self.images    = []
         self.desktop   = []
         self.ungrouped = []
-        self.fm_config = self.getFileManagerSettings()
+
         self.set_to_home()
-
-
-    # Settings data
-    def getFileManagerSettings(self):
-        returnData = []
-        with open(self.CONFIG_FILE) as infile:
-            try:
-                return json.load(infile)
-            except Exception as e:
-                print(repr(e))
-                return ['', 'mplayer', 'xdg-open']
 
     def load_directory(self):
         path           = self.get_path()
@@ -49,7 +37,7 @@ class View(Settings, Launcher, Path):
 
         for f in listdir(path):
             file = join(path, f)
-            if self.hideHiddenFiles:
+            if self.HIDE_HIDDEN_FILES:
                 if f.startswith('.'):
                     continue
 
@@ -83,7 +71,7 @@ class View(Settings, Launcher, Path):
             data.append([arr, self.hashText(arr)])
         return data
 
-    def returnPathPartFromHash(self, hash):
+    def get_path_part_from_hash(self, hash):
         files = self.get_files()
         for file in files:
             if hash == file[1]:
@@ -109,6 +97,23 @@ class View(Settings, Launcher, Path):
                 'ungrouped': ungrouped
             }
         }
+
+    def is_folder_locked(self, hash):
+        if self.lock_folder:
+            path_parts = self.get_path().split('/')
+            file       = self.get_path_part_from_hash(hash)
+
+            # Insure chilren folders are locked too.
+            lockedFolderInPath = False
+            for folder in self.locked_folders:
+                if folder in path_parts:
+                    lockedFolderInPath = True
+                    break
+
+            return (file in self.locked_folders or lockedFolderInPath)
+        else:
+            return False
+
 
     def get_current_directory(self):
         return self.get_path()

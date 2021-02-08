@@ -14,26 +14,24 @@ class Launcher:
         command   = []
 
         if lowerName.endswith(self.fvideos):
-            player  = self.fm_config["settings"]["media_app"]
-            options = self.fm_config["settings"]["mplayer_options"].split()
-            command = [player]
+            command = [self.media_app]
 
-            if "mplayer" in player:
-                command += options
+            if "mplayer" in self.media_app:
+                command += self.mplayer_options
 
             command += [file]
         elif lowerName.endswith(self.fimages):
-            command = [self.fm_config["settings"]["image_app"], file]
+            command = [self.image_app, file]
         elif lowerName.endswith(self.fmusic):
-            command = [self.fm_config["settings"]["music_app"], file]
+            command = [self.music_app], file]
         elif lowerName.endswith(self.foffice):
-            command = [self.fm_config["settings"]["office_app"], file]
+            command = [self.office_app, file]
         elif lowerName.endswith(self.ftext):
-            command = [self.fm_config["settings"]["text_app"], file]
+            command = [self.text_app, file]
         elif lowerName.endswith(self.fpdf):
-            command = [self.fm_config["settings"]["pdf_app"], file]
+            command = [self.pdf_app, file]
         else:
-            command = [self.fm_config["settings"]["file_manager_app"], file]
+            command = [self.file_manager_app, file]
 
         self.logging.debug(command)
         DEVNULL = open(os.devnull, 'w')
@@ -78,7 +76,7 @@ class Launcher:
 
 
     def check_remux_space(self):
-        limit = self.fm_config["settings"]["remux_folder_max_disk_usage"]
+        limit = self.remux_folder_max_disk_usage
         try:
             limit = int(limit)
         except Exception as e:

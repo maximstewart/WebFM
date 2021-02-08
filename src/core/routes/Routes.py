@@ -18,9 +18,15 @@ window_controllers = {}
 
 def get_window_controller():
     if session.get('win_controller_id') is None:
-        id = secrets.token_hex(16)
+        id         = secrets.token_hex(16)
+        controller = WindowController()
+        view       = controller.get_window(1).get_view(0)
+        view.ABS_THUMBS_PTH = app.config['ABS_THUMBS_PTH']
+        view.REMUX_FOLDER   = app.config['REMUX_FOLDER']
+        view.FFMPG_THUMBNLR = app.config['FFMPG_THUMBNLR']
+
         session['win_controller_id'] = id
-        window_controllers.update( {id: WindowController() } )
+        window_controllers.update( {id: controller } )
 
     return window_controllers[ session["win_controller_id"]  ]
 
@@ -28,7 +34,7 @@ def get_window_controller():
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        view   = get_window_controller().get_window(1).get_view(0)
+        view               = get_window_controller().get_window(1).get_view(0)
         _dot_dots          = view.get_dot_dots()
         _current_directory = view.get_current_directory()
         return render_template('pages/index.html', current_directory = _current_directory, dot_dots = _dot_dots)
@@ -38,41 +44,37 @@ def home():
 
 
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
-def listFilesRoute(_hash):
+def listFilesRoute(_hash = None):
     if request.method == 'POST':
-        view    = get_window_controller().get_window(1).get_view(0)
-        files   = view.get_files_formatted()
+        view = get_window_controller().get_window(1).get_view(0)
 
-        _path  = view.get_path()
-        _files = view.get_files_formatted()
+        if _dot_dots[0][1] == HASH:    # Refresh
+            view.load_directory()
+        elif _dot_dots[1][1] == HASH:  # Pop from dir
+            view.pop_from_path()
+        else:                          # Push to dir
+            _path = view.get_path_part_from_hash(HASH)
+            view.push_to_path(_path)
 
-        fave    = db.session.query(Favorites).filter_by(link=path).first()
-        in_fave = "true" if fave else "false"
-        files.update({'in_fave': in_fave})
+
+        msg       = "Log in with an Admin privlidged user to view the requested path!"
+        fave      = db.session.query(Favorites).filter_by(link=_path).first()
+        _in_fave  = "true" if fave else "false"
+        _dot_dots = view.get_dot_dots()
+        _files    = view.get_files_formatted()
+        _path     = view.get_current_directory()
+        is_locked = view.is_folder_locked(HASH)
+
+        files.update({'in_fave': _in_fave})
+        if is_locked and not oidc.user_loggedin:
+            return msgHandler.createMessageJSON("danger", msg)
+        elif is_locked and oidc.user_loggedin:
+            isAdmin = oidc.user_getfield("isAdmin")
+            if isAdmin != "yes" :
+                return msgHandler.createMessageJSON("danger", msg)
+
         return files
 
-        # HASH          = _hash.strip()
-        # pathPart      = file_manager.returnPathPartFromHash(HASH)
-        # lockedFolders = config["settings"]["locked_folders"].split("::::")
-        # path          = file_manager.getPath().split('/')
-        # lockedFolderInPath = False
-        #
-        # # Insure chilren folders are locked too.
-        # for folder in lockedFolders:
-        #     if folder in path:
-        #         lockedFolderInPath = True
-        #         break
-        #
-        # isALockedFolder = (pathPart in lockedFolders or lockedFolderInPath)
-        # msg = "Log in with an Admin privlidged user to view the requested path!"
-        # if isALockedFolder and not oidc.user_loggedin:
-        #     return msgHandler.createMessageJSON("danger", msg)
-        # elif isALockedFolder and oidc.user_loggedin:
-        #     isAdmin = oidc.user_getfield("isAdmin")
-        #     if isAdmin != "yes" :
-        #         return msgHandler.createMessageJSON("danger", msg)
-        #
-        # return listFiles(HASH)
     else:
         msg = "Can't manage the request type..."
         return msgHandler.createMessageJSON("danger", msg)
@@ -96,7 +98,7 @@ def file_manager_action(_type, _hash = None):
     if _type == "remux":
         # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
         # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
-        # I.E....this is stupid but for now works
+        # I.E....this is stupid but for now works better than nothing
         return view.remuxVideo(hash, fpath)
     if _type == "run-locally":
         view.openFilelocally(fpath)
