@@ -1,5 +1,5 @@
 # Python imports
-import secrets
+import json, secrets
 
 # Lib imports
 from flask import request, session, render_template, send_from_directory, redirect
@@ -7,9 +7,9 @@ from flask_login import current_user
 
 
 # App imports
-from core import app, logger, oidc, db  # Get from __init__
-from core.utils import MessageHandler   # Get simple message processor
-from core.utils.shellfm import WindowController   # Get file manager controller
+from core import app, logger, oidc, db, Favorites  # Get from __init__
+from core.utils import MessageHandler              # Get simple message processor
+from core.utils.shellfm import WindowController    # Get file manager controller
 
 
 msgHandler         = MessageHandler()
@@ -46,35 +46,33 @@ def home():
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
 def listFilesRoute(_hash = None):
     if request.method == 'POST':
-        view = get_window_controller().get_window(1).get_view(0)
+        view     = get_window_controller().get_window(1).get_view(0)
+        dot_dots = view.get_dot_dots()
 
-        if _dot_dots[0][1] == HASH:    # Refresh
+        if dot_dots[0][1] == _hash:    # Refresh
             view.load_directory()
-        elif _dot_dots[1][1] == HASH:  # Pop from dir
+        elif dot_dots[1][1] == _hash:  # Pop from dir
             view.pop_from_path()
-        else:                          # Push to dir
-            _path = view.get_path_part_from_hash(HASH)
-            view.push_to_path(_path)
-
 
         msg       = "Log in with an Admin privlidged user to view the requested path!"
-        fave      = db.session.query(Favorites).filter_by(link=_path).first()
-        _in_fave  = "true" if fave else "false"
-        _dot_dots = view.get_dot_dots()
-        _files    = view.get_files_formatted()
-        _path     = view.get_current_directory()
-        is_locked = view.is_folder_locked(HASH)
-
-        files.update({'in_fave': _in_fave})
+        is_locked = view.is_folder_locked(_hash)
         if is_locked and not oidc.user_loggedin:
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.createMessageJSON("danger")
         elif is_locked and oidc.user_loggedin:
             isAdmin = oidc.user_getfield("isAdmin")
             if isAdmin != "yes" :
-                return msgHandler.createMessageJSON("danger", msg)
+                return msgHandler.createMessageJSON("danger")
 
+        if dot_dots[0][1] != _hash and dot_dots[1][1] != _hash:
+            path = view.get_path_part_from_hash(_hash)
+            view.push_to_path(path)
+
+        path    = view.get_current_directory()
+        files   = view.get_files_formatted()
+        fave    = db.session.query(Favorites).filter_by(link = path).first()
+        in_fave = "true" if fave else "false"
+        files.update({'in_fave': in_fave})
         return files
-
     else:
         msg = "Can't manage the request type..."
         return msgHandler.createMessageJSON("danger", msg)
@@ -124,10 +122,9 @@ def loadFavorite(_id):
         try:
             ID   = int(_id)
             fave = db.session.query(Favorites).filter_by(id=ID).first()
-            file_manager.setNewPathFromFavorites(fave.link)
-            file_manager.loadPreviousPath()
-
-            return '{"refresh":"true"}'
+            view = get_window_controller().get_window(1).get_view(0)
+            view.set_path(fave.link)
+            return '{"refresh": "true"}'
         except Exception as e:
             print(repr(e))
             msg = "Incorrect Favorites ID..."
@@ -141,7 +138,8 @@ def loadFavorite(_id):
 def manageFavoritesRoute(_action):
     if request.method == 'POST':
         ACTION = _action.strip()
-        path   = file_manager.getPath()
+        view   = get_window_controller().get_window(1).get_view(0)
+        path   = view.getPath()
 
         if ACTION == "add":
             fave = Favorites(link=path)

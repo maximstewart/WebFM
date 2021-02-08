@@ -38,7 +38,7 @@ app.jinja_env.globals['oidc_isAdmin']  = oidc_isAdmin
 app.jinja_env.globals['TITLE']         = app.config["TITLE"]
 
 
-from core.models import db, User
+from core.models import db, User, Favorites
 db.init_app(app)
 with app.app_context():
     db.create_all()

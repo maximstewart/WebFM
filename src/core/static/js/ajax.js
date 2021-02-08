@@ -1,3 +1,29 @@
+const listFilesAjax = async (hash) => {
+    const data = "empty=NULL";
+    doAjax("api/list-files/" + hash, data, "list-files");
+}
+
+const getFavesAjax = async () => {
+    const data = "empty=NULL";
+    doAjax("api/get-favorites", data, "favorites");
+}
+
+const loadFavoriteLink = async (id) => {
+    const data = "empty=NULL";
+    doAjax("api/load-favorite/" + id, data, "load-favorite");
+}
+
+const manageFavoritesAjax = async (action) => {
+    const data = "empty=NULL";
+    doAjax("api/manage-favorites/" + action, data, "manage-favorites");
+}
+
+const lockFoldersAjax = async () => {
+    const data = "empty=NULL";
+    doAjax("logout", data, "lock-folders");
+}
+
+
 const doAjax = (actionPath, data, action) => {
     let xhttp = new XMLHttpRequest();
 
@@ -14,23 +40,22 @@ const doAjax = (actionPath, data, action) => {
         }
     };
 
+    // xhttp.open("POST", formatURL(actionPath), true);
     xhttp.open("POST", actionPath, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    if (action === "list-files") {
+        xhttp.setRequestHeader("Cache-Control", "no-cache, no-store");
+        xhttp.setRequestHeader("Pragma", "no-cache");
+        xhttp.setRequestHeader("Expires", "0");
+    }
+
     // Force return to be JSON NOTE: Use application/xml to force XML
     xhttp.overrideMimeType('application/json');
     xhttp.send(data);
 }
 
-const formatURL = (basePath) => {
-    url = window.location.href;
-    if ( url.endsWith('/') )
-        return url + basePath;
-    else
-        return url + '/' + basePath;
-}
-
 const fetchData = async (url) => {
-    let response = null;
-    response = await fetch(url);
+    let response = await fetch(url);
     return await response.json();
 }
