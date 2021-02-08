@@ -5,8 +5,9 @@ const postAjaxController = (data, action) => {
         return ;
     }
 
+    console.log(data);
     if (data.hasOwnProperty('path_head'))
-        console.log(data);
+        console.log();
         // updateHTMLDirList(data);
     if (data.hasOwnProperty('faves_list'))
         // generateFavesList(data.faves_list);

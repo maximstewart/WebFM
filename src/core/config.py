@@ -25,7 +25,7 @@ class Config(object):
     SECRET_KEY = secrets.token_hex(32)
 
     PERMANENT_SESSION_LIFETIME     = timedelta(days = 7).total_seconds()
-    SQLALCHEMY_DATABASE_URI        = "sqlite:///static/db/database.db"
+    SQLALCHEMY_DATABASE_URI        = "sqlite:///static/db/webfm.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     LOGIN_PATH                     = "FLASK_LOGIN"  # Value can be OIDC or FLASK_LOGIN

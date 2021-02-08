@@ -14,8 +14,8 @@
 {% endblock body_header_additional %}
 
 {% block body_content_additional %}
-<div id="files" class="row">
-</div>
+    <div id="files">
+    </div>
 {% endblock body_content_additional %}
 
 {% block body_footer_additional %}
@@ -23,7 +23,7 @@
 
 
 {% block body_scripts_additional %}
-    <script src="{{ url_for('static', filename='js/react-ui-logic.js')}}"></script>
+    <script type="text/babel" src="{{ url_for('static', filename='js/react-ui-logic.js')}}"></script>
     <script src="{{ url_for('static', filename='js/ui-logic.js')}}"></script>
     <script src="{{ url_for('static', filename='js/post-ajax.js')}}"></script>
     <script src="{{ url_for('static', filename='js/ajax.js')}}"></script>

@@ -5,7 +5,7 @@ const listFilesAjax = async (hash) => {
 
 const getFavesAjax = async () => {
     const data = "empty=NULL";
-    doAjax("api/get-favorites", data, "favorites");
+    doAjax("api/list-favorites", data, "favorites");
 }
 
 const loadFavoriteLink = async (id) => {

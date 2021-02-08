@@ -1,20 +1,3 @@
-// {% for file in files['files'] %}
-// <div class="col-sm-12 col-md-6 col-lg-4">
-//     <div class="card">
-//         <div class="card-header">{{file[0]}}</div>
-//         <div class="card-body">
-//             <img class="image-style" src="/api/files/{{file[1]}}" alt="{{file[0]}}" />
-//         </div>
-//         <div class="card-footer">
-//             <input app="{{file[1]}}" class="btn btn-secondary btn-sm" type="button" value="Launch"/>
-//             <input app="{{file[1]}}" class="btn btn-secondary btn-sm" type="button" value="Launch Locally"/>
-//         </div>
-//     </div>
-// </div>
-// {% endfor %}
-
-
-
 const reloadDirectory = () => {
     let target = document.getElementById('refresh-btn')
     const hash = target.getAttribute("hash");

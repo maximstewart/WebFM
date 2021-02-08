@@ -44,7 +44,7 @@ def home():
 
 
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
-def listFilesRoute(_hash = None):
+def listFiles(_hash = None):
     if request.method == 'POST':
         view     = get_window_controller().get_window(1).get_view(0)
         dot_dots = view.get_dot_dots()
@@ -78,7 +78,7 @@ def listFilesRoute(_hash = None):
         return msgHandler.createMessageJSON("danger", msg)
 
 @app.route('/api/file-manager-action/<_type>/<_hash>')
-def file_manager_action(_type, _hash = None):
+def fileManagerAction(_type, _hash = None):
     view = get_window_controller().get_window(1).get_view(0)
 
     if _type == "reset-path" and _hash == None:
@@ -103,8 +103,8 @@ def file_manager_action(_type, _hash = None):
         return msgHandler.createMessageJSON("success", msg)
 
 
-@app.route('/api/get-favorites', methods=['GET', 'POST'])
-def getAllFavoritesRoute():
+@app.route('/api/list-favorites', methods=['GET', 'POST'])
+def listFavorites():
     if request.method == 'POST':
         list  = db.session.query(Favorites).all()
         faves = []
@@ -121,7 +121,7 @@ def loadFavorite(_id):
     if request.method == 'POST':
         try:
             ID   = int(_id)
-            fave = db.session.query(Favorites).filter_by(id=ID).first()
+            fave = db.session.query(Favorites).filter_by(id = ID).first()
             view = get_window_controller().get_window(1).get_view(0)
             view.set_path(fave.link)
             return '{"refresh": "true"}'
@@ -135,7 +135,7 @@ def loadFavorite(_id):
 
 
 @app.route('/api/manage-favorites/<_action>', methods=['GET', 'POST'])
-def manageFavoritesRoute(_action):
+def manageFavorites(_action):
     if request.method == 'POST':
         ACTION = _action.strip()
         view   = get_window_controller().get_window(1).get_view(0)
@@ -146,7 +146,7 @@ def manageFavoritesRoute(_action):
             db.session.add(fave)
             msg  = "Added to Favorites successfully..."
         else:
-            fave = db.session.query(Favorites).filter_by(link=path).first()
+            fave = db.session.query(Favorites).filter_by(link = path).first()
             db.session.delete(fave)
             msg  = "Deleted from Favorites successfully..."
 
