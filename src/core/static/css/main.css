@@ -46,11 +46,12 @@
 
 
 
+.icon-style {
+    width: 2em;
+    height: auto;
+}
 
 .dir-style, .video-style, .image-style, .file-style {
-	/* max-width: 24vw; */
-    /* height: auto;
-	position: relative; */
 	max-width: 20em;
 }
 

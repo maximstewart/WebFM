@@ -45,19 +45,15 @@ const generateFavesList = (data) => {
 
 
 const updateHTMLDirList = async (data) => {
-    console.log(data);
-    let pathElm     = document.getElementById("path");
-    let dirs        = (data.list.dirs)  ? data.list.dirs[0]  : [];
-    let videos      = (data.list.vids)  ? data.list.vids[0]  : [];
-    let images      = (data.list.images)  ? data.list.images[0]  : [];
-    let files       = (data.list.ungrouped) ? data.list.ungrouped[0] : [];
-    let isInFaves   = data.in_fave;
-
-    console.log(data.list.images);
+    // let dirs             = data.list.dirs[0];
+    // let videos           = data.list.vids[0];
+    let images           = data.list.images[0];
+    // let files            = data.list.files[0];
+    let isInFaves        = data.in_fave;
     let background_image = (images[0]) ? images[0][0] : "";
-    console.log(background_image);
 
-    pathElm.innerText = data.path_head; // Can still set the path info if locked...
+
+    document.getElementById("path").innerText = data.path_head;
     // Setup background if there is a 000.* in selection
     if (background_image.match(/000\.(jpg|png|gif)\b/) != null) {
         // Due to same hash for 000 we add date to make link unique for each run to bypass cache issues...
@@ -69,11 +65,11 @@ const updateHTMLDirList = async (data) => {
     }
 
     // See if in faves
-    let elm = document.getElementById("tggl-faves-btn");
+    let tggl_faves_btn = document.getElementById("tggl-faves-btn");
     if (isInFaves == "true")
-        elm.classList.add("btn-info");
+        tggl_faves_btn.classList.add("btn-info");
     else
-        elm.classList.remove("btn-info");
+        tggl_faves_btn.classList.remove("btn-info");
 
 
     renderFilesList(data.list);
@@ -163,26 +159,26 @@ const updateHTMLDirList = async (data) => {
 //     ulElm.appendChild(clone);
 }
 
-const setFileIconType = (fileName) => {
-    icoPath = "";
-
-    if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null) {
-        icoPath = "static/imgs/icons/doc.png";
-    } else if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null) {
-        icoPath = "resources/images/icons/arc.png";
-    } else if (fileName.match(/\.(pdf)\b/) != null) {
-        icoPath = "static/imgs/icons/pdf.png";
-    } else if (fileName.match(/\.(html)\b/) != null) {
-        icoPath = "static/imgs/icons/html.png";
-    } else if (fileName.match(/\.(txt|conf)\b/) != null) {
-        icoPath = "static/imgs/icons/text.png";
-    } else if (fileName.match(/\.(iso|img)\b/) != null) {
-        icoPath = "static/imgs/icons/img.png";
-    } else if (fileName.match(/\.(sh|batch|exe)\b/) != null) {
-        icoPath = "static/imgs/icons/scrip.png";
-    } else {
-        icoPath = "static/imgs/icons/bin.png";
-    }
-
-    return formatURL(icoPath)
-}
+// const setFileIconType = (fileName) => {
+//     icoPath = "";
+//
+//     if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null) {
+//         icoPath = "static/imgs/icons/doc.png";
+//     } else if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null) {
+//         icoPath = "resources/images/icons/arc.png";
+//     } else if (fileName.match(/\.(pdf)\b/) != null) {
+//         icoPath = "static/imgs/icons/pdf.png";
+//     } else if (fileName.match(/\.(html)\b/) != null) {
+//         icoPath = "static/imgs/icons/html.png";
+//     } else if (fileName.match(/\.(txt|conf)\b/) != null) {
+//         icoPath = "static/imgs/icons/text.png";
+//     } else if (fileName.match(/\.(iso|img)\b/) != null) {
+//         icoPath = "static/imgs/icons/img.png";
+//     } else if (fileName.match(/\.(sh|batch|exe)\b/) != null) {
+//         icoPath = "static/imgs/icons/scrip.png";
+//     } else {
+//         icoPath = "static/imgs/icons/bin.png";
+//     }
+//
+//     return formatURL(icoPath)
+// }
