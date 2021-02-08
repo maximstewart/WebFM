@@ -11,9 +11,114 @@ const goUpADirectory = () => {
 }
 
 const scrollFilesToTop = () => {
-    let target = document.getElementById('file-grid')
+    let target = document.getElementById('files');
     target.scrollTop = 0;
 }
+
+
+const showMedia = async (hash, extension, type) => {
+    document.getElementById("image-viewer").style.display   = "none";
+    document.getElementById("text-viewer").style.display    = "none";
+    document.getElementById("pdf-viewer").style.display     = "none";
+    document.getElementById("video-viewer").style.display   = "none";
+    document.getElementById("video-controls").style.display = "none";
+
+    if (type === "video") {
+        setupVideo(hash, extension);
+    }
+     if (type === "file") {
+        setupFile(hash, extension);
+    }
+}
+
+const setupVideo = async (hash, extension) => {
+    let video           = document.getElementById("video-viewer");
+    let controls        = document.getElementById("video-controls");
+    video.poster        = "static/imgs/icons/loading.gif";
+    video.style.display = "";
+    video.src           = "#"
+    video_path          = "files/" + hash;
+
+    try {
+        if ((/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)$/i).test(extension)) {
+            if ((/\.(avi|mkv|wmv|flv|f4v)$/i).test(extension)) {
+                data = await fetchData( "remux/" + hash );
+                if ( data.hasOwnProperty('path') ) {
+                    video_path = data.path;
+                } else {
+                    displayMessage(data.message.text, data.message.type);
+                    return ;
+                }
+            } else if ((/\.(flv|mov|m4v|mpg|mpeg)$/i).test(extension)) {
+                $('#file-view-modal').modal({"focus": false, "show": false});
+                openWithLocalProgram(hash, extension);
+                return ;
+            }
+        }
+
+        $('#file-view-modal').modal({"focus": true, "show": true});
+        controls.style.display = "none";
+        video.src              = video_path;
+        // if ((/\.(flv|f4v)$/i).test(extension)) {
+        //     video.src              = video_path;
+        // } else {
+        //     // This is questionable in usage since it loads the full video before
+        //     showing; but, seeking doesn't work otherwise...
+        //     let response           = await fetch(formatURL(video_path));
+        //     let vid_src            = URL.createObjectURL(await response.blob()); // IE10+
+        //     video.src              = vid_src;
+        //     video.src              = video_path;
+        // }
+    } catch (e) {
+        video.style.display = "none";
+        console.log(e);
+    }
+}
+
+const setupFile = async (hash, extension) => {
+    let viewer = null;
+    let type   = "local";
+
+    if ((/\.(png|jpg|jpeg|gif|ico)$/i).test(extension)) {
+        type   = "image";
+        viewer = document.getElementById("image-viewer");
+    }
+    if ((/\.(txt|text|sh|cfg|conf)$/i).test(extension)) {
+        type   = "text";
+        viewer = document.getElementById("text-viewer");
+    }
+    if ((/\.(mp3|ogg|flac)$/i).test(extension)) {
+        type   = "music";
+        viewer = document.getElementById("video-viewer");
+    }
+    if ((/\.(pdf)$/i).test(extension)) {
+        type   = "pdf";
+        viewer = document.getElementById("pdf-viewer");
+    }
+
+    if (type !== "text" && type !== "local" ) {
+        $('#file-view-modal').modal({"focus": true, "show": true});
+        let response = await fetch(formatURL("files/" + hash));
+        let src_obj  = URL.createObjectURL(await response.blob()); // IE10+
+        viewer.src   = src_obj;
+    }
+
+    if (type == "text") {
+        let response     = await fetch(formatURL("files/" + hash));
+        let textData     = await response.text(); // IE10+
+        viewer.innerText = textData;
+    }
+
+    if (type !== "local") {
+        viewer.style.display = "";
+        $('#file-view-modal').modal({"focus": true, "show": true});
+    }
+
+    if (type == "local") {
+        openWithLocalProgram(hash);
+    }
+}
+
 
 const openWithLocalProgram = async (hash, extension = "") => {
     const url   = "run-locally/" + hash;
@@ -23,9 +128,52 @@ const openWithLocalProgram = async (hash, extension = "") => {
 }
 
 
+const searchPage = () => {
+    let query = document.getElementById('search-files-field').value.toLowerCase();
+    let list  = document.getElementById("file-grid").querySelectorAll("[title]");
+    let size  = list.length;
+
+    for (var i = 0; i < size; i++) {
+        if (!list[i].tagName.includes("SPAN")) {
+            if (!list[i].title.toLowerCase().includes(query)) {
+                list[i].style.display = "none";
+            } else {
+                list[i].style.display = "";
+            }
+        }
+    }
+}
+
+const clearSearch = () => {
+    let list  = document.getElementById("file-grid").querySelectorAll("[title]");
+    let size  = list.length;
+
+    document.getElementById('search-files-field').value = "";
+    for (var i = 0; i < size; i++) {
+        list[i].style.display = "";
+    }
+}
+
+const enableEdit = (elm) => {
+    console.log(elm);
+    elm.style.backgroundColor  = "#ffffffff";
+    elm.style.color            = '#000000ff';
+    elm.readOnly               = '';
+    formerFileName             = elm.value;
+}
+
+const disableEdit = (elm) => {
+    elm.style.backgroundColor  = "";
+    elm.style.color            = '';
+    elm.value                  = formerFileName;
+    elm.readOnly               = "true";
+}
+
 const updateBackground = (srcLink, isvideo = true) => {
     try {
         let elm = document.getElementById("bg");
+
+        console.log(srcLink);
         if (isvideo) {
             if (elm.getAttribute('src') === "") {
                 elm.src = srcLink;
@@ -34,7 +182,7 @@ const updateBackground = (srcLink, isvideo = true) => {
             elm.src = "";
             elm.setAttribute("poster", srcLink);
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 

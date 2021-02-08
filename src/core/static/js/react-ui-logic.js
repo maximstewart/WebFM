@@ -57,9 +57,9 @@ class FilesList extends React.Component {
                         <div class="card-body">
                         <img class="image-style" src={"api/file-manager-action/" + file[1]} alt={file[0]} />
                         </div>
-                        <div class="card-footer justify-content-right">
-                            <input app={file[1]} onClick={this.openThis} class="btn btn-secondary btn-sm" type="button" value="Open"/>
-                            <input app={file[1]} onClick={this.openThisLocally} class="btn btn-secondary btn-sm" type="button" value="Open Locally"/>
+                        <div class="card-footer">
+                            <input app={file[1]} onClick={this.openThisLocally} class="btn btn-secondary btn-sm float-left" type="button" value="Open Locally"/>
+                            <input app={file[1]} onClick={this.openThis} class="btn btn-secondary btn-sm float-right" type="button" value="Open"/>
                         </div>
                     </div>
                 </div>
@@ -67,9 +67,9 @@ class FilesList extends React.Component {
         }
 
         return (
-            <div class="row">
+            <React.Fragment>
                 {final}
-            </div>
+            </React.Fragment>
         );
     }
 }
