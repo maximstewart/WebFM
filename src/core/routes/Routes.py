@@ -57,11 +57,11 @@ def listFiles(_hash = None):
         msg       = "Log in with an Admin privlidged user to view the requested path!"
         is_locked = view.is_folder_locked(_hash)
         if is_locked and not oidc.user_loggedin:
-            return msgHandler.createMessageJSON("danger")
+            return msgHandler.createMessageJSON("danger", msg)
         elif is_locked and oidc.user_loggedin:
             isAdmin = oidc.user_getfield("isAdmin")
             if isAdmin != "yes" :
-                return msgHandler.createMessageJSON("danger")
+                return msgHandler.createMessageJSON("danger", msg)
 
         if dot_dots[0][1] != _hash and dot_dots[1][1] != _hash:
             path = view.get_path_part_from_hash(_hash)

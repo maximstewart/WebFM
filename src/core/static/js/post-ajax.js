@@ -45,10 +45,7 @@ const generateFavesList = (data) => {
 
 
 const updateHTMLDirList = async (data) => {
-    // let dirs             = data.list.dirs[0];
-    // let videos           = data.list.vids[0];
     let images           = data.list.images[0];
-    // let files            = data.list.files[0];
     let isInFaves        = data.in_fave;
     let background_image = (images[0]) ? images[0][0] : "";
 
@@ -73,112 +70,4 @@ const updateHTMLDirList = async (data) => {
 
 
     renderFilesList(data.list);
-
-//     clearChildNodes(insertArea);
-//     // Insert dirs
-//     let dirClone  = document.importNode(dirTemplate.content, true);
-//     let dir       = null;
-//     size          = dirs.length;
-//     for (; i < size; i++) {
-//         const clone = dirClone.cloneNode(true);
-//         title = dirs[i][0];
-//         hash  = dirs[i][1];
-//         createElmBlock(insertArea, clone, thumbnail, title, hash);
-//     }
-//
-//     // Insert videos
-//     let vidClone  = document.importNode(vidTemplate.content, true);
-//     size          = videos.length;
-//     for (i = 0; i < size; i++) {
-//         const clone = vidClone.cloneNode(true);
-//         title       = videos[i][0];
-//         thumbnail   = formatURL(videos[i][1]);
-//         hash        = videos[i][2];
-//         createElmBlock(insertArea, clone, thumbnail, title, hash, true);
-//     }
-//
-//     // Insert images
-//     let imgClone  = document.importNode(imgTemplate.content, true);
-//     thumbnail     = "";
-//     size          = images.length;
-//     for (i = 0; i < size; i++) {
-//         title     = images[i][0];
-//         thumbnail = formatURL("files/" + images[i][1]);
-//         hash      = images[i][1];
-//
-//         if (thumbnail.match(/000\.(jpg|png|gif)\b/) == null &&
-//             !thumbnail.includes("favicon.png") && !thumbnail.includes("000")) {
-//             const clone  = imgClone.cloneNode(true);
-//             createElmBlock(insertArea, clone, thumbnail, title, hash);
-//         }
-//     }
-//
-//     // Insert files
-//     let fileClone = document.importNode(filTemplate.content, true);
-//     size          = files.length;
-//     for (i = 0; i < size; i++) {
-//         const clone  = fileClone.cloneNode(true);
-//         title     = files[i][0];
-//         thumbnail = setFileIconType(files[i][0]);
-//         hash      = files[i][1];
-//         createElmBlock(insertArea, clone, thumbnail, title, hash);
-//     }
-// }
-//
-// const createElmBlock = (ulElm, clone, thumbnail, title, hash, isVideo=false) => {
-//     let containerTag = clone.firstElementChild;
-//     containerTag.setAttribute("style", "background-image: url('" + thumbnail + "')");
-//     containerTag.setAttribute("title", title);
-//     containerTag.setAttribute("hash", hash);
-//
-//     // If image tag this sink to oblivion since there are no input tags in the template
-//     try {
-//         let inputTag = clone.querySelector("input");
-//         inputTag.setAttribute("value", title);
-//         // NOTE: Keeping this just incase i do want to rename stuff...
-//         //
-//         // inputTag.addEventListener("dblclick", function (eve) {
-//         //     enableEdit(eve.target);
-//         // });
-//         // inputTag.addEventListener("focusout", function (eve) {
-//         //     disableEdit(eve.target);
-//         // });
-//     } catch (e) { }
-//
-//     if (isVideo) {
-//         let popoutTag = clone.querySelector(".card-popout-btn");
-//         popoutTag.setAttribute("hash", hash);
-//         popoutTag.addEventListener("click", function (eve) {
-//             let target = eve.target;
-//             const hash = target.getAttribute("hash");
-//             openWithLocalProgram(hash);
-//         });
-//     }
-//
-//
-//     ulElm.appendChild(clone);
 }
-
-// const setFileIconType = (fileName) => {
-//     icoPath = "";
-//
-//     if (fileName.match(/\.(doc|docx|xls|xlsx|rtf)\b/) != null) {
-//         icoPath = "static/imgs/icons/doc.png";
-//     } else if (fileName.match(/\.(7z|7zip|zip|tar.gz|tar.xz|gz|rar|jar)\b/) != null) {
-//         icoPath = "resources/images/icons/arc.png";
-//     } else if (fileName.match(/\.(pdf)\b/) != null) {
-//         icoPath = "static/imgs/icons/pdf.png";
-//     } else if (fileName.match(/\.(html)\b/) != null) {
-//         icoPath = "static/imgs/icons/html.png";
-//     } else if (fileName.match(/\.(txt|conf)\b/) != null) {
-//         icoPath = "static/imgs/icons/text.png";
-//     } else if (fileName.match(/\.(iso|img)\b/) != null) {
-//         icoPath = "static/imgs/icons/img.png";
-//     } else if (fileName.match(/\.(sh|batch|exe)\b/) != null) {
-//         icoPath = "static/imgs/icons/scrip.png";
-//     } else {
-//         icoPath = "static/imgs/icons/bin.png";
-//     }
-//
-//     return formatURL(icoPath)
-// }

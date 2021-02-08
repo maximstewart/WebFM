@@ -25,10 +25,26 @@ const setFileIconType = (fileName) => {
 // Create a ES6 class component
 class FilesList extends React.Component {
     // Use the render function to return JSX component
+
+    constructor(props) {
+      super(props);
+      this.openThis = this.openThis.bind(this);
+      this.openThisLocally = this.openThisLocally.bind(this);
+    }
+
+    openThis(e) {
+        e.preventDefault();
+        openFile(e);
+    }
+
+    openThisLocally(e) {
+        e.preventDefault();
+        openFileLocally(e);
+    }
+
     render() {
         let final = [];
         let files = this.props.files[0];
-        console.log(files);
 
         for (let file of files) {
             final.push(
@@ -41,9 +57,9 @@ class FilesList extends React.Component {
                         <div class="card-body">
                         <img class="image-style" src={"api/file-manager-action/" + file[1]} alt={file[0]} />
                         </div>
-                        <div class="card-footer">
-                            <input app={file[1]} class="btn btn-secondary btn-sm" type="button" value="Open"/>
-                            <input app={file[1]} class="btn btn-secondary btn-sm" type="button" value="Open Locally"/>
+                        <div class="card-footer justify-content-right">
+                            <input app={file[1]} onClick={this.openThis} class="btn btn-secondary btn-sm" type="button" value="Open"/>
+                            <input app={file[1]} onClick={this.openThisLocally} class="btn btn-secondary btn-sm" type="button" value="Open Locally"/>
                         </div>
                     </div>
                 </div>

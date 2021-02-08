@@ -18,11 +18,6 @@ const manageFavoritesAjax = async (action) => {
     doAjax("api/manage-favorites/" + action, data, "manage-favorites");
 }
 
-const lockFoldersAjax = async () => {
-    const data = "empty=NULL";
-    doAjax("logout", data, "lock-folders");
-}
-
 
 const doAjax = (actionPath, data, action) => {
     let xhttp = new XMLHttpRequest();

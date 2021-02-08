@@ -15,6 +15,12 @@ const scrollFilesToTop = () => {
     target.scrollTop = 0;
 }
 
+const openWithLocalProgram = async (hash, extension = "") => {
+    const url   = "run-locally/" + hash;
+    let data    = await fetchData(url);
+    let message = data.message;
+    displayMessage(message.text, message.type);
+}
 
 
 const updateBackground = (srcLink, isvideo = true) => {
