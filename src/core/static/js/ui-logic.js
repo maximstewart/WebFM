@@ -1,6 +1,6 @@
 const reloadDirectory = () => {
-    let target = document.getElementById('refresh-btn')
-    const hash = target.getAttribute("hash");
+    const target = document.getElementById('refresh-btn');
+    const hash   = target.getAttribute("hash");
     listFilesAjax(hash);
 }
 
@@ -172,8 +172,6 @@ const disableEdit = (elm) => {
 const updateBackground = (srcLink, isvideo = true) => {
     try {
         let elm = document.getElementById("bg");
-
-        console.log(srcLink);
         if (isvideo) {
             if (elm.getAttribute('src') === "") {
                 elm.src = srcLink;
@@ -201,7 +199,7 @@ const manageFavorites = (elm) => {
 }
 
 
-const loadFave = (id) => {
+const loadFavorite = (id) => {
     loadFavoriteLink(id);
     document.getElementById("favorites-modal")
             .getElementsByClassName("modal-footer")[0]

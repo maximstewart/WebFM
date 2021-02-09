@@ -18,6 +18,7 @@ class Config(object):
     TITLE      = APP_NAME
     DEBUG      = False
     TESTING    = False
+    THREADED   =True
     SECRET_KEY = secrets.token_hex(32)
 
     PERMANENT_SESSION_LIFETIME     = timedelta(days = 7).total_seconds()
@@ -55,6 +56,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     OIDC_ID_TOKEN_COOKIE_SECURE = False
     OIDC_REQUIRE_VERIFIED_EMAIL = False
+    USE_RELOADER = True
 
 
 class TestingConfig(Config):

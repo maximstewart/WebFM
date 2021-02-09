@@ -124,7 +124,8 @@ def loadFavorite(_id):
             ID   = int(_id)
             fave = db.session.query(Favorites).filter_by(id = ID).first()
             view = get_window_controller().get_window(1).get_view(0)
-            view.set_path(fave.link)
+            print(fave.link)
+            view.set_path_with_sub_path(fave.link)
             return '{"refresh": "true"}'
         except Exception as e:
             print(repr(e))

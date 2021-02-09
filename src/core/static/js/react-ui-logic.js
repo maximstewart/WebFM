@@ -30,10 +30,7 @@ const setFileIconType = (fileName) => {
     return [icoPath, ftype]
 }
 
-// Create a ES6 class component
 class FilesList extends React.Component {
-    // Use the render function to return JSX component
-
     constructor(props) {
       super(props);
       this.openThis = this.openThis.bind(this);
@@ -102,10 +99,61 @@ class FilesList extends React.Component {
     }
 }
 
+
+class FavoritesList extends React.Component {
+    constructor(props) {
+      super(props);
+      this.loadFaveEvent = this.loadFaveEvent.bind(this);
+    }
+
+    loadFaveEvent(e) {
+        e.preventDefault();
+        loadFavePath(e);
+    }
+
+    render() {
+        let final = [];
+        let faves = this.props.faves_list;
+
+        for (let fave of faves) {
+            let title   = fave[0]
+            let _faveId = fave[1]
+            let liTag   = document.createElement("LI");
+            let parts   = (title.includes("/")) ? title.split("/") : title.split("\\");
+
+            let name = parts[parts.length - 1]
+            if (name.toLowerCase().includes("season")) {
+                name = name[name.length - 2] + "/" + name
+            }
+
+            final.push(
+                <li onClick={this.loadFaveEvent} faveid={_faveId}  class="btn btn-secondary btn-sm" name={name} title={name}>
+                    {name}
+                </li>
+            );
+        }
+
+        return (
+            <React.Fragment>
+                {final}
+            </React.Fragment>
+        );
+    }
+}
+
+
 const renderFilesList = (data = null) => {
     const filesListElm = document.getElementById('files');
     ReactDOM.render(
         React.createElement(FilesList, data),
         filesListElm
+    )
+}
+
+const renderFavesList = (data = null) => {
+    const favesListElm = document.getElementById("faves-list");
+    ReactDOM.render(
+        React.createElement(FavoritesList, data),
+        favesListElm
     )
 }

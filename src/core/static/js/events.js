@@ -21,7 +21,11 @@ document.body.onload = (eve) => {
 }
 
 
-
+const loadFavePath = (e) => {
+    const target = e.target;
+    const faveId = target.getAttribute("faveid");
+    loadFavorite(faveId);
+}
 
 const openFile = (eve) => {
     const target    = eve.target;

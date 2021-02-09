@@ -16,7 +16,8 @@ from core.utils import Logger
 
 
 app = Flask(__name__)
-app.config.from_object("core.config.Config")
+app.config.from_object("core.config.ProductionConfig")
+# app.config.from_object("core.config.DevelopmentConfig")
 
 oidc          = OpenIDConnect(app)
 login_manager = LoginManager(app)

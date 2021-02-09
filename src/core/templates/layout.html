@@ -91,6 +91,13 @@
     </div>
 
 
+
+    {% include "modals/options-modal.html" %}
+    {% include "modals/favorites-modal.html" %}
+    {% include "modals/file-modal.html" %}
+
+
+
     {% block body_scripts %}
         <!-- For Bootstrap in this exact order... -->
         <script src="{{ url_for('static', filename='js/libs/bootstrap/jquery-3.3.1.slim.min.js')}}"></script>

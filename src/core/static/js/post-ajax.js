@@ -8,8 +8,7 @@ const postAjaxController = (data, action) => {
     if (data.hasOwnProperty('path_head'))
         updateHTMLDirList(data);
     if (data.hasOwnProperty('faves_list'))
-        // generateFavesList(data.faves_list);
-        console.log("faves stub...");
+        renderFavesList(data);
     if (data.hasOwnProperty("refresh")) {
         if (data.refresh == "true") {
             reloadDirectory();
@@ -17,31 +16,6 @@ const postAjaxController = (data, action) => {
     }
 }
 
-
-const generateFavesList = (data) => {
-    let listView = document.getElementById("faves-list");
-    clearChildNodes(listView);
-
-    data.forEach(faveArry => {
-        let fave    = faveArry[0]
-        let faveId  = faveArry[1]
-        let liTag   = document.createElement("LI");
-        let parts   = (fave.includes("/")) ? fave.split("/") : fave.split("\\");
-
-        let part = parts[parts.length - 1]
-        if (part.toLowerCase().includes("season")) {
-            part = parts[parts.length - 2] + "/" + part
-        }
-
-        let txtNode = document.createTextNode(part);
-        liTag.setAttribute("class", "btn btn-secondary btn-sm");
-        liTag.setAttribute("name", fave);
-        liTag.setAttribute("title", fave);
-        liTag.setAttribute("onclick", "loadFave(" + faveId +")");
-        liTag.appendChild(txtNode);
-        listView.appendChild(liTag);
-    });
-}
 
 
 const updateHTMLDirList = async (data) => {
