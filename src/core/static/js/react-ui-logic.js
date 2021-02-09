@@ -77,7 +77,7 @@ class FilesList extends React.Component {
             }
 
             final.push(
-                <div class="col-sm-12 col-md-6 col-lg-4">
+                <li class="col-sm-12 col-md-6 col-lg-4">
                     <div class="card">
                         <div class="card-header">
                             {card_header}
@@ -90,7 +90,7 @@ class FilesList extends React.Component {
                             <input hash={hash} onClick={this.openThis} ftype={filetype} class="btn btn-secondary btn-sm float-right" title={name} type="button" value="Open"/>
                         </div>
                     </div>
-                </div>
+                </li>
             );
         }
 
