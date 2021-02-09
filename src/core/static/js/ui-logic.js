@@ -121,7 +121,7 @@ const setupFile = async (hash, extension) => {
 
 
 const openWithLocalProgram = async (hash, extension = "") => {
-    const url   = "run-locally/" + hash;
+    const url   = "api/file-manager-action/run-locally/" + hash;
     let data    = await fetchData(url);
     let message = data.message;
     displayMessage(message.text, message.type);
@@ -184,6 +184,30 @@ const updateBackground = (srcLink, isvideo = true) => {
         }
     } catch (e) { }
 }
+
+
+const manageFavorites = (elm) => {
+    const classType = "btn-info";
+    const hasClass  = elm.classList.contains(classType);
+    if (hasClass) {
+        elm.classList.remove(classType);
+        action = "delete";
+    } else {
+        elm.classList.add(classType);
+        action = "add";
+    }
+
+    manageFavoritesAjax(action);
+}
+
+
+const loadFave = (id) => {
+    loadFavoriteLink(id);
+    document.getElementById("favorites-modal")
+            .getElementsByClassName("modal-footer")[0]
+            .children[0].click()
+}
+
 
 
 // Message handler

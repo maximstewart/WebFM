@@ -86,7 +86,6 @@ def fileManagerAction(_type, _hash = None):
         view.set_to_home()
         return redirect("/")
 
-
     folder = view.get_current_directory()
     file   = view.get_path_part_from_hash(_hash)
     fpath  = os.path.join(folder, file)
@@ -100,6 +99,7 @@ def fileManagerAction(_type, _hash = None):
         # I.E....this is stupid but for now works better than nothing
         return view.remuxVideo(_hash, fpath)
     if _type == "run-locally":
+        msg = "Opened media..."
         view.openFilelocally(fpath)
         return msgHandler.createMessageJSON("success", msg)
 
@@ -140,7 +140,7 @@ def manageFavorites(_action):
     if request.method == 'POST':
         ACTION = _action.strip()
         view   = get_window_controller().get_window(1).get_view(0)
-        path   = view.getPath()
+        path   = view.get_current_directory()
 
         if ACTION == "add":
             fave = Favorites(link=path)

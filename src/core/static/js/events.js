@@ -11,10 +11,10 @@ document.body.onload = (eve) => {
             elm.parentElement.removeChild(elm);
 
             // Stylesheet for iframe views
-            var link = document.createElement("link");
+            let  link = document.createElement("link");
             link.href = formatURL("static/css/iframe.css");
             link.type = "text/css";
-            link.rel = "stylesheet";
+            link.rel  = "stylesheet";
             document.getElementsByTagName("head")[0].appendChild(link);
         }, 500);
     }
@@ -22,46 +22,29 @@ document.body.onload = (eve) => {
 
 
 
+
 const openFile = (eve) => {
-    let target = eve.target;
-    let hash   = target.getAttribute("app");
-    listFilesAjax(hash);
+    const target    = eve.target;
+    const ftype     = target.getAttribute("ftype");
+    const title     = target.getAttribute("title");
+    const hash      = target.getAttribute("hash");
+    const parts     = title.split('.');
+    const extension = "." + parts[parts.length - 1].toLowerCase();
+
+    if (ftype === "dir") {
+        listFilesAjax(hash);
+    } else if (ftype === "video") {
+        showMedia(hash, extension, "video");
+    } else {
+        showMedia(hash, extension, "file");
+    }
 }
 
 const openFileLocally = (eve) => {
-    let target = eve.target;
-    let hash   = target.getAttribute("app");
+    const target = eve.target;
+    const hash   = target.getAttribute("hash");
     openWithLocalProgram(hash);
 }
-
-// Actions for content
-// document.getElementById('file-grid').ondblclick = (event) => {
-//     let target    = event.target;
-//     let className = target.className;
-//
-//     // Left click detect
-//     if (event.which == 1) {
-//         // If clicking on container
-//         if (className === "dir-style" || className === "video-style" ||
-//             className === "file-style" || className === "image-style") {
-//                 const title     = target.getAttribute("title");
-//                 const hash      = target.getAttribute("hash");
-//                 const parts     = title.split('.');
-//                 const extension = "." + parts[parts.length - 1].toLowerCase();
-//
-//                 if (className === "dir-style") {
-//                     listFilesAjax(hash);
-//                 } else if (className === "video-style") {
-//                     showMedia(hash, extension, "video");
-//                 } else {
-//                     showMedia(hash, extension, "file");
-//                 }
-//         }
-//     }
-// }
-
-
-
 
 
 

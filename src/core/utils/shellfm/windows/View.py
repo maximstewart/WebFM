@@ -1,5 +1,6 @@
 # Python imports
 import hashlib
+import os
 from os import listdir
 from os.path import isdir, isfile, join
 
@@ -85,7 +86,7 @@ class View(Settings, Launcher, Path):
     def get_files_formatted(self):
         files     = self.hashSet(self.files),
         dirs      = self.hashSet(self.dirs),
-        videos    = self.hashSet(self.vids),
+        videos    = self.get_videos(),
         images    = self.hashSet(self.images),
         desktops  = self.hashSet(self.desktop),
         ungrouped = self.hashSet(self.ungrouped)
@@ -132,7 +133,16 @@ class View(Settings, Launcher, Path):
         return self.hashSet(self.dirs)
 
     def get_videos(self):
-        return self.hashSet(self.vids)
+        videos_set        = self.hashSet(self.vids)
+        current_directory = self.get_current_directory()
+        for video in videos_set:
+            hashImgPth = join(self.ABS_THUMBS_PTH, video[1]) + ".jpg"
+            if not os.path.exists(hashImgPth) :
+                fullPath = join(current_directory, video[0])
+                self.logger.debug(f"Hash Path: {hashImgPth}\nFile Path: {fullPath}")
+                self.generateVideoThumbnail(fullPath, hashImgPth)
+
+        return videos_set
 
     def get_images(self):
         return self.hashSet(self.images)

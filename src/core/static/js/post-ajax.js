@@ -68,7 +68,5 @@ const updateHTMLDirList = async (data) => {
     else
         tggl_faves_btn.classList.remove("btn-info");
 
-    console.log(data.list);
-
     renderFilesList(data.list);
 }
