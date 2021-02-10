@@ -79,7 +79,7 @@ class FilesList extends React.Component {
                         <div class="card-header">
                             {card_header}
                         </div>
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             {card_body}
                         </div>
                         <div class="card-footer">

@@ -12,7 +12,7 @@ const goUpADirectory = () => {
 
 const scrollFilesToTop = () => {
     const target = document.getElementById('files');
-    target..scrollIntoView();
+    target.scrollIntoView();
 }
 
 
@@ -223,7 +223,7 @@ const clearCache = () => {
     const rep = /.*\?.*/;
     let links     = document.getElementsByTagName('link'),
         scripts   = document.getElementsByTagName('script'),
-        links     = document.getElementsByTagName('video'),
+        video     = document.getElementsByTagName('video'),
         process_scripts = false;
 
     for (let i = 0; i < links.length; i++) {

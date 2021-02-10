@@ -1,16 +1,13 @@
 @font-face {
     font-family: Dosis;
-    src: url("/static/fonts/dosis/Dosis-Regular.ttf"),
-    url("/static/fonts/dosis/Dosis-Medium.ttf"),
-    url("/static/fonts/dosis/Dosis-Light.ttf"),
-    url("/static/fonts/dosis/Dosis-ExtraLight.ttf"),
-    url("/static/fonts/dosis/Dosis-Bold.ttf"),
-    url("/static/fonts/dosis/Dosis-ExtraBold.ttf"),
-    url("/static/fonts/dosis/Dosis-SemiBold.ttf"),
-    url("/static/fonts/Dosis-VariableFont_wght.ttf"),
-    url("/static/fonts/fa-brands-400.ttf"),
-    url("/static/fonts/fa-regular-400.ttf"),
-    url("/static/fonts/fa-solid-900.ttf");
+    src: url("/static/css/fonts/dosis/Dosis-Regular.ttf"),
+    url("/static/css/fonts/dosis/Dosis-Medium.ttf"),
+    url("/static/css/fonts/dosis/Dosis-Light.ttf"),
+    url("/static/css/fonts/dosis/Dosis-ExtraLight.ttf"),
+    url("/static/css/fonts/dosis/Dosis-Bold.ttf"),
+    url("/static/css/fonts/dosis/Dosis-ExtraBold.ttf"),
+    url("/static/css/fonts/dosis/Dosis-SemiBold.ttf"),
+    url("/static/css/fonts/Dosis-VariableFont_wght.ttf");
     font-style: normal;
     font-display: auto;
 }
