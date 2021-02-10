@@ -20,7 +20,7 @@ const showMedia = async (hash, extension, type) => {
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
-    document.getElementById("video-viewer").style.display   = "none";
+    document.getElementById("video").style.display   = "none";
     document.getElementById("video-controls").style.display = "none";
 
     if (type === "video") {
@@ -32,17 +32,17 @@ const showMedia = async (hash, extension, type) => {
 }
 
 const setupVideo = async (hash, extension) => {
-    let video           = document.getElementById("video-viewer");
+    let video           = document.getElementById("video");
     let controls        = document.getElementById("video-controls");
     video.poster        = "static/imgs/icons/loading.gif";
     video.style.display = "";
     video.src           = "#"
-    video_path          = "files/" + hash;
+    video_path          = "api/file-manager-action/files/" + hash;
 
     try {
         if ((/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)$/i).test(extension)) {
             if ((/\.(avi|mkv|wmv|flv|f4v)$/i).test(extension)) {
-                data = await fetchData( "remux/" + hash );
+                data = await fetchData( "api/file-manager-action/remux/" + hash );
                 if ( data.hasOwnProperty('path') ) {
                     video_path = data.path;
                 } else {
@@ -59,16 +59,6 @@ const setupVideo = async (hash, extension) => {
         $('#file-view-modal').modal({"focus": true, "show": true});
         controls.style.display = "none";
         video.src              = video_path;
-        // if ((/\.(flv|f4v)$/i).test(extension)) {
-        //     video.src              = video_path;
-        // } else {
-        //     // This is questionable in usage since it loads the full video before
-        //     showing; but, seeking doesn't work otherwise...
-        //     let response           = await fetch(formatURL(video_path));
-        //     let vid_src            = URL.createObjectURL(await response.blob()); // IE10+
-        //     video.src              = vid_src;
-        //     video.src              = video_path;
-        // }
     } catch (e) {
         video.style.display = "none";
         console.log(e);
@@ -89,7 +79,7 @@ const setupFile = async (hash, extension) => {
     }
     if ((/\.(mp3|ogg|flac)$/i).test(extension)) {
         type   = "music";
-        viewer = document.getElementById("video-viewer");
+        viewer = document.getElementById("video");
     }
     if ((/\.(pdf)$/i).test(extension)) {
         type   = "pdf";
@@ -98,13 +88,13 @@ const setupFile = async (hash, extension) => {
 
     if (type !== "text" && type !== "local" ) {
         $('#file-view-modal').modal({"focus": true, "show": true});
-        let response = await fetch(formatURL("files/" + hash));
+        let response = await fetch("api/file-manager-action/files/" + hash);
         let src_obj  = URL.createObjectURL(await response.blob()); // IE10+
         viewer.src   = src_obj;
     }
 
     if (type == "text") {
-        let response     = await fetch(formatURL("files/" + hash));
+        let response     = await fetch("api/file-manager-action/files/" + hash);
         let textData     = await response.text(); // IE10+
         viewer.innerText = textData;
     }

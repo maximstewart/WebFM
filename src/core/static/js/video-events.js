@@ -8,16 +8,16 @@ let canHideControls = true;
 const getTimeFormatted = (duration = null) => {
     if (duration == null) { return "00:00"; }
 
-    let hours   = (duration / 3600).toFixed(2).split(".")[0];
-    let minutes = (duration / 60).toFixed(2).split(".")[0];
-    let time    = (duration / 60).toFixed(2)
-    let seconds = Math.floor( (time - Math.floor(time) ) * 60);
+    const hours   = (duration / 3600).toFixed(2).split(".")[0];
+    const minutes = (duration / 60).toFixed(2).split(".")[0];
+    const time    = (duration / 60).toFixed(2)
+    const seconds = Math.floor( (time - Math.floor(time) ) * 60);
 
     return hours + ":" + minutes + ":" + seconds;
 }
 
 const pauseVideo = () => {
-    const video        = document.getElementById("video-viewer");
+    const video        = document.getElementById("video");
     video.style.cursor = '';
     video.pause();
 }
@@ -38,56 +38,8 @@ const togglePlay = (video) => {
     }, 300);
 }
 
-const toggleFullscreen = (video) => {
-    containerElm = document.getElementById("video-container");
-    parentElm    = video.parentElement;
-
-    if (video.requestFullscreen) {
-        parentElm.requestFullscreen();
-        video.style.cursor         = 'none';
-        containerElm.style.display = "block";
-    } else if (video.webkitRequestFullscreen) { /* Safari */
-        parentElm.webkitRequestFullscreen();
-        video.style.cursor         = 'none';
-        containerElm.style.display = "block";
-    } else if (video.msRequestFullscreen) {     /* IE11 */
-        parentElm.msRequestFullscreen();
-        video.style.cursor         = 'none';
-        containerElm.style.display = "block";
-    }
-
-    if (fullScreenState == 2) {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-            video.style.cursor         = '';
-            containerElm.style.display = "contents";
-        } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-            video.style.cursor         = '';
-            containerElm.style.display = "contents";
-        } else if (document.msExitFullscreen) {     /* IE11 */
-            document.msExitFullscreen();
-            video.style.cursor         = '';
-            containerElm.style.display = "contents";
-        }
-
-        fullScreenState = 0;
-    }
-
-    fullScreenState += 1;
-}
-
-const toggleVolumeControl = () => {
-    const volume = document.getElementById("volume-slider");
-    if (volume.style.display === "none") {
-        volume.style.display = "";
-    } else {
-        volume.style.display = "none";
-    }
-}
-
 const showControls = () => {
-    const video    = document.getElementById("video-viewer");
+    const video    = document.getElementById("video");
     const controls = document.getElementById("video-controls");
 
     video.style.cursor     = '';
@@ -110,13 +62,68 @@ const showControls = () => {
 }
 
 
-$("#video-viewer").on("loadedmetadata", function(eve){
-    let video               = eve.target;
+
+
+const setFullscreenSettings = (parentElm, video) => {
+    parentElm.requestFullscreen();
+    video.classList.remove("card-img-top");
+    video.classList.remove("viewer");
+    video.style.cursor = 'none';
+    video.style.height = 'inherit';
+}
+
+const unsetFullscreenSettings = (video) => {
+    video.classList.add("card-img-top");
+    video.classList.add("viewer");
+    video.style.cursor = '';
+    video.style.height = '';
+}
+
+const toggleFullscreen = (video) => {
+    containerElm = document.getElementById("video-container");
+    parentElm    = video.parentElement;
+
+    if (video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen) {
+        setFullscreenSettings(parentElm, video);
+    }
+
+    if (fullScreenState == 2) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+            unsetFullscreenSettings(video);
+        } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+            unsetFullscreenSettings(video);
+        } else if (document.msExitFullscreen) {     /* IE11 */
+            document.msExitFullscreen();
+            unsetFullscreenSettings(video);
+        }
+
+        fullScreenState = 0;
+    }
+
+    fullScreenState += 1;
+}
+
+const toggleVolumeControl = () => {
+    const volume = document.getElementById("volume-slider");
+    if (volume.style.display === "none") {
+        volume.style.display = "";
+    } else {
+        volume.style.display = "none";
+    }
+}
+
+
+
+
+$("#video").on("loadedmetadata", function(eve){
+    const video             = eve.target;
     let videoDuration       = document.getElementById("videoDuration");
     videoDuration.innerText = getTimeFormatted(video.duration);
 });
 
-$("#video-viewer").on("click", function(eve){
+$("#video").on("click", function(eve){
     const video = eve.target;
 
     if(!shouldPlay) {
@@ -132,7 +139,7 @@ $("#video-viewer").on("click", function(eve){
     eve.preventDefault();
 });
 
-$("#video-viewer").on("touchend", function(eve){
+$("#video").on("touchend", function(eve){
     const video = eve.target;
 
     if(!shouldPlay) {
@@ -148,7 +155,7 @@ $("#video-viewer").on("touchend", function(eve){
     eve.preventDefault();
 });
 
-$( "#video-viewer" ).bind( "timeupdate", async function(eve) {
+$( "#video" ).bind( "timeupdate", async function(eve) {
     let videoDuration = document.getElementById("videoCurrentTime");
     const video       = eve.target;
     const seekto      = document.getElementById("seek-slider");
@@ -160,14 +167,14 @@ $( "#video-viewer" ).bind( "timeupdate", async function(eve) {
 
 $( "#seek-slider" ).bind( "change", async function(eve) {
     const slider = eve.target;
-    let video    = document.getElementById("video-viewer");
+    let video    = document.getElementById("video");
     let seekto   = video.duration * (slider.value / 100);
     video.currentTime = seekto;
 });
 
 $( "#volume-slider" ).bind( "change", async function(eve) {
     const slider = eve.target;
-    let video    = document.getElementById("video-viewer");
+    let video    = document.getElementById("video");
     let volumeto = slider.value;
     video.volume = volumeto;
 

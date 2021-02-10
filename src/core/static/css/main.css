@@ -25,8 +25,9 @@
     overflow-y: auto;
 }
 
-#files {
-    margin-bottom: 6em;
+#video-controls {
+    position: relative;
+    bottom: 2em;
 }
 
 
@@ -44,19 +45,14 @@
     left: 50%;
 }
 
-
-
 .icon-style {
     width: 2em;
     height: auto;
 }
 
-.dir-style, .video-style, .image-style, .file-style {
-	max-width: 20em;
+.viewer {
+    max-width: 45em;
 }
-
-
-
 
 
 

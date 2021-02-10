@@ -15,7 +15,7 @@
                     <div class="col scroller" style="max-height: 70vh; overflow: auto;">
                         <!-- For video -->
                         <div id="video-container">
-                            <video id="video-viewer"
+                            <video id="video" class="card-img-top viewer"
                                 loop
                                 src=""
                                 autoplay=""
@@ -43,16 +43,14 @@
                             </div>
                         </div>
 
-
                         <!-- For image -->
-                        <img id="image-viewer"
-                            style="width: inherit; height: auto; display: none;"
+                        <img id="image-viewer" class="card-img-top viewer"
+                            style="display: none;"
                             src="" alt="" />
 
                         <!-- For pdf -->
-                        <iframe id="pdf-viewer"
+                        <iframe id="pdf-viewer" class="card-img-top viewer"
                             src=""
-                            width="720" height="460"
                             style="display: none;"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen="allowfullscreen"
@@ -63,8 +61,8 @@
                         </iframe>
 
                         <!-- For text -->
-                        <pre id="text-viewer"
-                            style="width: inherit; height: auto; display: none;">
+                        <pre id="text-viewer" class="card-img-top viewer"
+                            style="display: none;">
                         </pre>
                     </div>
                 </div>

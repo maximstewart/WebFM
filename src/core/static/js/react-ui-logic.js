@@ -63,10 +63,10 @@ class FilesList extends React.Component {
 
             if (filetype === "video") {
                 card_header = name;
-                card_body   = <img class="image-style" src={"static/imgs/thumbnails/" + hash + ".jpg"} alt={name} />;
+                card_body   = <img class="card-img-top" src={"static/imgs/thumbnails/" + hash + ".jpg"} alt={name} />;
             } else if (filetype === "image") {
                 card_header = name;
-                card_body   = <img class="image-style" src={"api/file-manager-action/files/" + hash} alt={name} />;
+                card_body   = <img class="card-img-top" src={"api/file-manager-action/files/" + hash} alt={name} />;
             } else {
                 card_header = <img class="icon-style" src={icon} alt={name} />;
                 card_body = name;
@@ -127,7 +127,7 @@ class FavoritesList extends React.Component {
             }
 
             final.push(
-                <li onClick={this.loadFaveEvent} faveid={_faveId}  class="btn btn-secondary btn-sm" name={name} title={name}>
+                <li onClick={this.loadFaveEvent} faveid={_faveId}  class="list-group-item text-center" name={name} title={name}>
                     {name}
                 </li>
             );

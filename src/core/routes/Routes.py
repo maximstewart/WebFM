@@ -97,7 +97,12 @@ def fileManagerAction(_type, _hash = None):
         # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
         # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
         # I.E....this is stupid but for now works better than nothing
-        return view.remuxVideo(_hash, fpath)
+        good_result = view.remuxVideo(_hash, fpath)
+        if good_result:
+            return '{"path":"static/remuxs/' + _hash + '.mp4"}'
+        else:
+            msg = "Remuxing: Remux failed or took too long; please, refresh the page and try again..."
+            return msgHandler.createMessageJSON("success", msg)
     if _type == "run-locally":
         msg = "Opened media..."
         view.openFilelocally(fpath)
