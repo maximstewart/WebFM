@@ -50,6 +50,11 @@
                     </i>
                 </li>
             {% endif %}
+            <li class="nav-item" data-toggle="modal" data-target="#options-modal">
+                <i class="nav-link fa fa-gear" aria-hidden="true" title="Other options..." >
+                    Settings
+                </i>
+            </li>
             {% if current_user.is_authenticated or oidc_loggedin() %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('logout') }}">
@@ -57,12 +62,7 @@
                     </a>
                 </li>
             {% endif %}
-            <li class="nav-item" data-toggle="modal" data-target="#options-modal">
-                <i class="nav-link fa fa-gear" aria-hidden="true" title="Other options..." >
-                    Settings
-                </i>
-            </li>
-            {% if not current_user.is_authenticated %}
+            {% if not current_user.is_authenticated and not oidc_loggedin() %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Account

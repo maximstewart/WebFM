@@ -53,10 +53,10 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
+    DEBUG        = True
+    USE_RELOADER = True
     OIDC_ID_TOKEN_COOKIE_SECURE = False
     OIDC_REQUIRE_VERIFIED_EMAIL = False
-    USE_RELOADER = True
 
 
 class TestingConfig(Config):
