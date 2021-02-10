@@ -21,9 +21,7 @@ const postAjaxController = (data, action) => {
 const updateHTMLDirList = async (data) => {
     let images           = data.list.images[0];
     let isInFaves        = data.in_fave;
-    console.log(isInFaves);
     let background_image = (images[0]) ? images[0][0] : "";
-
 
     document.getElementById("path").innerText = data.path_head;
     // Setup background if there is a 000.* in selection
@@ -36,7 +34,7 @@ const updateHTMLDirList = async (data) => {
         updateBackground(background_image);
     }
 
-    // See if in faves
+    // Set faves state
     let tggl_faves_btn = document.getElementById("tggl-faves-btn");
     if (isInFaves == "true")
         tggl_faves_btn.classList.add("btn-info");

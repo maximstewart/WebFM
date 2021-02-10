@@ -5,14 +5,14 @@ const reloadDirectory = () => {
 }
 
 const goUpADirectory = () => {
-    let target = document.getElementById('back-btn')
+    const target = document.getElementById('back-btn')
     const hash = target.getAttribute("hash");
     listFilesAjax(hash);
 }
 
 const scrollFilesToTop = () => {
-    let target = document.getElementById('files');
-    target.scrollTop = 0;
+    const target = document.getElementById('files');
+    target..scrollIntoView();
 }
 
 
@@ -112,16 +112,16 @@ const setupFile = async (hash, extension) => {
 
 const openWithLocalProgram = async (hash, extension = "") => {
     const url   = "api/file-manager-action/run-locally/" + hash;
-    let data    = await fetchData(url);
+    const data  = await fetchData(url);
     let message = data.message;
     displayMessage(message.text, message.type);
 }
 
 
 const searchPage = () => {
-    let query = document.getElementById('search-files-field').value.toLowerCase();
-    let list  = document.getElementById("files").querySelectorAll("li[title]");
-    let size  = list.length;
+    const query = document.getElementById('search-files-field').value.toLowerCase();
+    const list  = document.getElementById("files").querySelectorAll("li[title]");
+    const size  = list.length;
 
     for (var i = 0; i < size; i++) {
         if (!list[i].title.toLowerCase().includes(query)) {
@@ -133,8 +133,8 @@ const searchPage = () => {
 }
 
 const clearSearch = () => {
-    let list  = document.getElementById("files").querySelectorAll("li[title]");
-    let size  = list.length;
+    const list  = document.getElementById("files").querySelectorAll("li[title]");
+    const size  = list.length;
 
     document.getElementById('search-files-field').value = "";
     for (var i = 0; i < size; i++) {
@@ -142,20 +142,6 @@ const clearSearch = () => {
     }
 }
 
-const enableEdit = (elm) => {
-    console.log(elm);
-    elm.style.backgroundColor  = "#ffffffff";
-    elm.style.color            = '#000000ff';
-    elm.readOnly               = '';
-    formerFileName             = elm.value;
-}
-
-const disableEdit = (elm) => {
-    elm.style.backgroundColor  = "";
-    elm.style.color            = '';
-    elm.value                  = formerFileName;
-    elm.readOnly               = "true";
-}
 
 const updateBackground = (srcLink, isvideo = true) => {
     try {
@@ -234,14 +220,14 @@ const clearChildNodes = (parent) => {
 
 //Cache Buster
 const clearCache = () => {
-    var rep = /.*\?.*/,
-    links   = document.getElementsByTagName('link'),
-    scripts = document.getElementsByTagName('script'),
-    links   = document.getElementsByTagName('video'),
-    process_scripts = false;
+    const rep = /.*\?.*/;
+    let links     = document.getElementsByTagName('link'),
+        scripts   = document.getElementsByTagName('script'),
+        links     = document.getElementsByTagName('video'),
+        process_scripts = false;
 
-    for (var i=0; i<links.length; i++) {
-        var link = links[i],
+    for (let i = 0; i < links.length; i++) {
+        let link = links[i],
         href = link.href;
         if(rep.test(href)) {
             link.href = href+'&'+Date.now();
@@ -251,8 +237,8 @@ const clearCache = () => {
 
     }
     if(process_scripts) {
-        for (var i=0; i<scripts.length; i++) {
-            var script = scripts[i],
+        for (let i = 0; i < scripts.length; i++) {
+            let script = scripts[i],
             src = script.src;
             if(rep.test(src)) {
                 script.src = src+'&'+Date.now();

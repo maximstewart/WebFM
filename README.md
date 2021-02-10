@@ -20,9 +20,4 @@ n/a
 
 
 # Images
-![1 Home](Images/pic1.png)
-![2 Images Listed](Images/pic2.png)
-![3 Videos Listed](Images/pic3.png)
-![4 Image Open](Images/pic4.png)
-![5 Image Open And Video Playing](Images/pic5.png)
-![6 Alternate Background](Images/pic6.png)
+![1 Files List](images/pic1.png)
