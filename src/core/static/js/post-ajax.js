@@ -21,6 +21,7 @@ const postAjaxController = (data, action) => {
 const updateHTMLDirList = async (data) => {
     let images           = data.list.images[0];
     let isInFaves        = data.in_fave;
+    console.log(isInFaves);
     let background_image = (images[0]) ? images[0][0] : "";
 
 

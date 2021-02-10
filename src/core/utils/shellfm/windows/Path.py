@@ -31,6 +31,11 @@ class Path:
         self.path = list( filter(None, path.replace("\\", "/").split('/')) )
         self.load_directory()
 
+    def set_path_with_sub_path(self, sub_path):
+        path      = os.path.join(self.get_home(), sub_path)
+        self.path = list( filter(None, path.replace("\\", "/").split('/')) )
+        self.load_directory()
+
     def set_to_home(self):
         home = os.path.expanduser("~") + self.subpath
         path = list( filter(None, home.replace("\\", "/").split('/')) )

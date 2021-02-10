@@ -74,7 +74,7 @@ class FilesList extends React.Component {
             }
 
             final.push(
-                <li class="col-sm-12 col-md-6 col-lg-4">
+                <li class="col-sm-12 col-md-6 col-lg-4" title={name}>
                     <div class="card">
                         <div class="card-header">
                             {card_header}

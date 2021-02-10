@@ -68,10 +68,10 @@ def listFiles(_hash = None):
             path = view.get_path_part_from_hash(_hash)
             view.push_to_path(path)
 
-        path    = view.get_current_directory()
-        files   = view.get_files_formatted()
-        fave    = db.session.query(Favorites).filter_by(link = path).first()
-        in_fave = "true" if fave else "false"
+        sub_path = view.get_current_sub_path()
+        files    = view.get_files_formatted()
+        fave     = db.session.query(Favorites).filter_by(link = sub_path).first()
+        in_fave  = "true" if fave else "false"
         files.update({'in_fave': in_fave})
         return files
     else:
@@ -129,7 +129,6 @@ def loadFavorite(_id):
             ID   = int(_id)
             fave = db.session.query(Favorites).filter_by(id = ID).first()
             view = get_window_controller().get_window(1).get_view(0)
-            print(fave.link)
             view.set_path_with_sub_path(fave.link)
             return '{"refresh": "true"}'
         except Exception as e:
@@ -144,16 +143,16 @@ def loadFavorite(_id):
 @app.route('/api/manage-favorites/<_action>', methods=['GET', 'POST'])
 def manageFavorites(_action):
     if request.method == 'POST':
-        ACTION = _action.strip()
-        view   = get_window_controller().get_window(1).get_view(0)
-        path   = view.get_current_directory()
+        ACTION   = _action.strip()
+        view     = get_window_controller().get_window(1).get_view(0)
+        sub_path = view.get_current_sub_path()
 
         if ACTION == "add":
-            fave = Favorites(link=path)
+            fave = Favorites(link = sub_path)
             db.session.add(fave)
             msg  = "Added to Favorites successfully..."
         else:
-            fave = db.session.query(Favorites).filter_by(link = path).first()
+            fave = db.session.query(Favorites).filter_by(link = sub_path).first()
             db.session.delete(fave)
             msg  = "Deleted from Favorites successfully..."
 

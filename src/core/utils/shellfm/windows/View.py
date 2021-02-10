@@ -123,6 +123,11 @@ class View(Settings, Launcher, Path):
     def get_current_directory(self):
         return self.get_path()
 
+    def get_current_sub_path(self):
+        path = self.get_path()
+        home = self.get_home() + "/"
+        return path.replace(home, "")
+
     def get_dot_dots(self):
         return self.hashSet(['.', '..'])
 

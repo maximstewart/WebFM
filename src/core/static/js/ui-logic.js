@@ -120,22 +120,20 @@ const openWithLocalProgram = async (hash, extension = "") => {
 
 const searchPage = () => {
     let query = document.getElementById('search-files-field').value.toLowerCase();
-    let list  = document.getElementById("file-grid").querySelectorAll("[title]");
+    let list  = document.getElementById("files").querySelectorAll("li[title]");
     let size  = list.length;
 
     for (var i = 0; i < size; i++) {
-        if (!list[i].tagName.includes("SPAN")) {
-            if (!list[i].title.toLowerCase().includes(query)) {
-                list[i].style.display = "none";
-            } else {
-                list[i].style.display = "";
-            }
+        if (!list[i].title.toLowerCase().includes(query)) {
+            list[i].style.display = "none";
+        } else {
+            list[i].style.display = "";
         }
     }
 }
 
 const clearSearch = () => {
-    let list  = document.getElementById("file-grid").querySelectorAll("[title]");
+    let list  = document.getElementById("files").querySelectorAll("li[title]");
     let size  = list.length;
 
     document.getElementById('search-files-field').value = "";
