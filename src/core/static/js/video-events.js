@@ -66,14 +66,12 @@ const showControls = () => {
 
 const setFullscreenSettings = (parentElm, video) => {
     parentElm.requestFullscreen();
-    video.classList.remove("card-img-top");
     video.classList.remove("viewer");
     video.style.cursor = 'none';
     video.style.height = 'inherit';
 }
 
 const unsetFullscreenSettings = (video) => {
-    video.classList.add("card-img-top");
     video.classList.add("viewer");
     video.style.cursor = '';
     video.style.height = '';
@@ -122,6 +120,43 @@ $("#video").on("loadedmetadata", function(eve){
     let videoDuration       = document.getElementById("videoDuration");
     videoDuration.innerText = getTimeFormatted(video.duration);
 });
+
+
+$("#video").on("keyup", function(eve) {
+    const key   = eve.keyCode;
+    const video = eve.target;
+
+    if (key === 32 || key === 80) { // Spacebar for pausing
+        togglePlay(video);
+    } else if (key === 37) {        // Left key for back tracking 5 sec
+        video.currentTime -= 5;
+    } else if (key === 39) {        // Right key for fast forward 5 sec
+        video.currentTime += 5;
+    } else if (key === 38) {        // Up key for volume up
+        if (video.volume <= 1.0) {
+            video.volume += 0.05;
+        }
+    } else if (key === 40) {        // Down key for volume down
+        if (video.volume >= 0.0) {
+            video.volume -= 0.05;
+        }
+    } else if (key === 70) {        // f key for toggling full screen
+        toggleFullscreen(video);
+    } else if (key === 76) {        // l key for toggling loop
+        if (myVideo.loop) {
+            myVideo.loop = false;
+        } else {
+            myVideo.loop = true;
+        }
+    } else if (key === 77) {        // m key for toggling sound
+        if (video.muted) {
+            video.muted = false;
+        } else {
+            video.muted = true;
+        }
+    }
+});
+
 
 $("#video").on("click", function(eve){
     const video = eve.target;
@@ -177,7 +212,6 @@ $( "#volume-slider" ).bind( "change", async function(eve) {
     let video    = document.getElementById("video");
     let volumeto = slider.value;
     video.volume = volumeto;
-
 });
 
 $( "#video-controls" ).bind( "mouseenter", async function(eve) { canHideControls = false; });
