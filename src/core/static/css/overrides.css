@@ -29,7 +29,12 @@ input[type=range][orient=vertical] {
     padding: 0 5px;
 }
 
-
+[class*="col-"] {
+	background-clip: padding-box;
+	border: 10px solid transparent;
+	margin: 0em !important;
+	padding: 0em !important;
+}
 
 #video-container::-webkit-media-controls {
   display: none !important;
