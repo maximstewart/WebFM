@@ -3,21 +3,22 @@ window.onload = (eve) => {
 }
 
 document.body.onload = (eve) => {
-    getFavesAjax();
-    reloadDirectory();
     if (window.self !== window.top) {
-        setTimeout(function () {
-            let elm = document.getElementById("bg");
-            elm.parentElement.removeChild(elm);
+        let elm = document.getElementById("bg");
+        elm.parentElement.removeChild(elm);
 
-            // Stylesheet for iframe views
-            let  link = document.createElement("link");
-            link.href = formatURL("static/css/iframe.css");
-            link.type = "text/css";
-            link.rel  = "stylesheet";
-            document.getElementsByTagName("head")[0].appendChild(link);
-        }, 500);
+        // Stylesheet for iframe views
+        let  link = document.createElement("link");
+        link.href = "static/css/iframe.css";
+        link.type = "text/css";
+        link.rel  = "stylesheet";
+        document.getElementsByTagName("head")[0].appendChild(link);
     }
+
+    setTimeout(function () {
+        getFavesAjax();
+        reloadDirectory();
+    }, 200);
 }
 
 

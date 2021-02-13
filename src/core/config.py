@@ -18,7 +18,7 @@ class Config(object):
     TITLE      = APP_NAME
     DEBUG      = False
     TESTING    = False
-    THREADED   =True
+    THREADED   = True
     SECRET_KEY = secrets.token_hex(32)
 
     PERMANENT_SESSION_LIFETIME     = timedelta(days = 7).total_seconds()
