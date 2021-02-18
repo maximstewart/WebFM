@@ -16,11 +16,6 @@ const getTimeFormatted = (duration = null) => {
     return hours + ":" + minutes + ":" + seconds;
 }
 
-const pauseVideo = () => {
-    const video        = document.getElementById("video");
-    video.style.cursor = '';
-    video.pause();
-}
 
 const togglePlay = (video) => {
     shouldPlay = setTimeout(function () {

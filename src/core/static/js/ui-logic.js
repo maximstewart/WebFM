@@ -16,12 +16,30 @@ const scrollFilesToTop = () => {
 }
 
 
-const showMedia = async (hash, extension, type) => {
+const closeFile = () => {
+    const video = document.getElementById("video");
+    let title   = document.getElementById("selectedFile");
+
+    document.getElementById("image-viewer").style.display   = "none";
+    document.getElementById("text-viewer").style.display    = "none";
+    document.getElementById("pdf-viewer").style.display     = "none";
+    document.getElementById("video-controls").style.display = "none";
+
+    title.innerText     = "";
+    video.style.display = "none";
+    video.style.cursor  = '';
+    video.pause();
+}
+
+const showFile = async (title, hash, extension, type) => {
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
     document.getElementById("video").style.display   = "none";
     document.getElementById("video-controls").style.display = "none";
+
+    let titleElm          = document.getElementById("selectedFile");
+    titleElm.innerText    = title;
 
     if (type === "video") {
         setupVideo(hash, extension);

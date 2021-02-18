@@ -78,13 +78,13 @@ class FilesList extends React.Component {
                     <div class="card">
                         <div class="card-header">
                             {card_header}
+                            <input hash={hash} onClick={this.openThis} ftype={filetype} class="btn btn-secondary btn-sm float-right" title={name} type="button" value="Open"/>
                         </div>
                         <div class="card-body text-center">
                             {card_body}
                         </div>
                         <div class="card-footer">
-                            <input hash={hash} onClick={this.openThisLocally} ftype={filetype} class="btn btn-secondary btn-sm float-left" type="button" value="Open Locally"/>
-                            <input hash={hash} onClick={this.openThis} ftype={filetype} class="btn btn-secondary btn-sm float-right" title={name} type="button" value="Open"/>
+                            <input hash={hash} onClick={this.openThisLocally} ftype={filetype} class="btn btn-secondary btn-sm float-right" type="button" value="Open Locally"/>
                         </div>
                     </div>
                 </li>
