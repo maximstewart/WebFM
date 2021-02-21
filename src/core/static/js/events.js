@@ -29,7 +29,10 @@ const loadFavePath = (e) => {
 }
 
 const openFile = (eve) => {
-    const target    = eve.target;
+    let target = eve.target;
+    if (!target.getAttribute("title"))
+        target = target.parentElement
+
     const ftype     = target.getAttribute("ftype");
     const title     = target.getAttribute("title");
     const hash      = target.getAttribute("hash");
