@@ -17,7 +17,10 @@ window_controllers = {}
 
 
 def get_window_controller():
-    if session.get('win_controller_id') is None:
+    controller = None
+    try:
+        controller = window_controllers[ session["win_controller_id"]  ]
+    except Exception as e:
         id         = secrets.token_hex(16)
         controller = WindowController()
         view       = controller.get_window(1).get_view(0)
@@ -28,8 +31,9 @@ def get_window_controller():
 
         session['win_controller_id'] = id
         window_controllers.update( {id: controller } )
+        controller = window_controllers[ session["win_controller_id"]  ]
 
-    return window_controllers[ session["win_controller_id"]  ]
+    return controller
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -67,6 +71,12 @@ def listFiles(_hash = None):
         if dot_dots[0][1] != _hash and dot_dots[1][1] != _hash:
             path = view.get_path_part_from_hash(_hash)
             view.push_to_path(path)
+
+        error_msg = view.get_error_message()
+        if  error_msg != None:
+            view.unset_error_message()
+            return msgHandler.createMessageJSON("danger", error_msg)
+
 
         sub_path = view.get_current_sub_path()
         files    = view.get_files_formatted()

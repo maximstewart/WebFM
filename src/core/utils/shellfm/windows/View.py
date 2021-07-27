@@ -9,8 +9,8 @@ from os.path import isdir, isfile, join
 
 
 # Application imports
-from . import Path, Settings, Launcher
-
+from .utils import Settings, Launcher
+from . import Path
 
 class View(Settings, Launcher, Path):
     def __init__(self):
@@ -20,6 +20,7 @@ class View(Settings, Launcher, Path):
         self.images    = []
         self.desktop   = []
         self.ungrouped = []
+        self.error_message = None
 
         self.set_to_home()
 
@@ -33,7 +34,7 @@ class View(Settings, Launcher, Path):
         self.files     = []
 
         if not isdir(path):
-            self.set_to_home()
+            self._set_error_message("Path can not be accessed.")
             return ""
 
         for f in listdir(path):
@@ -119,6 +120,15 @@ class View(Settings, Launcher, Path):
         else:
             return False
 
+
+    def _set_error_message(self, text):
+        self.error_message = text
+
+    def unset_error_message(self):
+        self.error_message = None
+
+    def get_error_message(self):
+        return self.error_message
 
     def get_current_directory(self):
         return self.get_path()
