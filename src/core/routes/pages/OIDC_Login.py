@@ -11,6 +11,7 @@ from ... import app, oidc
 @app.route('/oidc-login', methods=['GET', 'POST'])
 @oidc.require_login
 def oidc_login():
+    print(request)
     return redirect("/")
 
 
