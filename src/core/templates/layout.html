@@ -20,7 +20,7 @@
         <!-- Bootstrap CSS -->
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap-datepicker.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/mdb.dark.min.css')}}">
 
         <!-- Font Awesome CSS Notes -->
         <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> -->
@@ -99,19 +99,18 @@
 
 
     {% block body_scripts %}
+        <!-- For internal scripts... -->
+        <script src="{{ url_for('static', filename='js/libs/jquery-3.6.0.min.js')}}"></script>
+
         <!-- For Bootstrap in this exact order... -->
-        <script src="{{ url_for('static', filename='js/libs/bootstrap/jquery-3.3.1.slim.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/libs/bootstrap/popper.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap.min.js')}}"></script>
-
-        <!-- For DatePicker -->
-        <script src="{{ url_for('static', filename='js/libs/bootstrap/moment.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap-datepicker.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/bootstrap/mdb.min.js')}}"></script>
 
         <!-- For React -->
         <script src="{{ url_for('static', filename='js/libs/react/react.production.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/libs/react/react-dom.production.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/libs/react/babel.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/babel.min.js')}}"></script>
 
         <!-- Application Imports -->
         {% block body_scripts_additional %}

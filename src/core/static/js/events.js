@@ -18,7 +18,7 @@ document.body.onload = (eve) => {
     setTimeout(function () {
         getFavesAjax();
         reloadDirectory();
-    }, 200);
+    }, 400);
 }
 
 

@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>File Viewer:</h3> <span id="selectedFile"></span>
-                <button onclick="closeFile()" type="button" data-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+                <button onclick="closeFile()" type="button" data-bs-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
             </div>
 
             <div class="modal-body text-center justify-content-center">
@@ -25,7 +25,7 @@
                             <div id="video-controls">
                                 <div class="row pl-5 pr-5">
                                     <div class="col-md-8">
-                                        <input id="seek-slider" class="form-control-range" type="range" min="0" value="0" max="100" step="1"/>
+                                        <input id="seek-slider" class="form-control-range" style="width: inherit;" type="range" min="0" value="0" max="100" step="1"/>
                                     </div>
                                     <div class="col-md-3">
                                         <span id="videoCurrentTime"></span>

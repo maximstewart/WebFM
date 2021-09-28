@@ -76,16 +76,16 @@ class FilesList extends React.Component {
             final.push(
                 <li class="col-sm-12 col-md-6 col-lg-4" title={name}>
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header card-title-text">
                             {card_header}
                         </div>
                         <div class="card-body text-center noselect" title={name} hash={hash} ftype={filetype} onDoubleClick={this.openThis}>
                             {card_body}
                         </div>
                         <div class="card-footer">
-                            <a href={"api/file-manager-action/files/" + hash} download class="btn btn-secondary btn-sm float-left">Download</a>
-                            <input hash={hash} onClick={this.openThisLocally} ftype={filetype} class="btn btn-secondary btn-sm float-left" type="button" value="Open Locally"/>
-                            <input hash={hash} onClick={this.openThis} ftype={filetype} class="btn btn-secondary btn-sm float-right" title={name} type="button" value="Open"/>
+                            <a href={"api/file-manager-action/files/" + hash} download class="btn btn-dark btn-sm float-start">Download</a>
+                            <input hash={hash} onClick={this.openThisLocally} ftype={filetype} class="btn btn-dark btn-sm float-start" type="button" value="Open Locally"/>
+                            <input hash={hash} onClick={this.openThis} ftype={filetype} class="btn btn-dark btn-sm float-end" title={name} type="button" value="Open"/>
                         </div>
                     </div>
                 </li>

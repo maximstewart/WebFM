@@ -50,12 +50,16 @@
 
 
 
+.card-title-text {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 .volume-control-positioner {
     position: absolute;
-    bottom: 2em;
-    right: 50%;
-    left: 50%;
+    bottom: 3.5em;
+    right: 2.5%;
 }
 
 .icon-style {

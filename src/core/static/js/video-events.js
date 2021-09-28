@@ -195,6 +195,17 @@ $( "#video" ).bind( "timeupdate", async function(eve) {
     videoDuration.innerText = getTimeFormatted(video.currentTime);
 });
 
+// $( "#video" ).bind( "ended", async function(eve) {
+//     alert("Hello...")
+//     // let videoDuration = document.getElementById("videoCurrentTime");
+//     // const video       = eve.target;
+//     // const seekto      = document.getElementById("seek-slider");
+//     // const vt          = video.currentTime * (100 / video.duration);
+//     //
+//     // seekto.value            = vt;
+//     // videoDuration.innerText = getTimeFormatted(video.currentTime);
+// });
+
 $( "#seek-slider" ).bind( "change", async function(eve) {
     const slider = eve.target;
     let video    = document.getElementById("video");
