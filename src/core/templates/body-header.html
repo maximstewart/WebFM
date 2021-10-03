@@ -1,0 +1,86 @@
+<nav class="container navbar navbar-expand-sm bg-dark navbar-dark justify-content-center text-center sticky-top">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarTogglerHeader" aria-controls="navbarTogglerHeader"
+                aria-expanded="false" aria-label="Toggle Header Navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbarTogglerHeader" class="row collapse navbar-collapse">
+        {% if current_directory %}
+            <div class="col">
+                <!-- Left menues -->
+                <ul class="navbar-nav">
+                    <li class="nav-item" data-bs-toggle="modal" data-bs-target="#file-view-modal">
+                        <i class="nav-link" aria-hidden="true" title="File viewer..." >
+                            🖼
+                        </i>
+                    </li>
+                    <li class="nav-item">
+                        <div class="input-group">
+                            <input id="search-files-field" type="text" class="form-control"
+                                    aria-label="Search..." placeholder="Search..." style="max-width: 260px">
+                            <div class="input-group-prepend">
+                                <span id="clear-search-btn" class="input-group-text" title="Clears search...">X</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item" data-bs-toggle="modal" data-bs-target="#favorites-modal">
+                        <i class="nav-link" aria-hidden="true" title="Faves list..." >
+                            Faves List
+                        </i>
+                    </li>
+                    <li class="nav-item">
+                        <i id="scroll-files-to-top-btn" class="nav-link" aria-hidden="true" title="Scroll to top..." >
+                            Scroll To Top
+                        </i>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="col col-auto">
+            <!-- Right menues -->
+            <ul class="navbar-nav">
+                {% if current_directory %}
+                    <li class="nav-item">
+                        <i id="back-btn" class="fa fa-arrow-left nav-link" aria-hidden="true" title="Back..." hash="{{dot_dots[1][1]}}">
+                            Back
+                        </i>
+                    </li>
+                    <li class="nav-item">
+                        <i id="refresh-btn" class="fa fa-refresh nav-link" aria-hidden="true" title="Refresh..." hash="{{dot_dots[0][1]}}">
+                            Refresh
+                        </i>
+                    </li>
+                {% endif %}
+                <li class="nav-item" data-bs-toggle="modal" data-bs-target="#options-modal">
+                    <i class="nav-link fa fa-gear" aria-hidden="true" title="Other options..." >
+                        Settings
+                    </i>
+                </li>
+                {% if current_user.is_authenticated or oidc_loggedin() %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                {% endif %}
+                {% if not current_user.is_authenticated and not oidc_loggedin() %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">
+                            Account
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ url_for('login') }}">
+                                <i title="Login" class="fas fa-user"></i>&nbsp;&nbsp;Login
+                            </a>
+                            <a class="dropdown-item" href="{{ url_for('register') }}">
+                                <i title="Register A User..." class="fas fa-user-plus"></i>&nbsp;&nbsp;Register
+                            </a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,5 @@
+body,
+.container-fluid, .row, .col,
+.error-styling, .dir-style, .movie-style, .file-style {
+    background-color: rgba(0,0,0,0.0);
+}

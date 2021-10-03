@@ -1,0 +1,51 @@
+{% block options_modal %}
+<!-- Other Options modal -->
+<div class="modal fade" id="options-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings:</h3>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row scroller" style="max-height: 30em; overflow: auto;">
+                    <!-- File Upload -->
+                    <div class="col-md-6 controls-secondary">
+                        {% if oidc_loggedin() and oidc_isAdmin() %}
+                            <!-- Server Messages -->
+                            <div id="settings-alert-zone-files"></div>
+                            <!-- To Upload List -->
+                            <ul id="uploadListTitles" class="list-group scroller" style="min-height: 286px; max-height: 286px; overflow: hidden auto;">
+                            </ul>
+                            <input id="toUpload" class="btn btn-dark" type="file" multiple>
+                            <button id="uploadFiles" class="btn btn-success">Submit Files...</button>
+                            <button id="clearUploadFiles" class="btn btn-dark">Clear</button>
+                            {% else %}
+                            <h3>Upload not available to this user...</h3>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 controls-secondary">
+                        {% if oidc_loggedin() and oidc_isAdmin() %}
+                            <div id="settings-alert-zone-new-items"></div>
+                            <input type="text" id="newItem" placeholder="File name..." value=""/>
+                            <input type="button" class="btn btn-dark" value="New Dir" onclick="createItem('dir')"/>
+                            <input type="button" class="btn btn-dark" value="New File" onclick="createItem('file')"/>
+                        {% endif %}
+                        <br/>
+                        <!-- <input id="MergeType" type="checkbox" onchange="getDir('./')" />
+                            <label for="MergeType">Show seassons in same list.</label> -->
+                    </div>
+                    <div id="page-alert-zone-2"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock options_modal %}

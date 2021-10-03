@@ -1,0 +1,81 @@
+@font-face {
+    font-family: Dosis;
+    src: url("/static/css/fonts/dosis/Dosis-Regular.ttf"),
+    url("/static/css/fonts/dosis/Dosis-Medium.ttf"),
+    url("/static/css/fonts/dosis/Dosis-Light.ttf"),
+    url("/static/css/fonts/dosis/Dosis-ExtraLight.ttf"),
+    url("/static/css/fonts/dosis/Dosis-Bold.ttf"),
+    url("/static/css/fonts/dosis/Dosis-ExtraBold.ttf"),
+    url("/static/css/fonts/dosis/Dosis-SemiBold.ttf"),
+    url("/static/css/fonts/Dosis-VariableFont_wght.ttf");
+    font-style: normal;
+    font-display: auto;
+}
+
+body {
+    font-family: Dosis;
+}
+
+ul, li {
+    list-style: none;
+}
+
+
+/* Vertical slider */
+input[type=range][orient=vertical] {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 175px;
+    padding: 0 5px;
+}
+
+[class*="col-"] {
+	  background-clip: padding-box;
+	  border: 10px solid transparent;
+	  margin: 0em !important;
+	  padding: 0em !important;
+}
+
+#video-container::-webkit-media-controls {
+    display: none !important;
+}
+
+#video-container::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+
+
+
+.modal-content {
+    background-color: #32383e74;
+    border-color: #f8940674;
+}
+
+.sticky-top,
+.card {
+    background-color: rgba(50, 56, 62, 0.84);
+}
+
+.card-body {
+	min-height: 326px;
+	font-size: x-large;
+	vertical-align: middle !important;
+	align-items: center;
+	display: grid;
+}
+
+.card-img, .card-img-top {
+	  max-height: 285px !important;
+	  object-fit: contain;
+}
+
+.list-group-item {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+.label-as-badge {
+    border-radius: 1em;
+    cursor: pointer;
+}

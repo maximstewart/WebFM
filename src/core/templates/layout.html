@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% block header %}
+<head>
+    {% block header_meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="index,follow">
+        {% block header_meta_additional %}
+        {% endblock header_meta_additional %}
+    {% endblock %}
+
+    {% if title %}
+        <title>{{title}}</title>
+    {% else %}
+        <title>{{TITLE}}</title>
+    {% endif %}
+
+    {% block header_css %}
+        <!-- Bootstrap CSS -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/mdb.dark.min.css')}}">
+
+        <!-- Font Awesome CSS Notes -->
+        <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> -->
+        <!-- https://use.fontawesome.com/releases/v5.7.0/webfonts/fa-regular-400.woff2 -->
+        <!-- https://use.fontawesome.com/releases/v5.7.0/webfonts/ -->
+
+        <!-- Site Font Awesome CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/font-awesome-all-v5.7.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/font-awesome-min-v4.7.0.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/font-awesome-woff2.css')}}">
+
+        <!-- Site CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/context-menu.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/overrides.css')}}">
+        {% block header_css_additional %}
+        {% endblock header_css_additional %}
+    {% endblock %}
+
+
+    {% block header_scripts %}
+        {% block header_scripts_additional %}
+        {% endblock header_scripts_additional %}
+    {% endblock %}
+</head>
+{% endblock %}
+<body>
+    <!-- <video id="bg" src="{{ url_for('static', filename='imgs/backgrounds/particles.mp4')}}"
+        poster="{{ url_for('static', filename='imgs/backgrounds/000.png')}}"
+        autoplay loop>
+    </video> -->
+
+    <video id="bg" src="{{ url_for('static', filename='imgs/backgrounds/tendrels.webm')}}"
+        poster="{{ url_for('static', filename='imgs/backgrounds/000.png')}}"
+        autoplay loop>
+    </video>
+
+    <div class="menu">
+        <ul class="menu-options">
+            <li class="menu-option" onclick="goUpADirectory()">Back</li>
+            <li class="menu-option" onclick="goHome()">Home Directory</li>
+            <li class="menu-option" onclick="downloadItem()">Download</li>
+            <li class="menu-option" onclick="deleteItem()">Delete</li>
+        </ul>
+    </div>
+
+    {% block body_header %}
+        {% include "body-header.html" %}
+
+        {% block body_header_additional %}
+        {% endblock body_header_additional%}
+    {% endblock %}
+
+
+    <div id="master-container" class="container scroller">
+        <!-- System flashed messages! -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                    {% for category, message in messages %}
+                        <li class="alert alert-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div id="page-alert-zone" class="col">
+            </div>
+        </div>
+        {% block body_content %}
+                {% block body_content_additional %}
+                {% endblock body_content_additional%}
+        {% endblock %}
+
+
+        {% block body_footer %}
+            {% include "body-footer.html" %}
+
+            {% block body_footer_additional %}
+            {% endblock body_footer_additional%}
+        {% endblock %}
+    </div>
+
+
+
+    {% include "modals/options-modal.html" %}
+    {% include "modals/favorites-modal.html" %}
+    {% include "modals/file-modal.html" %}
+
+
+
+    {% block body_scripts %}
+        <!-- For internal scripts... -->
+        <script src="{{ url_for('static', filename='js/libs/jquery-3.6.0.min.js')}}"></script>
+
+        <!-- For Bootstrap in this exact order... -->
+        <script src="{{ url_for('static', filename='js/libs/bootstrap/popper.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/bootstrap/mdb.min.js')}}"></script>
+
+        <!-- For React -->
+        <script src="{{ url_for('static', filename='js/libs/react/react.production.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/react/react-dom.production.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/babel.min.js')}}"></script>
+
+        <!-- Application Imports -->
+        {% block body_scripts_additional %}
+        {% endblock body_scripts_additional%}
+
+        <script src="{{ url_for('static', filename='js/context-menu.js')}}"></script>
+    {% endblock %}
+</body>
+</html>
