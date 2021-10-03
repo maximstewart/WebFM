@@ -28,3 +28,7 @@ $( "#uploadFiles" ).bind( "click", function(eve) {
     const files = document.getElementById('toUpload').files;
     uploadFiles(files);
 });
+
+$( "#clearUploadFiles" ).bind( "click", function(eve) {
+    clearUlList();
+});

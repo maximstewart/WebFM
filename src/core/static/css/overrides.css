@@ -13,12 +13,13 @@
 }
 
 body {
-  font-family: Dosis;
+    font-family: Dosis;
 }
 
 ul, li {
     list-style: none;
 }
+
 
 /* Vertical slider */
 input[type=range][orient=vertical] {
@@ -30,18 +31,18 @@ input[type=range][orient=vertical] {
 }
 
 [class*="col-"] {
-	background-clip: padding-box;
-	border: 10px solid transparent;
-	margin: 0em !important;
-	padding: 0em !important;
+	  background-clip: padding-box;
+	  border: 10px solid transparent;
+	  margin: 0em !important;
+	  padding: 0em !important;
 }
 
 #video-container::-webkit-media-controls {
-  display: none !important;
+    display: none !important;
 }
 
 #video-container::-webkit-media-controls-enclosure {
-  display: none !important;
+    display: none !important;
 }
 
 
@@ -55,6 +56,23 @@ input[type=range][orient=vertical] {
 .sticky-top,
 .card {
     background-color: rgba(50, 56, 62, 0.84);
+}
+
+.card-body {
+	min-height: 326px;
+	font-size: x-large;
+	vertical-align: middle !important;
+	align-items: center;
+	display: grid;
+}
+
+.card-img, .card-img-top {
+	  max-height: 285px !important;
+	  object-fit: contain;
+}
+
+.list-group-item {
+    color: rgba(255, 255, 255, 1) !important;
 }
 
 .label-as-badge {

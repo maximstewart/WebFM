@@ -14,6 +14,7 @@ const setPosition = ({ top, left }) => {
     toggleMenu("show");
 };
 
+
 window.addEventListener("click", e => {
     if(menuVisible) toggleMenu("hide");
 });

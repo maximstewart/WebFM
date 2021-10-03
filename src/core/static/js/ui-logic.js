@@ -4,14 +4,6 @@ const goHome = () => {
     goHomeAjax();
 }
 
-const clearUlList = () => {
-    const titles = document.getElementById('uploadListTitles');
-    const files  = document.getElementById('toUpload');
-
-    files.value = null;
-    clearChildNodes(titles);
-}
-
 const downloadItem = (eve) => {
     let elm = active_card.querySelector('a');
     elm.click();

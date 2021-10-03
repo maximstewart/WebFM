@@ -1,5 +1,13 @@
 
 // Uploader Logic
+const clearUlList = () => {
+    const titles = document.getElementById('uploadListTitles');
+    const files  = document.getElementById('toUpload');
+
+    files.value = null;
+    clearChildNodes(titles);
+}
+
 const setUploadListTitles = (files = null) => {
     if (files == null) {
         return ;
