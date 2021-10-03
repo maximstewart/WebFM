@@ -1,8 +1,9 @@
 # Python imports
-import os, json, secrets
+import os, json, secrets, re, shutil
 
 # Lib imports
 from flask import request, session, render_template, send_from_directory, redirect
+from flask_uploads import UploadSet, configure_uploads, ALL
 from flask_login import current_user
 
 
@@ -14,6 +15,8 @@ from core.utils.shellfm import WindowController    # Get file manager controller
 
 msgHandler         = MessageHandler()
 window_controllers = {}
+# valid_fname_pat    = re.compile(r"/^[a-zA-Z0-9-_\[\]\(\)| ]+$/")
+valid_fname_pat    = re.compile(r"[a-z0-9A-Z-_\[\]\(\)\| ]{4,20}")
 
 
 def get_window_controller():
@@ -88,13 +91,14 @@ def listFiles(_hash = None):
         msg = "Can't manage the request type..."
         return msgHandler.createMessageJSON("danger", msg)
 
-@app.route('/api/file-manager-action/<_type>/<_hash>')
+@app.route('/api/file-manager-action/<_type>/<_hash>', methods=['GET', 'POST'])
 def fileManagerAction(_type, _hash = None):
     view = get_window_controller().get_window(1).get_view(0)
 
-    if _type == "reset-path" and _hash == None:
+    if _type == "reset-path" and _hash == "None":
         view.set_to_home()
-        return redirect("/")
+        msg = "Returning to home directory..."
+        return msgHandler.createMessageJSON("success", msg)
 
     folder = view.get_current_directory()
     file   = view.get_path_part_from_hash(_hash)
@@ -117,6 +121,30 @@ def fileManagerAction(_type, _hash = None):
         msg = "Opened media..."
         view.openFilelocally(fpath)
         return msgHandler.createMessageJSON("success", msg)
+
+
+    # NOTE: Positionally protecting actions further down that are privlidged
+    #       Be aware of ordering!
+    msg = "Log in with an Admin privlidged user to do this action!"
+    if not oidc.user_loggedin:
+        return msgHandler.createMessageJSON("danger", msg)
+    elif oidc.user_loggedin:
+        isAdmin = oidc.user_getfield("isAdmin")
+        if isAdmin != "yes" :
+            return msgHandler.createMessageJSON("danger", msg)
+
+
+    if _type == "delete":
+        try:
+            msg = f"[Success] Deleted the file/folder -->:  {file}  !"
+            if os.path.isfile(fpath):
+                os.unlink(fpath)
+            else:
+                shutil.rmtree(fpath)
+            return msgHandler.createMessageJSON("success", msg)
+        except Exception as e:
+            msg = "[Error] Unable to delete the file/folder...."
+            return msgHandler.createMessageJSON("danger", msg)
 
 
 @app.route('/api/list-favorites', methods=['GET', 'POST'])
@@ -161,12 +189,90 @@ def manageFavorites(_action):
             fave = Favorites(link = sub_path)
             db.session.add(fave)
             msg  = "Added to Favorites successfully..."
-        else:
+        elif ACTION == "delete":
             fave = db.session.query(Favorites).filter_by(link = sub_path).first()
             db.session.delete(fave)
             msg  = "Deleted from Favorites successfully..."
+        else:
+            msg  = "Couldn't handle action for favorites item..."
+            return msgHandler.createMessageJSON("danger", msg)
 
         db.session.commit()
+        return msgHandler.createMessageJSON("success", msg)
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+
+@app.route('/api/create/<_type>', methods=['GET', 'POST'])
+def create_item(_type = None):
+    if request.method == 'POST':
+        msg = "Log in with an Admin privlidged user to upload files!"
+        if not oidc.user_loggedin:
+            return msgHandler.createMessageJSON("danger", msg)
+        elif oidc.user_loggedin:
+            isAdmin = oidc.user_getfield("isAdmin")
+            if isAdmin != "yes" :
+                return msgHandler.createMessageJSON("danger", msg)
+
+        TYPE  = _type.strip()
+        FNAME = str(request.values['fname']).strip()
+
+        if not re.fullmatch(valid_fname_pat, FNAME):
+            msg  = "A new item name can only contain alphanumeric, -, _, |, [], (), or spaces and must be minimum of 4 and max of 20 characters..."
+            return msgHandler.createMessageJSON("danger", msg)
+
+        view     = get_window_controller().get_window(1).get_view(0)
+        folder   = view.get_current_directory()
+        new_item = folder + '/' + FNAME
+
+        try:
+            if TYPE == "dir":
+                os.mkdir(new_item)
+            elif TYPE == "file":
+                open(new_item + ".txt", 'a').close()
+            else:
+                msg  = "Couldn't handle action type for api create..."
+                return msgHandler.createMessageJSON("danger", msg)
+        except Exception as e:
+            print(repr(e))
+            msg  = "Couldn't create file/folder. An unexpected error occured..."
+            return msgHandler.createMessageJSON("danger", msg)
+
+
+        msg = "[Success] created the file/dir..."
+        return msgHandler.createMessageJSON("success", msg)
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST' and len(request.files) > 0:
+        msg = "Log in with an Admin privlidged user to upload files!"
+        if not oidc.user_loggedin:
+            return msgHandler.createMessageJSON("danger", msg)
+        elif oidc.user_loggedin:
+            isAdmin = oidc.user_getfield("isAdmin")
+            if isAdmin != "yes" :
+                return msgHandler.createMessageJSON("danger", msg)
+
+        view         = get_window_controller().get_window(1).get_view(0)
+        folder       = view.get_current_directory()
+        UPLOADS_PTH  = folder + '/'
+        files        = UploadSet('files', ALL, default_dest=lambda x: UPLOADS_PTH)
+        configure_uploads(app, files)
+
+        for file in request.files:
+            try:
+                files.save(request.files[file])
+            except Exception as e:
+                print(repr(e))
+                msg = "[Error] Failed to upload some or all of the file(s)..."
+                return msgHandler.createMessageJSON("danger", msg)
+
+        msg = "[Success] Uploaded file(s)..."
         return msgHandler.createMessageJSON("success", msg)
     else:
         msg = "Can't manage the request type..."

@@ -1,3 +1,37 @@
+// Context Menu items
+
+const goHome = () => {
+    goHomeAjax();
+}
+
+const clearUlList = () => {
+    const titles = document.getElementById('uploadListTitles');
+    const files  = document.getElementById('toUpload');
+
+    files.value = null;
+    clearChildNodes(titles);
+}
+
+const downloadItem = (eve) => {
+    let elm = active_card.querySelector('a');
+    elm.click();
+}
+
+const deleteItem = (eve) => {
+    let elm     = active_card.querySelector('[hash]'); // With attribute named "hash"
+    let elm2    = active_card.querySelector('[title]'); // With attribute named "title"
+    const hash  = elm.getAttribute("hash");
+    const title = elm2.getAttribute("title");
+
+    let res = confirm("Delete:  " + title + "  ?");
+    if (res == true) {
+      deleteItemAjax(hash);
+    }
+}
+
+
+
+// Header menu items
 const reloadDirectory = () => {
     const target = document.getElementById('refresh-btn');
     const hash   = target.getAttribute("hash");
@@ -5,7 +39,7 @@ const reloadDirectory = () => {
 }
 
 const goUpADirectory = () => {
-    const target = document.getElementById('back-btn')
+    const target = document.getElementById('back-btn');
     const hash = target.getAttribute("hash");
     listFilesAjax(hash);
 }

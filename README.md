@@ -23,3 +23,5 @@ n/a
 ![1 Videos List](images/pic1.png)
 ![2 Video Playing](images/pic2.png)
 ![3 Images List](images/pic3.png)
+![4 Context menu](images/pic4.png)
+![5 Settings Pane With Upload And Create Functionality](images/pic5.png)

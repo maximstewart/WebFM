@@ -1,7 +1,35 @@
 const postAjaxController = (data, action) => {
     if (data.message) {
-        message = data.message
-        displayMessage(message.text, message.type);
+        type    = data.message.type
+        message = data.message.text
+
+        if (action === "reset-path") {
+            reloadDirectory();
+            return ;
+        }
+
+        if (action === "delete-file") {
+            reloadDirectory();
+            displayMessage(message, type);
+            return ;
+        }
+
+        if (action === "upload-text" || action === "upload-file") {
+            let field = null;
+            if (action === "upload-text") field = "settings-alert-zone-text";
+            if (action === "upload-file") field = "settings-alert-zone-files";
+            displayMessage(message, type, 3, field);
+            reloadDirectory();
+            return ;
+        }
+
+        if (action === "create-item") {
+            displayMessage(message, type, 3, "settings-alert-zone-new-items");
+            reloadDirectory();
+            return ;
+        }
+
+        displayMessage(message, type);
         return ;
     }
 
