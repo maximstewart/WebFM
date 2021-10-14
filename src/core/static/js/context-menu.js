@@ -20,8 +20,6 @@ window.addEventListener("click", e => {
 });
 
 window.addEventListener("contextmenu", e => {
-    e.preventDefault();
-
     let target = e.target;
     let elm    = target;
     while (elm.nodeName != "BODY") {
@@ -33,9 +31,24 @@ window.addEventListener("contextmenu", e => {
         }
     }
 
+    let posY = e.pageY;
+    let posX = e.pageX - 165;
+
+    if (e.pageY > (window.innerHeight - 120)) {
+        posY = window.innerHeight - 220;
+    }
+
+    if (e.pageX > (window.innerWidth - 80)) {
+        posX = window.innerWidth - 320;
+    }
+
+    if (e.pageX < 80) {
+        posX = e.pageX + 180;
+    }
+
     const origin = {
-        left: e.pageX,
-        top: e.pageY
+        left: posX,
+        top: posY
     };
     setPosition(origin);
     return false;

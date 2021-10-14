@@ -2,9 +2,10 @@
     "settings": {
         "base_of_home": "/LazyShare",
         "hide_hidden_files": "true",
-        "go_past_home": "true",
+        "thumbnailer_path": "ffmpegthumbnailer",
+        "go_past_home": "false",
         "lock_folder": "true",
-        "locked_folders": "Synced Backup::::venv::::flasks::::Cryptomator",
+        "locked_folders": "Synced Backup::::venv::::flasks::::Encrypted Vault::::Cryptomator",
         "mplayer_options": "-quiet -really-quiet -xy 1600 -geometry 50%:50%",
         "music_app": "/opt/deadbeef/bin/deadbeef",
         "media_app": "mpv",

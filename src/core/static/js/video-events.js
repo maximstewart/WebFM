@@ -2,7 +2,6 @@ let fullScreenState = 0;
 let clicktapwait    = 200;
 let shouldPlay      = null;
 let controlsTimeout = null;
-let canHideControls = true;
 
 
 const getTimeFormatted = (duration = null) => {
@@ -19,44 +18,16 @@ const getTimeFormatted = (duration = null) => {
 
 const togglePlay = (video) => {
     shouldPlay = setTimeout(function () {
-        let controls = document.getElementById("video-controls");
-        shouldPlay   = null;
+        shouldPlay = null;
         if (video.paused) {
-            video.style.cursor     = 'none';
-            controls.style.display = "none";
+            video.style.cursor = 'none';
             video.play();
         } else {
-            video.style.cursor     = '';
-            controls.style.display = "";
+            video.style.cursor = '';
             video.pause();
         }
     }, 300);
 }
-
-const showControls = () => {
-    const video    = document.getElementById("video");
-    const controls = document.getElementById("video-controls");
-
-    video.style.cursor     = '';
-    controls.style.display = "";
-    if (controlsTimeout) {
-        clearTimeout(controlsTimeout);
-    }
-
-    controlsTimeout = setTimeout(function () {
-        if (!video.paused) {
-            if (canHideControls) {
-                video.style.cursor     = 'none';
-                controls.style.display = "none";
-                controlsTimeout        = null;
-            } else {
-                showControls();
-            }
-        }
-    }, 3000);
-}
-
-
 
 
 const setFullscreenSettings = (parentElm, video) => {
@@ -73,8 +44,8 @@ const unsetFullscreenSettings = (video) => {
 }
 
 const toggleFullscreen = (video) => {
-    containerElm = document.getElementById("video-container");
-    parentElm    = video.parentElement;
+    let containerElm = document.getElementById("video-container");
+    let parentElm    = video.parentElement;
 
     if (video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen) {
         setFullscreenSettings(parentElm, video);
@@ -92,7 +63,7 @@ const toggleFullscreen = (video) => {
             unsetFullscreenSettings(video);
         }
 
-        fullScreenState = 0;
+        fullScreenState   = 0;
     }
 
     fullScreenState += 1;
@@ -109,7 +80,6 @@ const toggleVolumeControl = () => {
 
 
 
-
 $("#video").on("loadedmetadata", function(eve){
     const video             = eve.target;
     let videoDuration       = document.getElementById("videoDuration");
@@ -117,13 +87,13 @@ $("#video").on("loadedmetadata", function(eve){
 });
 
 
-$("#video").on("keyup", function(eve) {
+
+$("#video").on("keydown", function(eve) {
+    event.preventDefault();
     const key   = eve.keyCode;
     const video = eve.target;
 
-    if (key === 32 || key === 80) { // Spacebar for pausing
-        togglePlay(video);
-    } else if (key === 37) {        // Left key for back tracking 5 sec
+    if (key === 37) {               // Left key for back tracking 5 sec
         video.currentTime -= 5;
     } else if (key === 39) {        // Right key for fast forward 5 sec
         video.currentTime += 5;
@@ -135,6 +105,17 @@ $("#video").on("keyup", function(eve) {
         if (video.volume >= 0.0) {
             video.volume -= 0.05;
         }
+    }
+
+});
+
+
+$("#video").on("keyup", function(eve) {
+    const key   = eve.keyCode;
+    const video = eve.target;
+
+    if (key === 32 || key === 80) { // Spacebar for pausing
+        togglePlay(video);
     } else if (key === 70) {        // f key for toggling full screen
         toggleFullscreen(video);
     } else if (key === 76) {        // l key for toggling loop
@@ -195,17 +176,6 @@ $( "#video" ).bind( "timeupdate", async function(eve) {
     videoDuration.innerText = getTimeFormatted(video.currentTime);
 });
 
-// $( "#video" ).bind( "ended", async function(eve) {
-//     alert("Hello...")
-//     // let videoDuration = document.getElementById("videoCurrentTime");
-//     // const video       = eve.target;
-//     // const seekto      = document.getElementById("seek-slider");
-//     // const vt          = video.currentTime * (100 / video.duration);
-//     //
-//     // seekto.value            = vt;
-//     // videoDuration.innerText = getTimeFormatted(video.currentTime);
-// });
-
 $( "#seek-slider" ).bind( "change", async function(eve) {
     const slider = eve.target;
     let video    = document.getElementById("video");
@@ -220,5 +190,14 @@ $( "#volume-slider" ).bind( "change", async function(eve) {
     video.volume = volumeto;
 });
 
-$( "#video-controls" ).bind( "mouseenter", async function(eve) { canHideControls = false; });
-$( "#video-controls" ).bind( "mouseleave", async function(eve) { canHideControls = true; });
+
+// $( "#video" ).bind( "ended", async function(eve) {
+//     alert("Hello...")
+//     // let videoDuration = document.getElementById("videoCurrentTime");
+//     // const video       = eve.target;
+//     // const seekto      = document.getElementById("seek-slider");
+//     // const vt          = video.currentTime * (100 / video.duration);
+//     //
+//     // seekto.value            = vt;
+//     // videoDuration.innerText = getTimeFormatted(video.currentTime);
+// });

@@ -20,14 +20,13 @@
 }
 
 #master-container {
-    height: 90vh;
+    height: 80vh;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 #video-controls {
-    position: relative;
-    bottom: 2.5em;
+    background-color: rgba(0, 0, 0, 0.64);
 }
 
 

@@ -19,27 +19,8 @@
                                 autoplay=""
                                 volume="0.75"
                                 poster="{{ url_for('static', filename='imgs/icons/loading.gif')}}"
-                                onmousemove="showControls()">
+                                >
                             </video>
-
-                            <div id="video-controls">
-                                <div class="row pl-5 pr-5">
-                                    <div class="col-md-8">
-                                        <input id="seek-slider" class="form-control-range" style="width: inherit;" type="range" min="0" value="0" max="100" step="1"/>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <span id="videoCurrentTime"></span>
-                                        /
-                                        <span id="videoDuration"></span>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <span id="volumeIcon" onclick="toggleVolumeControl()">&#128264;</span>
-                                        <input id="volume-slider" class="form-control-range volume-control-positioner" style="display: none;"
-                                        type="range" orient="vertical" min="0.0" max="1.0" value="0.75" step="0.05" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- For image -->
                         <img id="image-viewer" class="card-img-top viewer"
@@ -65,10 +46,24 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="modal-footer">
+        <div id="video-controls" class="modal-footer">
+            <div class="col-md-8">
+                <input id="seek-slider" class="form-control-range" style="width: inherit;" type="range" min="0" value="0" max="100" step="1"/>
+            </div>
+            <div class="col-md-3">
+                <span id="videoCurrentTime"></span>
+                /
+                <span id="videoDuration"></span>
+            </div>
+            <div class="col-md-auto">
+                <span id="volumeIcon" onclick="toggleVolumeControl()">&#128264;</span>
+                <input id="volume-slider" class="form-control-range volume-control-positioner" style="display: none;"
+                type="range" orient="vertical" min="0.0" max="1.0" value="0.75" step="0.05" />
             </div>
         </div>
+
     </div>
 </div>
 {% endblock file_modal %}

@@ -10,7 +10,14 @@ const downloadItem = (eve) => {
 }
 
 const deleteItem = (eve) => {
-    let elm     = active_card.querySelector('[hash]'); // With attribute named "hash"
+    if (active_card == null) {
+        let text = "No card hovered over to delete!";
+        let type = "danger";
+        displayMessage(text, type, 3);
+        return ;
+    }
+
+    let elm     = active_card.querySelector('[hash]');  // With attribute named "hash"
     let elm2    = active_card.querySelector('[title]'); // With attribute named "title"
     const hash  = elm.getAttribute("hash");
     const title = elm2.getAttribute("title");
@@ -49,7 +56,6 @@ const closeFile = () => {
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
-    document.getElementById("video-controls").style.display = "none";
 
     title.innerText     = "";
     video.style.display = "none";
@@ -62,7 +68,6 @@ const showFile = async (title, hash, extension, type) => {
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
     document.getElementById("video").style.display          = "none";
-    document.getElementById("video-controls").style.display = "none";
 
     let titleElm          = document.getElementById("selectedFile");
     titleElm.innerText    = title;
@@ -77,7 +82,6 @@ const showFile = async (title, hash, extension, type) => {
 
 const setupVideo = async (hash, extension) => {
     let video           = document.getElementById("video");
-    let controls        = document.getElementById("video-controls");
     video.poster        = "static/imgs/icons/loading.gif";
     video.style.display = "";
     video.src           = "#"
@@ -102,9 +106,9 @@ const setupVideo = async (hash, extension) => {
             }
         }
 
+
+        video.src         = video_path;
         modal.show();
-        controls.style.display = "none";
-        video.src              = video_path;
     } catch (e) {
         video.style.display = "none";
         console.log(e);

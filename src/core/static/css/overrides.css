@@ -47,10 +47,13 @@ input[type=range][orient=vertical] {
 
 
 
+.modal-header {
+    background-color: rgba(0, 0, 0, 0.64);
+}
 
 .modal-content {
-    background-color: #32383e74;
-    border-color: #f8940674;
+    background-color: rgba(50, 56, 62, 0.74);
+    border-color: rgba(249, 148, 6, 0.74);
 }
 
 .sticky-top,
@@ -59,7 +62,7 @@ input[type=range][orient=vertical] {
 }
 
 .card-body {
-	min-height: 326px;
+    min-height: 326px;
 	font-size: x-large;
 	vertical-align: middle !important;
 	align-items: center;
