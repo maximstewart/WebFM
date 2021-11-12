@@ -1,5 +1,5 @@
 # Python imports
-import os, json, secrets, re, shutil
+import os, json, secrets, requests, shutil, re
 
 # Lib imports
 from flask import request, session, render_template, send_from_directory, redirect
@@ -11,9 +11,11 @@ from flask_login import current_user
 from core import app, logger, oidc, db, Favorites  # Get from __init__
 from core.utils import MessageHandler              # Get simple message processor
 from core.utils.shellfm import WindowController    # Get file manager controller
+from core.utils.tmdbscraper import scraper         # Get media art scraper
 
 
 msgHandler         = MessageHandler()
+tmdb               = scraper.get_tmdb_scraper()
 window_controllers = {}
 # valid_fname_pat    = re.compile(r"/^[a-zA-Z0-9-_\[\]\(\)| ]+$/")
 valid_fname_pat    = re.compile(r"[a-z0-9A-Z-_\[\]\(\)\| ]{4,20}")
@@ -81,12 +83,50 @@ def listFiles(_hash = None):
             return msgHandler.createMessageJSON("danger", error_msg)
 
 
-        sub_path = view.get_current_sub_path()
+        sub_path          = view.get_current_sub_path()
+        current_directory = sub_path.split("/")[-1]
+        if "(" in current_directory and ")" in current_directory:
+            title          = current_directory.split("(")[0].strip()
+            startIndex     = current_directory.index('(') + 1
+            endIndex       = current_directory.index(')')
+            date           = current_directory[startIndex:endIndex]
+            video_data     = tmdb.search(title, date)
+            background_url = video_data[0]["backdrop_path"]
+            background_pth = view.get_current_directory() + "/" + "000.jpg"
+
+            if not os.path.isfile(background_pth):
+                r = requests.get(background_url, stream = True)
+
+                if r.status_code == 200:
+                    r.raw.decode_content = True
+                    with open(background_pth,'wb') as f:
+                        shutil.copyfileobj(r.raw, f)
+
+                    view.load_directory()
+                    print('Cover Background Image sucessfully retreived...')
+                else:
+                    print('Cover Background Image Couldn\'t be retreived...')
+
+
         files    = view.get_files_formatted()
         fave     = db.session.query(Favorites).filter_by(link = sub_path).first()
         in_fave  = "true" if fave else "false"
+
         files.update({'in_fave': in_fave})
         return files
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.createMessageJSON("danger", msg)
+
+@app.route('/api/get-posters', methods=['GET', 'POST'])
+def getPosters():
+    if request.method == 'POST':
+        view   = get_window_controller().get_window(1).get_view(0)
+        videos = view.get_videos()
+
+        print(videos)
+        # tmdb.search("Matrix")
+        return videos
     else:
         msg = "Can't manage the request type..."
         return msgHandler.createMessageJSON("danger", msg)
