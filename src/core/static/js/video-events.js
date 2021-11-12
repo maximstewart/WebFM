@@ -33,14 +33,21 @@ const togglePlay = (video) => {
 const setFullscreenSettings = (parentElm, video) => {
     parentElm.requestFullscreen();
     video.classList.remove("viewer");
-    video.style.cursor = 'none';
-    video.style.height = 'inherit';
+    video.style.cursor    = 'none';
+    video.style.height    = 'inherit';
+    video.style.width     = 'inherit';
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        video.style.transform = 'rotate(90deg)';
+    }
 }
 
 const unsetFullscreenSettings = (video) => {
     video.classList.add("viewer");
-    video.style.cursor = '';
-    video.style.height = '';
+    video.style.transform = '';
+    video.style.cursor    = '';
+    video.style.height    = '';
+    video.style.width     = '';
 }
 
 const toggleFullscreen = (video) => {

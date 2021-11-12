@@ -48,6 +48,12 @@
 }
 
 
+.page-alert-zone-container {
+    position: sticky;
+    top: 0em;
+    z-index: 2;
+}
+
 
 .card-title-text {
 	white-space: nowrap;
@@ -68,9 +74,10 @@
 }
 
 .viewer {
-    max-width: 55em;
+	max-width: 100% !important;
+	height: auto !important;
+	max-height: 100% !important;
 }
-
 
 
 /* Other message text colors */
