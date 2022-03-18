@@ -54,6 +54,7 @@ class FilesList extends React.Component {
         for (let file of files) {
             const name    = file[0];
             const hash    = file[1];
+            const fsize   = file[2];
             let extension = re.exec( name.toLowerCase() )[1] ? name : "file.dir";
             let data      = setFileIconType(extension);
             let icon      = data[0];
@@ -63,13 +64,22 @@ class FilesList extends React.Component {
 
             if (filetype === "video") {
                 card_header = name;
-                card_body   = <img class="card-img-top" src={"static/imgs/thumbnails/" + hash + ".jpg"} alt={name} />;
+                card_body   = <React.Fragment>
+                                <img class="card-img-top" src={"static/imgs/thumbnails/" + hash + ".jpg"} alt={name} />
+                                <span class="float-right">{fsize}</span>
+                            </React.Fragment>;
             } else if (filetype === "image") {
                 card_header = name;
-                card_body   = <img class="card-img-top" src={"api/file-manager-action/files/" + hash} alt={name} />;
+                card_body   = <React.Fragment>
+                                <img class="card-img-top" src={"api/file-manager-action/files/" + hash} alt={name} />
+                                <span class="float-right">{fsize}</span>
+                            </React.Fragment>;
             } else {
                 card_header = <img class="icon-style" src={icon} alt={name} />;
-                card_body = name;
+                card_body = <React.Fragment>
+                                {name}
+                                <span>{fsize}</span>
+                            </React.Fragment>;
 
             }
 

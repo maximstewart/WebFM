@@ -1,6 +1,5 @@
 # Python imports
-import hashlib
-import os
+import hashlib, os, re
 from os import listdir
 from os.path import isdir, isfile, join
 
@@ -56,11 +55,11 @@ class View(Settings, Launcher, Path):
             else:
                 self.dirs.append(f)
 
-        self.dirs.sort()
-        self.vids.sort()
-        self.images.sort()
-        self.desktop.sort()
-        self.ungrouped.sort()
+        self.dirs.sort(key=self._natural_keys)
+        self.vids.sort(key=self._natural_keys)
+        self.images.sort(key=self._natural_keys)
+        self.desktop.sort(key=self._natural_keys)
+        self.ungrouped.sort(key=self._natural_keys)
 
         self.files = self.dirs + self.vids + self.images + self.desktop + self.ungrouped
 
@@ -68,9 +67,12 @@ class View(Settings, Launcher, Path):
         return hashlib.sha256(str.encode(text)).hexdigest()[:18]
 
     def hashSet(self, arry):
+        path = self.get_path()
         data = []
         for arr in arry:
-            data.append([arr, self.hashText(arr)])
+            file = f"{path}/{arr}"
+            size = "4K" if isdir(file) else self.sizeof_fmt(os.path.getsize(file))
+            data.append([arr, self.hashText(arr), size])
         return data
 
     def get_path_part_from_hash(self, hash):
@@ -167,3 +169,31 @@ class View(Settings, Launcher, Path):
 
     def get_ungrouped(self):
         return self.hashSet(self.ungrouped)
+
+    def sizeof_fmt(self, num, suffix="B"):
+        for unit in ["", "K", "M", "G", "T", "Pi", "Ei", "Zi"]:
+            if abs(num) < 1024.0:
+                return f"{num:3.1f} {unit}{suffix}"
+            num /= 1024.0
+        return f"{num:.1f} Yi{suffix}"
+
+    def get_dir_size(self, sdir):
+        """Get the size of a directory.  Based on code found online."""
+        size = os.path.getsize(sdir)
+
+        for item in listdir(sdir):
+            item = join(sdir, item)
+
+            if isfile(item):
+                size = size + os.path.getsize(item)
+            elif isdir(item):
+                size = size + self.get_dir_size(item)
+
+        return size
+
+
+    def _atoi(self, text):
+        return int(text) if text.isdigit() else text
+
+    def _natural_keys(self, text):
+        return [ self._atoi(c) for c in re.split('(\d+)',text) ]
