@@ -11,7 +11,7 @@ class WindowController:
             if window.id == win_id:
                 return window
 
-        raise("No Window by ID {} found!".format(win_id))
+        raise(f"No Window by ID {win_id} found!")
 
     def get_windows(self):
         return self.windows
@@ -19,7 +19,7 @@ class WindowController:
     def add_window(self):
         window      = Window()
         window.id   = len(self.windows) + 1
-        window.name = "window_" + str(window.id)
+        window.name = f"window_{window.id}"
         window.create_view()
         self.windows.append(window)
 
@@ -48,10 +48,10 @@ class WindowController:
     def list_windows(self):
         for window in self.windows:
             print("\n[  Window  ]")
-            print("ID: " + str(window.id))
-            print("Name: " + window.name)
-            print("Nickname: " + window.nickname)
-            print("View Count: " + str( len(window.views) ))
+            print("ID: {window.id}")
+            print("Name: {window.name}")
+            print("Nickname: {window.nickname}")
+            print("View Count: {len(window.views)}")
 
 
     def list_views_from_window(self, win_id):

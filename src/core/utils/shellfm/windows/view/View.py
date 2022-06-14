@@ -157,7 +157,7 @@ class View(Settings, Launcher, Path):
             if not os.path.exists(hashImgPth) :
                 fullPath = join(current_directory, video[0])
                 self.logger.debug(f"Hash Path: {hashImgPth}\nFile Path: {fullPath}")
-                self.generateVideoThumbnail(fullPath, hashImgPth)
+                self.generate_video_thumbnail(fullPath, hashImgPth)
 
         return videos_set
 

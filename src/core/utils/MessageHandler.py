@@ -10,5 +10,5 @@ class MessageHandler:
         print("MessageHandler initialized...")
 
 
-    def createMessageJSON(self, type, text):
+    def create_JSON_message(self, type, text):
         return '{"message": { "type": "' + type +  '", "text": "' + text + '" } }'
