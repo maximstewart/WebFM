@@ -17,20 +17,12 @@
     {% endif %}
 
     {% block header_css %}
-        <!-- Bootstrap CSS -->
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/mdb.dark.min.css')}}">
 
-        <!-- Font Awesome CSS Notes -->
-        <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> -->
-        <!-- https://use.fontawesome.com/releases/v5.7.0/webfonts/fa-regular-400.woff2 -->
-        <!-- https://use.fontawesome.com/releases/v5.7.0/webfonts/ -->
-
-        <!-- Site Font Awesome CSS -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/font-awesome-all-v5.7.css')}}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/font-awesome-min-v4.7.0.css')}}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/font-awesome-woff2.css')}}">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap5/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap5/bootstrap-dark.min.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons/bootstrap-icons.css')}}">
 
         <!-- Site CSS -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
@@ -53,7 +45,7 @@
         autoplay loop>
     </video> -->
 
-    <video id="bg" src="{{ url_for('static', filename='imgs/backgrounds/tendrels.webm')}}"
+    <video id="bg" src="{{ url_for('static', filename='imgs/backgrounds/bubbles.mp4')}}"
         poster="{{ url_for('static', filename='imgs/backgrounds/000.png')}}"
         autoplay loop>
     </video>
@@ -87,7 +79,7 @@
             {% endif %}
         {% endwith %}
 
-        <div class="row">
+        <div class="row page-alert-zone-container">
             <div id="page-alert-zone" class="col">
             </div>
         </div>
@@ -118,9 +110,7 @@
         <script src="{{ url_for('static', filename='js/libs/jquery-3.6.0.min.js')}}"></script>
 
         <!-- For Bootstrap in this exact order... -->
-        <script src="{{ url_for('static', filename='js/libs/bootstrap/popper.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/libs/bootstrap/bootstrap.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/libs/bootstrap/mdb.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/libs/bootstrap5/bootstrap.bundle.min.js')}}"></script>
 
         <!-- For React -->
         <script src="{{ url_for('static', filename='js/libs/react/react.production.min.js')}}"></script>

@@ -43,6 +43,36 @@
                         <pre id="text-viewer" class="card-img-top viewer"
                             style="display: none;">
                         </pre>
+
+                        <!-- For GBA JS Emulator -->
+                        <div  id="gbajs-viewer" class="card-img-top viewer"
+                            style="display: none;">
+                            <canvas id="screen" width="720" height="480"></canvas>
+                            <section id="controls">
+                                <div id="preload">
+                                    <button class="bigbutton" id="select" onclick="document.getElementById('loader').click()">SELECT</button>
+                                    <input id="loader" type="file" accept=".gba" onchange="run(this.files[0]);">
+                                    <button onclick="document.getElementById('saveloader').click()">Upload Savegame</button>
+                                    <input id="saveloader" type="file" onchange="uploadSavedataPending(this.files[0]);">
+                                </div>
+                                <div id="ingame" class="hidden">
+                                    <button id="pause" class="bigbutton" onclick="togglePause()">PAUSE</button>
+                                    <button class="bigbutton" onclick="reset()">RESET</button>
+                                    <button onclick="gba.downloadSavedata()">Download Savegame</button>
+                                    <button onclick="screenshot()">Screenshot</button>
+                                    <label id="pixelated">
+                                        <input type="checkbox" onchange="setPixelated(this.checked)">
+                                        <p>Pixelated</p>
+                                    </label>
+                                    <div id="sound">
+                                        <input type="checkbox" checked onchange="gba.audio.masterEnable = this.checked">
+                                        <p>Sound</p>
+                                        <input type="range" min="0" max="1" value="1" step="any" onchange="setVolume(this.value)" oninput="setVolume(this.value)">
+                                    </div>
+                                    <p id="openDebug" onclick="enableDebug()">Debugger</p>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
             </div>

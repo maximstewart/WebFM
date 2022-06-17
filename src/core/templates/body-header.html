@@ -9,10 +9,10 @@
         {% if current_directory %}
             <div class="col">
                 <!-- Left menues -->
-                <ul class="navbar-nav">
+                <ul class="navbar-nav col-auto">
                     <li class="nav-item" data-bs-toggle="modal" data-bs-target="#file-view-modal">
-                        <i class="nav-link" aria-hidden="true" title="File viewer..." >
-                            🖼
+                        <i class="nav-link bi bi-projector-fill" aria-hidden="true" title="File viewer..." >
+                            Media Viewer
                         </i>
                     </li>
                     <li class="nav-item">
@@ -43,25 +43,25 @@
             <ul class="navbar-nav">
                 {% if current_directory %}
                     <li class="nav-item">
-                        <i id="back-btn" class="fa fa-arrow-left nav-link" aria-hidden="true" title="Back..." hash="{{dot_dots[1][1]}}">
+                        <i id="back-btn" class="nav-link bi bi-arrow-left-square" aria-hidden="true" title="Back..." hash="{{dot_dots[1][1]}}">
                             Back
                         </i>
                     </li>
                     <li class="nav-item">
-                        <i id="refresh-btn" class="fa fa-refresh nav-link" aria-hidden="true" title="Refresh..." hash="{{dot_dots[0][1]}}">
+                        <i id="refresh-btn" class="nav-link bi bi-arrow-clockwise" aria-hidden="true" title="Refresh..." hash="{{dot_dots[0][1]}}">
                             Refresh
                         </i>
                     </li>
                 {% endif %}
                 <li class="nav-item" data-bs-toggle="modal" data-bs-target="#options-modal">
-                    <i class="nav-link fa fa-gear" aria-hidden="true" title="Other options..." >
+                    <i class="nav-link bi bi-gear-wide-connected" aria-hidden="true" title="Other options..." >
                         Settings
                     </i>
                 </li>
                 {% if current_user.is_authenticated or oidc_loggedin() %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                            <i class="bi bi-box-arrow-left"></i> Logout
                         </a>
                     </li>
                 {% endif %}
@@ -72,10 +72,10 @@
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{ url_for('login') }}">
-                                <i title="Login" class="fas fa-user"></i>&nbsp;&nbsp;Login
+                                <i title="Login" class="bi bi-person-circle"></i>&nbsp;&nbsp;Login
                             </a>
                             <a class="dropdown-item" href="{{ url_for('register') }}">
-                                <i title="Register A User..." class="fas fa-user-plus"></i>&nbsp;&nbsp;Register
+                                <i title="Register A User..." class="bi bi-person-plus-fill"></i>&nbsp;&nbsp;Register
                             </a>
                         </div>
                     </li>
