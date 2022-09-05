@@ -7,9 +7,9 @@
 
     <div id="navbarTogglerHeader" class="row collapse navbar-collapse">
         {% if current_directory %}
-            <div class="col">
+            <div class="col col-auto">
                 <!-- Left menues -->
-                <ul class="navbar-nav col-auto">
+                <ul class="navbar-nav">
                     <li class="nav-item" data-bs-toggle="modal" data-bs-target="#file-view-modal">
                         <i class="nav-link bi bi-projector-fill" aria-hidden="true" title="File viewer..." >
                             Media Viewer
@@ -37,6 +37,14 @@
                 </ul>
             </div>
         {% endif %}
+
+        <div class="col">
+            <li class="nav-item mx-3">
+                <a id="trailer-link" href="#">
+                    <span id="trailer-btn" class="btn btn-info btn-sm" style="display: none;" title="Trailer..." >Trailer</span>
+                </a>
+            </li>
+        </div>
 
         <div class="col col-auto">
             <!-- Right menues -->

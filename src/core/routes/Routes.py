@@ -29,9 +29,22 @@ def get_window_controller():
         id         = secrets.token_hex(16)
         controller = WindowController()
         view       = controller.get_window(1).get_view(0)
-        view.ABS_THUMBS_PTH = app.config['ABS_THUMBS_PTH']
-        view.REMUX_FOLDER   = app.config['REMUX_FOLDER']
-        view.FFMPG_THUMBNLR = app.config['FFMPG_THUMBNLR']
+
+        try:
+            view.ABS_THUMBS_PTH = app.config['ABS_THUMBS_PTH']
+        except Exception as e:
+            ...
+
+        try:
+            view.REMUX_FOLDER   = app.config['REMUX_FOLDER']
+        except Exception as e:
+            ...
+
+        try:
+            view.FFMPG_THUMBNLR = app.config['FFMPG_THUMBNLR']
+        except Exception as e:
+            ...
+
         view.logger         = logger
 
         session['win_controller_id'] = id
@@ -85,14 +98,29 @@ def listFiles(_hash = None):
 
         sub_path          = view.get_current_sub_path()
         current_directory = sub_path.split("/")[-1]
+        trailer           = None
         if "(" in current_directory and ")" in current_directory:
             title          = current_directory.split("(")[0].strip()
             startIndex     = current_directory.index('(') + 1
             endIndex       = current_directory.index(')')
             date           = current_directory[startIndex:endIndex]
-            video_data     = tmdb.search(title, date)
-            background_url = video_data[0]["backdrop_path"]
+            video_data     = tmdb.search(title, date)[0]
+            video_id       = video_data["id"]
+            background_url = video_data["backdrop_path"]
             background_pth = f"{view.get_current_directory()}/000.jpg"
+
+            try:
+                tmdb_videos = tmdb.tmdbapi.get_movie(str(video_id), append_to_response="videos")["videos"]["results"]
+                for tmdb_video in tmdb_videos:
+                    if "YouTube" in tmdb_video["site"]:
+                        trailer_key = tmdb_video["key"]
+                        trailer     = f"https://www.youtube-nocookie.com/embed/{trailer_key}?start=0&autoplay=1";
+
+                if not trailer:
+                    raise Exception("No key found. Defering to none...")
+            except Exception as e:
+                print("No trailer found...")
+                trailer = None
 
             if not os.path.isfile(background_pth):
                 r = requests.get(background_url, stream = True)
@@ -113,6 +141,7 @@ def listFiles(_hash = None):
         in_fave  = "true" if fave else "false"
 
         files.update({'in_fave': in_fave})
+        files.update({'trailer': trailer})
         return files
     else:
         msg = "Can't manage the request type..."

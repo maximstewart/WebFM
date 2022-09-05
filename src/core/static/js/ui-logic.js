@@ -50,8 +50,9 @@ const scrollFilesToTop = () => {
 
 
 const closeFile = () => {
-    const video = document.getElementById("video");
-    let title   = document.getElementById("selectedFile");
+    const video         = document.getElementById("video");
+    const trailerPlayer = document.getElementById("trailerPlayer")
+    let title           = document.getElementById("selectedFile");
 
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
@@ -61,6 +62,9 @@ const closeFile = () => {
     video.style.display = "none";
     video.style.cursor  = '';
     video.pause();
+
+    trailerPlayer.src           = "#";
+    trailerPlayer.style.display = "none";
 }
 
 const showFile = async (title, hash, extension, type) => {
@@ -68,9 +72,10 @@ const showFile = async (title, hash, extension, type) => {
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
     document.getElementById("video").style.display          = "none";
+    document.getElementById("trailerPlayer").style.display  = "none";
 
-    let titleElm          = document.getElementById("selectedFile");
-    titleElm.innerText    = title;
+    let titleElm       = document.getElementById("selectedFile");
+    titleElm.innerText = title;
 
     if (type === "video") {
         setupVideo(hash, extension);
@@ -78,15 +83,27 @@ const showFile = async (title, hash, extension, type) => {
      if (type === "file") {
         setupFile(hash, extension);
     }
+     if (type === "trailer") {
+        launchTrailer(hash);
+    }
+}
+
+const launchTrailer = (link) => {
+    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
+    let trailerPlayer   = document.getElementById("trailerPlayer");
+    trailerPlayer.style.display = "";
+    trailerPlayer.src           = link;
+
+    modal.show();
 }
 
 const setupVideo = async (hash, extension) => {
+    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
     let video           = document.getElementById("video");
     video.poster        = "static/imgs/icons/loading.gif";
     video.style.display = "";
     video.src           = "#"
     video_path          = "api/file-manager-action/files/" + hash;
-    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
 
 
     try {
