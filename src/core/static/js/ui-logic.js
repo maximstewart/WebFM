@@ -65,6 +65,7 @@ const closeFile = () => {
 
     trailerPlayer.src           = "#";
     trailerPlayer.style.display = "none";
+    clearModalFades();
 }
 
 const showFile = async (title, hash, extension, type) => {
@@ -285,6 +286,12 @@ const clearChildNodes = (parent) => {
     }
 }
 
+const clearModalFades = (elm) => {
+    let elms = document.getElementsByClassName('modal-backdrop fade show');
+    for (var i = 0; i < elms.length; i++) {
+        elms[i].remove();
+    }
+}
 
 // Cache Buster
 const clearCache = () => {

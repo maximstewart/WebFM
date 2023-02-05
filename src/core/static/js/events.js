@@ -80,3 +80,7 @@ $( "#tggl-faves-btn" ).bind( "click", async function(eve) {
 $( "#scroll-files-to-top-btn" ).bind( "click", async function(eve) {
     scrollFilesToTop();
 });
+
+$( "#playlist-mode-btn" ).bind( "click", async function(eve) {
+    togglePlaylistMode(eve.target);
+});

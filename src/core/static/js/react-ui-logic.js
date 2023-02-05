@@ -163,6 +163,7 @@ const renderFilesList = (data = null) => {
         React.createElement(FilesList, data),
         filesListElm
     )
+    videoPlaylist = document.body.querySelectorAll('[ftype="video"][value="Open"]'); // With attributes ftype and value
 }
 
 const renderFavesList = (data = null) => {

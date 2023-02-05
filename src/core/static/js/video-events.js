@@ -2,7 +2,8 @@ let fullScreenState = 0;
 let clicktapwait    = 200;
 let shouldPlay      = null;
 let controlsTimeout = null;
-
+let playListMode    = false;
+let videoPlaylist   = [];
 
 const getTimeFormatted = (duration = null) => {
     if (duration == null) { return "00:00"; }
@@ -85,6 +86,19 @@ const toggleVolumeControl = () => {
     }
 }
 
+const togglePlaylistMode = (elm) => {
+    const classType = "btn-info";
+    const hasClass  = elm.classList.contains(classType);
+    if (playListMode) {
+        elm.classList.remove(classType);
+        playListMode = false;
+    } else {
+        elm.classList.add(classType);
+        playListMode = true;
+    }
+}
+
+
 
 
 $("#video").on("loadedmetadata", function(eve){
@@ -92,7 +106,6 @@ $("#video").on("loadedmetadata", function(eve){
     let videoDuration       = document.getElementById("videoDuration");
     videoDuration.innerText = getTimeFormatted(video.duration);
 });
-
 
 
 $("#video").on("keydown", function(eve) {
@@ -198,13 +211,24 @@ $( "#volume-slider" ).bind( "change", async function(eve) {
 });
 
 
-// $( "#video" ).bind( "ended", async function(eve) {
-//     alert("Hello...")
-//     // let videoDuration = document.getElementById("videoCurrentTime");
-//     // const video       = eve.target;
-//     // const seekto      = document.getElementById("seek-slider");
-//     // const vt          = video.currentTime * (100 / video.duration);
-//     //
-//     // seekto.value            = vt;
-//     // videoDuration.innerText = getTimeFormatted(video.currentTime);
-// });
+$( "#video" ).bind( "ended", async function(eve) {
+    if (!playListMode) {
+        const video       = eve.target;
+        const seekto      = document.getElementById("seek-slider");
+        const vt          = video.currentTime * (100 / video.duration);
+
+        seekto.value            = 0;
+        videoDuration.innerText = getTimeFormatted(video.currentTime);
+        video.play();
+    } else {
+        const current_title = document.getElementById('selectedFile').innerText;
+        for (let i = 0; i < videoPlaylist.length; i++) {
+            if (videoPlaylist[i].title === current_title) {
+                const index = (i === videoPlaylist.length) ? 0 : i+=1;
+                clearModalFades();
+                videoPlaylist[index].click();
+                break
+            }
+        }
+    }
+});
