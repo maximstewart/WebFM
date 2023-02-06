@@ -65,10 +65,11 @@ const closeFile = () => {
 
     trailerPlayer.src           = "#";
     trailerPlayer.style.display = "none";
+    clearSelectedActiveMedia();
     clearModalFades();
 }
 
-const showFile = async (title, hash, extension, type) => {
+const showFile = async (title, hash, extension, type, target=null) => {
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
@@ -80,8 +81,9 @@ const showFile = async (title, hash, extension, type) => {
 
     if (type === "video") {
         setupVideo(hash, extension);
+        setSelectedActiveMedia(target);
     }
-     if (type === "file") {
+    if (type === "file") {
         setupFile(hash, extension);
     }
      if (type === "trailer") {
@@ -106,7 +108,7 @@ const setupVideo = async (hash, extension) => {
     video.src           = "#"
     video_path          = "api/file-manager-action/files/" + hash;
 
-
+    clearSelectedActiveMedia();
     try {
         if ((/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)$/i).test(extension)) {
             if ((/\.(avi|mkv|wmv|flv|f4v)$/i).test(extension)) {
@@ -114,18 +116,18 @@ const setupVideo = async (hash, extension) => {
                 if ( data.hasOwnProperty('path') ) {
                     video_path = data.path;
                 } else {
-                    displayMessage(data.message.text, data.message.type, 3);
-                    return ;
+                    displayMessage(data.message.text, data.message.type);
+                    return;
                 }
             } else if ((/\.(flv|mov|m4v|mpg|mpeg)$/i).test(extension)) {
                 modal.hide();
                 openWithLocalProgram(hash, extension);
-                return ;
+                return;
             }
         }
 
 
-        video.src         = video_path;
+        video.src           = video_path;
         modal.show();
     } catch (e) {
         video.style.display = "none";
@@ -291,6 +293,33 @@ const clearModalFades = (elm) => {
     for (var i = 0; i < elms.length; i++) {
         elms[i].remove();
     }
+}
+
+const clearPlaylistMode = () => {
+    const playListState = document.getElementById("playlist-mode-btn");
+    if (playListState.checked) { playListState.click(); }
+}
+
+const setSelectedActiveMedia = (elm) => {
+    clearSelectedActiveMedia();
+
+    let card = elm;
+    while (card.parentElement) {
+        if (!card.classList.contains("card")) {
+            card = card.parentElement;
+            continue;
+        }
+
+        break
+    }
+    card.classList.add("selectedActiveMedia");
+}
+
+const clearSelectedActiveMedia = () => {
+    try {
+        const elm = document.getElementsByClassName('selectedActiveMedia')[0];
+        elm.classList.remove("selectedActiveMedia");
+    } catch (e) {}
 }
 
 // Cache Buster

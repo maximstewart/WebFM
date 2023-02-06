@@ -35,9 +35,15 @@
                         </i>
                     </li>
                     <li class="nav-item">
-                        <i id="playlist-mode-btn" class="nav-link" aria-label="Playlist Mode" title="Playlist Mode..." >
+                        <div class="ml-2 mt-2 form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="playlist-mode-btn">
+                            <label class="form-check-label" for="playlist-mode-btn">
+                                Playlist Mode
+                            </label>
+                        </div>
+                        <!-- <i id="playlist-mode-btn" class="nav-link" aria-label="Playlist Mode" title="Playlist Mode..." >
                             Playlist Mode
-                        </i>
+                        </i> -->
                     </li>
                 </ul>
             </div>
@@ -93,6 +99,32 @@
                         </div>
                     </li>
                 {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">
+                        Theme
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem;">
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                <i title="Register A User..." class="bi bi-brightness-high"></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;Light
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="dark">
+                                <i title="Register A User..." class="bi bi-brightness-low"></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;Dark
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto">
+                                <i title="Register A User..." class="bi bi-brightness-high"></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;Auto&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i title="Register A User..." class="bi bi-brightness-low"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

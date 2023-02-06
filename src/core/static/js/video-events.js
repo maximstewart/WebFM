@@ -79,22 +79,35 @@ const toggleFullscreen = (video) => {
 
 const toggleVolumeControl = () => {
     const volume = document.getElementById("volume-slider");
-    if (volume.style.display === "none") {
-        volume.style.display = "";
-    } else {
-        volume.style.display = "none";
+    volume.style.display = (volume.style.display === "none") ? "" : "none";
+}
+
+
+const togglePlaylistMode = (elm) => {
+    playListMode = elm.checked;
+}
+
+const previousMedia = () => {
+    const current_title = document.getElementById('selectedFile').innerText;
+    for (let i = videoPlaylist.length - 1; i >= 0; i--) {
+        if (videoPlaylist[i].title === current_title) {
+            const index = (i === 0) ? videoPlaylist.length - 1 : i-=1;
+            clearModalFades();
+            videoPlaylist[index].click();
+            break
+        }
     }
 }
 
-const togglePlaylistMode = (elm) => {
-    const classType = "btn-info";
-    const hasClass  = elm.classList.contains(classType);
-    if (playListMode) {
-        elm.classList.remove(classType);
-        playListMode = false;
-    } else {
-        elm.classList.add(classType);
-        playListMode = true;
+const nextMedia = () => {
+    const current_title = document.getElementById('selectedFile').innerText;
+    for (let i = 0; i < videoPlaylist.length; i++) {
+        if (videoPlaylist[i].title === current_title) {
+            const index = (i === videoPlaylist.length) ? 0 : i+=1;
+            clearModalFades();
+            videoPlaylist[index].click();
+            break
+        }
     }
 }
 
@@ -186,7 +199,7 @@ $("#video").on("touchend", function(eve){
     eve.preventDefault();
 });
 
-$( "#video" ).bind( "timeupdate", async function(eve) {
+$( "#video").bind( "timeupdate", async function(eve) {
     let videoDuration = document.getElementById("videoCurrentTime");
     const video       = eve.target;
     const seekto      = document.getElementById("seek-slider");
@@ -196,14 +209,18 @@ $( "#video" ).bind( "timeupdate", async function(eve) {
     videoDuration.innerText = getTimeFormatted(video.currentTime);
 });
 
-$( "#seek-slider" ).bind( "change", async function(eve) {
+$( "#video").bind( "stalled", async function(eve) {
+    console.log("Stalled load...");
+});
+
+$( "#seek-slider").bind( "change", async function(eve) {
     const slider = eve.target;
     let video    = document.getElementById("video");
     let seekto   = video.duration * (slider.value / 100);
     video.currentTime = seekto;
 });
 
-$( "#volume-slider" ).bind( "change", async function(eve) {
+$( "#volume-slider").bind( "change", async function(eve) {
     const slider = eve.target;
     let video    = document.getElementById("video");
     let volumeto = slider.value;
@@ -211,7 +228,7 @@ $( "#volume-slider" ).bind( "change", async function(eve) {
 });
 
 
-$( "#video" ).bind( "ended", async function(eve) {
+$( "#video").bind( "ended", async function(eve) {
     if (!playListMode) {
         const video       = eve.target;
         const seekto      = document.getElementById("seek-slider");
@@ -221,14 +238,16 @@ $( "#video" ).bind( "ended", async function(eve) {
         videoDuration.innerText = getTimeFormatted(video.currentTime);
         video.play();
     } else {
-        const current_title = document.getElementById('selectedFile').innerText;
-        for (let i = 0; i < videoPlaylist.length; i++) {
-            if (videoPlaylist[i].title === current_title) {
-                const index = (i === videoPlaylist.length) ? 0 : i+=1;
-                clearModalFades();
-                videoPlaylist[index].click();
-                break
-            }
-        }
+        nextMedia();
     }
+});
+
+
+$( "#previousVideoInPlaylist").bind( "click", async function(eve) {
+    previousMedia();
+});
+
+
+$( "#nextVideoInPlaylist").bind( "click", async function(eve) {
+    nextMedia();
 });

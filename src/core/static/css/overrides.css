@@ -47,18 +47,14 @@ input[type=range][orient=vertical] {
 
 
 
-.modal-header {
+.modal-header,
+.modal-footer {
     background-color: rgba(0, 0, 0, 0.64);
 }
 
 .modal-content {
     background-color: rgba(50, 56, 62, 0.74);
     border-color: rgba(249, 148, 6, 0.74);
-}
-
-.sticky-top,
-.card {
-    background-color: rgba(50, 56, 62, 0.84);
 }
 
 .card-body {
@@ -72,10 +68,6 @@ input[type=range][orient=vertical] {
 .card-img, .card-img-top {
 	  max-height: 285px !important;
 	  object-fit: contain;
-}
-
-.list-group-item {
-    color: rgba(255, 255, 255, 1) !important;
 }
 
 .label-as-badge {
