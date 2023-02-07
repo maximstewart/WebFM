@@ -126,8 +126,7 @@ const setupVideo = async (hash, extension) => {
             }
         }
 
-
-        video.src           = video_path;
+        video.src = video_path;
         modal.show();
     } catch (e) {
         video.style.display = "none";
@@ -216,15 +215,8 @@ const clearSearch = () => {
 
 const updateBackground = (srcLink, isvideo = true) => {
     try {
-        let elm = document.getElementById("bg");
-        if (isvideo) {
-            if (elm.getAttribute('src') === "") {
-                elm.src = srcLink;
-            }
-        } else {
-            elm.src = "";
-            elm.setAttribute("poster", srcLink);
-        }
+        const elm = document.getElementById("bg");
+        setBackgroundElement(elm, srcLink);
     } catch (e) { }
 }
 
@@ -312,13 +304,13 @@ const setSelectedActiveMedia = (elm) => {
 
         break
     }
-    card.classList.add("selectedActiveMedia");
+    card.classList.add("selected-active-media");
 }
 
 const clearSelectedActiveMedia = () => {
     try {
-        const elm = document.getElementsByClassName('selectedActiveMedia')[0];
-        elm.classList.remove("selectedActiveMedia");
+        const elm = document.getElementsByClassName('selected-active-media')[0];
+        elm.classList.remove("selected-active-media");
     } catch (e) {}
 }
 

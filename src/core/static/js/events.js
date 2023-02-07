@@ -16,6 +16,7 @@ document.body.onload = (eve) => {
     }
 
     setTimeout(function () {
+        loadBackground();
         getFavesAjax();
         reloadDirectory();
     }, 400);
@@ -54,7 +55,18 @@ const openFileLocally = (eve) => {
 }
 
 
+// Background control events
+$( "#background-selection" ).bind( "click", async function(eve) {
+    const target = eve.target;
+    if (target.className === "bg-imgs") {
+        const path = (!target.src.endsWith("/")) ? target.src : target.poster;
+        setBackgroundCookie(path);
+    }
+});
 
+$( "#load-bglist-btn" ).bind( "click", async function(eve) {
+    getBackgrounds();
+});
 
 $( "#search-files-field").bind( "keyup", async function(eve) {
     searchPage();

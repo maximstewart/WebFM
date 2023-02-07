@@ -8,12 +8,14 @@ from flask_login import current_user
 
 
 # App imports
-from core import app, logger, oidc, db, Favorites  # Get from __init__
+from core import app, logger, oidc, db, Favorites, ROOT_FILE_PTH  # Get from __init__
 from core.utils import MessageHandler              # Get simple message processor
 from core.utils.shellfm import WindowController    # Get file manager controller
 from core.utils.tmdbscraper import scraper         # Get media art scraper
 
 
+BG_IMGS_PATH  = ROOT_FILE_PTH + "/static/imgs/backgrounds/"
+BG_FILE_TYPE  = (".webm", ".mp4", ".gif", ".jpg", ".png", ".webp")
 msgHandler         = MessageHandler()
 tmdb               = scraper.get_tmdb_scraper()
 window_controllers = {}
@@ -65,6 +67,16 @@ def home():
     return render_template('error.html', title = 'Error!',
                             message = 'Must use GET request type...')
 
+
+@app.route('/backgrounds', methods=['GET', 'POST'])
+def backgrounds():
+    files = []
+    data  = os.listdir(BG_IMGS_PATH)
+    for file in data:
+        if file.lower().endswith(BG_FILE_TYPE):
+            files.append(file)
+
+    return '{ "backgrounds": ' + json.dumps(files) + '}'
 
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
 def listFiles(_hash = None):

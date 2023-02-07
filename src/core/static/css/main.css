@@ -19,6 +19,17 @@
     z-index: -999;
 }
 
+#background-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    height: 65vh;
+    bottom: 5%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 #master-container {
     height: 85vh;
     overflow-x: hidden;
@@ -42,7 +53,7 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-.selectedActiveMedia {
+.selected-active-media {
     background-color: rgba(25, 65, 0, 0.64);
 }
 
@@ -50,6 +61,20 @@
     position: sticky;
     top: 0em;
     z-index: 2;
+}
+
+
+.bg-imgs {
+    width: 20em;
+    height: auto;
+    border: 5px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.bg-imgs:hover {
+    border-radius: 25%;
+    border-style: solid;
+    border-color: #f8940674; /* #00e8ff */
 }
 
 

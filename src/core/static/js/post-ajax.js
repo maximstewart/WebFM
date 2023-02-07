@@ -70,8 +70,7 @@ const updateHTMLDirList = async (data) => {
         background_image = "api/file-manager-action/files/" + images[0][1] + '?d=' + Date.now();
         updateBackground(background_image, false);
     } else {
-        background_image = "static/imgs/backgrounds/particles.mp4";
-        updateBackground(background_image);
+        loadBackground();
     }
 
     // Set faves state
