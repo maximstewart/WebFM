@@ -5,38 +5,79 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Settings:</h3>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <div class="row scroller" style="max-height: 30em; overflow: auto;">
-                    <!-- File Upload -->
-                    <div class="col-md-6 controls-secondary">
+                <div class="row scroller">
+                    <div class="row">
+                        <div class="col-sm-2 col-md-2">
+                            <button class="btn btn-primary btn-sm" aria-label="Backgrounds viewer" title="Backgrounds viewer..."
+                                    data-bs-toggle="modal" data-bs-target="#backgrounds-modal">
+                                Backgrounds
+                            </button>
+                        </div>
+                        <div class="col-sm-8 col-md-8">
+
+                        </div>
+                        <div class="col-sm-2 col-md-2">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">
+                                    Theme
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem;">
+                                    <li>
+                                        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                            <i title="Register A User..." class="bi bi-brightness-high"></i>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Light
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="dark">
+                                            <i title="Register A User..." class="bi bi-brightness-low"></i>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Dark
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto">
+                                            <i title="Register A User..." class="bi bi-brightness-high"></i>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Auto&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i title="Register A User..." class="bi bi-brightness-low"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- File Upload -->
                         {% if oidc_loggedin() and oidc_isAdmin() %}
                             <!-- Server Messages -->
                             <div id="settings-alert-zone-files"></div>
                             <!-- To Upload List -->
-                            <ul id="uploadListTitles" class="list-group scroller" style="min-height: 286px; max-height: 286px; overflow: hidden auto;">
-                            </ul>
+                            <div id="uploadListTitlesContainer scroller">
+                                <ul id="uploadListTitles" class="list-group">
+                                </ul>
+                            </div>
                             <input id="toUpload" class="btn btn-dark" type="file" multiple>
                             <button id="uploadFiles" class="btn btn-success">Submit Files...</button>
                             <button id="clearUploadFiles" class="btn btn-dark">Clear</button>
                             {% else %}
-                            <h3>Upload not available to this user...</h3>
+                            <h3>Upload Not Permitted...</h3>
                         {% endif %}
                     </div>
-                    <div class="col-md-6 controls-secondary">
+                    <div class="col-md-6">
                         {% if oidc_loggedin() and oidc_isAdmin() %}
                             <div id="settings-alert-zone-new-items"></div>
                             <input type="text" id="newItem" placeholder="File name..." value=""/>
                             <input type="button" class="btn btn-dark" value="New Dir" onclick="createItem('dir')"/>
                             <input type="button" class="btn btn-dark" value="New File" onclick="createItem('file')"/>
+                            <br/>
+                            <!-- <input id="MergeType" type="checkbox" onchange="getDir('./')" />
+                                <label for="MergeType">Show seassons in same list.</label> -->
+                        {% else %}
+                            <h3>File Creation Not Permitted...</h3>
                         {% endif %}
-                        <br/>
-                        <!-- <input id="MergeType" type="checkbox" onchange="getDir('./')" />
-                            <label for="MergeType">Show seassons in same list.</label> -->
                     </div>
                     <div id="page-alert-zone-2"></div>
                 </div>

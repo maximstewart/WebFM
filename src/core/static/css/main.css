@@ -19,17 +19,28 @@
     z-index: -999;
 }
 
+#background-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    height: 65vh;
+    bottom: 5%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 #master-container {
-    height: 90vh;
+    height: 85vh;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-#video-controls {
-    position: relative;
-    bottom: 2.5em;
+#uploadListTitlesContainer {
+    min-height: 286px;
+    max-height: 286px;
+    overflow: hidden auto;
 }
-
 
 
 /* CLASSES */
@@ -48,6 +59,29 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.selected-active-media {
+    background-color: rgba(25, 65, 0, 0.64);
+}
+
+.page-alert-zone-container {
+    position: sticky;
+    top: 0em;
+    z-index: 2;
+}
+
+
+.bg-imgs {
+    width: 20em;
+    height: auto;
+    border: 5px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.bg-imgs:hover {
+    border-radius: 25%;
+    border-style: solid;
+    border-color: #f8940674; /* #00e8ff */
+}
 
 
 .card-title-text {
@@ -69,10 +103,16 @@
 }
 
 .viewer {
-    max-width: 55em;
+	max-width: 100% !important;
+	height: auto !important;
+	max-height: 100% !important;
 }
 
-
+.float-right {
+    float: right;
+    text-align: right;
+    font-size: initial;
+}
 
 /* Other message text colors */
 .errorTxt   { color: rgb(170, 18, 18); }

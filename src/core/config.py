@@ -29,7 +29,7 @@ class Config(object):
     LOGIN_PATH                     = "OIDC"  # Value can be OIDC or FLASK_LOGIN
     OIDC_TOKEN_TYPE_HINT           = 'access_token'
     APP_REDIRECT_URI               = "https%3A%2F%2Fwww.webfm.com%2F"  # This path is submitted as the redirect URI in certain code flows
-    OIDC_CLIENT_SECRETS            = ROOT_FILE_PTH + '/client_secrets.json'
+    OIDC_CLIENT_SECRETS            = f'{ROOT_FILE_PTH}/client_secrets.json'
     OIDC_ID_TOKEN_COOKIE_SECURE    = True
     OIDC_REQUIRE_VERIFIED_EMAIL    = False
     OIDC_USER_INFO_ENABLED         = True
@@ -38,14 +38,14 @@ class Config(object):
                             'https://www.ssoapps.com/auth/realms/apps'
                         ]
 
-    STATIC_FPTH    = ROOT_FILE_PTH + "/static"
+    STATIC_FPTH    = f"{ROOT_FILE_PTH}/static"
     REL_THUMBS_PTH = "static/imgs/thumbnails"              # Used for flask thumbnail return
 
     # We are overiding some of the the shellmen view settings with these to make it all work with flask.
     # These are passed along to the shellmen view from the Routes file upon the window controller creation.
-    ABS_THUMBS_PTH = STATIC_FPTH  + "/imgs/thumbnails"    # Used for thumbnail generation
-    REMUX_FOLDER   = STATIC_FPTH  + "/remuxs"             # Remuxed files folder
-    FFMPG_THUMBNLR = STATIC_FPTH  + "/ffmpegthumbnailer"  # Thumbnail generator binary
+    ABS_THUMBS_PTH = f"{STATIC_FPTH}/imgs/thumbnails"    # Used for thumbnail generation
+    REMUX_FOLDER   = f"{STATIC_FPTH}/remuxs"             # Remuxed files folder
+    FFMPG_THUMBNLR = f"{STATIC_FPTH}/ffmpegthumbnailer"  # Thumbnail generator binary
 
 
 

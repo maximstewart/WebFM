@@ -9,7 +9,7 @@ import os, subprocess, threading
 
 
 class Launcher:
-    def openFilelocally(self, file):
+    def open_file_locally(self, file):
         lowerName = file.lower()
         command   = []
 
@@ -38,14 +38,25 @@ class Launcher:
         subprocess.Popen(command, start_new_session=True, stdout=DEVNULL, stderr=DEVNULL, close_fds=True)
 
 
-    def remuxVideo(self, hash, file):
-        remux_vid_pth = self.REMUX_FOLDER + "/" + hash + ".mp4"
+    def create_stream(self, hash, file):
+        # ffmpeg -re -stream_loop -1 -i "<video file path>" -f rtsp -rtsp_transport udp rtsp://localhost:8554/live.stream
+        command = ["ffmpeg", "-re", "-stream_loop", "-1", "-i", file, "-f", "rtsp", "-rtsp_transport", "udp", "rtsp://www.webfm.com:8554/{hash}.stream",]
+        try:
+            proc = subprocess.Popen(command)
+        except Exception as e:
+            self.logger.debug(message)
+            self.logger.debug(e)
+            return False
+
+
+    def remux_video(self, hash, file):
+        remux_vid_pth = f"{self.REMUX_FOLDER}/{hash}.mp4"
         self.logger.debug(remux_vid_pth)
 
         if not os.path.isfile(remux_vid_pth):
             self.check_remux_space()
 
-            command = ["ffmpeg", "-i", file, "-hide_banner", "-movflags", "+faststart"]
+            command = ["ffmpeg", "-i", file, "-hide_banner", "-movflags", "+faststart", "-sws_flags", "fast_bilinear",]
             if file.endswith("mkv"):
                 command += ["-codec", "copy", "-strict", "-2"]
             if file.endswith("avi"):
@@ -67,7 +78,7 @@ class Launcher:
         return True
 
 
-    def generateVideoThumbnail(self, fullPath, hashImgPth):
+    def generate_video_thumbnail(self, fullPath, hashImgPth):
         try:
             proc = subprocess.Popen([self.FFMPG_THUMBNLR, "-t", "65%", "-s", "300", "-c", "jpg", "-i", fullPath, "-o", hashImgPth])
             proc.wait()
@@ -83,7 +94,7 @@ class Launcher:
             self.logger.debug(e)
             return
 
-        usage = self.getRemuxFolderUsage(self.REMUX_FOLDER)
+        usage = self.get_remux_folder_usage(self.REMUX_FOLDER)
         if usage > limit:
             files = os.listdir(self.REMUX_FOLDER)
             for file in files:
@@ -91,7 +102,7 @@ class Launcher:
                 os.unlink(fp)
 
 
-    def getRemuxFolderUsage(self, start_path = "."):
+    def get_remux_folder_usage(self, start_path = "."):
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(start_path):
             for f in filenames:

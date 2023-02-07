@@ -1,5 +1,7 @@
 const goHomeAjax = async (hash) => {
     const data = "empty=NULL";
+    clearPlaylistMode();
+    clearSelectedActiveMedia();
     doAjax("api/file-manager-action/reset-path/None", data, "reset-path");
 }
 
@@ -10,6 +12,8 @@ const deleteItemAjax = async (hash) => {
 
 const listFilesAjax = async (hash) => {
     const data = "empty=NULL";
+    clearPlaylistMode();
+    clearSelectedActiveMedia();
     doAjax("api/list-files/" + hash, data, "list-files");
 }
 
@@ -20,6 +24,8 @@ const getFavesAjax = async () => {
 
 const loadFavoriteLink = async (id) => {
     const data = "empty=NULL";
+    clearPlaylistMode();
+    clearSelectedActiveMedia();
     doAjax("api/load-favorite/" + id, data, "load-favorite");
 }
 
@@ -111,6 +117,19 @@ const doAjaxUpload  = (actionPath, data, fname, action) => {
 }
 
 const fetchData = async (url) => {
-    let response = await fetch(url);
-    return await response.json();
+    return await fetch(url).then((response) => {
+        if(response.status == 200) {
+            return response.json();
+        } else if (response.status == 504) {
+            msg = "[Warning] Status Code: 504 Timeout\n[Message] --> Please wait for conversion to complete then try again.";
+            return {'message': { 'type': "warning", 'text': msg} }
+        } else {
+            msg = "[Error] Status Code: " + response.status + "\n[Message] --> Network response was not ok...";
+            return {'message': { 'type': "error", 'text': msg} }
+        }
+    }).catch(function(error) {
+        let subStr1 = 'There has been a problem with your fetch operation: ' + error.message;
+        msg = "[Error] Status Code: 000\n[Message] -->" + subStr1;
+        return {'message': { 'type': "error", 'text': msg} }
+    });
 }

@@ -1,5 +1,5 @@
 # Python imports
-import os, json, secrets, re, shutil
+import os, json, secrets, requests, shutil, re
 
 # Lib imports
 from flask import request, session, render_template, send_from_directory, redirect
@@ -8,12 +8,16 @@ from flask_login import current_user
 
 
 # App imports
-from core import app, logger, oidc, db, Favorites  # Get from __init__
+from core import app, logger, oidc, db, Favorites, ROOT_FILE_PTH  # Get from __init__
 from core.utils import MessageHandler              # Get simple message processor
 from core.utils.shellfm import WindowController    # Get file manager controller
+from core.utils.tmdbscraper import scraper         # Get media art scraper
 
 
+BG_IMGS_PATH  = ROOT_FILE_PTH + "/static/imgs/backgrounds/"
+BG_FILE_TYPE  = (".webm", ".mp4", ".gif", ".jpg", ".png", ".webp")
 msgHandler         = MessageHandler()
+tmdb               = scraper.get_tmdb_scraper()
 window_controllers = {}
 # valid_fname_pat    = re.compile(r"/^[a-zA-Z0-9-_\[\]\(\)| ]+$/")
 valid_fname_pat    = re.compile(r"[a-z0-9A-Z-_\[\]\(\)\| ]{4,20}")
@@ -27,9 +31,22 @@ def get_window_controller():
         id         = secrets.token_hex(16)
         controller = WindowController()
         view       = controller.get_window(1).get_view(0)
-        view.ABS_THUMBS_PTH = app.config['ABS_THUMBS_PTH']
-        view.REMUX_FOLDER   = app.config['REMUX_FOLDER']
-        view.FFMPG_THUMBNLR = app.config['FFMPG_THUMBNLR']
+
+        try:
+            view.ABS_THUMBS_PTH = app.config['ABS_THUMBS_PTH']
+        except Exception as e:
+            ...
+
+        try:
+            view.REMUX_FOLDER   = app.config['REMUX_FOLDER']
+        except Exception as e:
+            ...
+
+        try:
+            view.FFMPG_THUMBNLR = app.config['FFMPG_THUMBNLR']
+        except Exception as e:
+            ...
+
         view.logger         = logger
 
         session['win_controller_id'] = id
@@ -51,6 +68,16 @@ def home():
                             message = 'Must use GET request type...')
 
 
+@app.route('/backgrounds', methods=['GET', 'POST'])
+def backgrounds():
+    files = []
+    data  = os.listdir(BG_IMGS_PATH)
+    for file in data:
+        if file.lower().endswith(BG_FILE_TYPE):
+            files.append(file)
+
+    return '{ "backgrounds": ' + json.dumps(files) + '}'
+
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
 def listFiles(_hash = None):
     if request.method == 'POST':
@@ -65,11 +92,11 @@ def listFiles(_hash = None):
         msg       = "Log in with an Admin privlidged user to view the requested path!"
         is_locked = view.is_folder_locked(_hash)
         if is_locked and not oidc.user_loggedin:
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
         elif is_locked and oidc.user_loggedin:
             isAdmin = oidc.user_getfield("isAdmin")
             if isAdmin != "yes" :
-                return msgHandler.createMessageJSON("danger", msg)
+                return msgHandler.create_JSON_message("danger", msg)
 
         if dot_dots[0][1] != _hash and dot_dots[1][1] != _hash:
             path = view.get_path_part_from_hash(_hash)
@@ -78,18 +105,69 @@ def listFiles(_hash = None):
         error_msg = view.get_error_message()
         if  error_msg != None:
             view.unset_error_message()
-            return msgHandler.createMessageJSON("danger", error_msg)
+            return msgHandler.create_JSON_message("danger", error_msg)
 
 
-        sub_path = view.get_current_sub_path()
+        sub_path          = view.get_current_sub_path()
+        current_directory = sub_path.split("/")[-1]
+        trailer           = None
+        if "(" in current_directory and ")" in current_directory:
+            title          = current_directory.split("(")[0].strip()
+            startIndex     = current_directory.index('(') + 1
+            endIndex       = current_directory.index(')')
+            date           = current_directory[startIndex:endIndex]
+            video_data     = tmdb.search(title, date)[0]
+            video_id       = video_data["id"]
+            background_url = video_data["backdrop_path"]
+            background_pth = f"{view.get_current_directory()}/000.jpg"
+
+            try:
+                tmdb_videos = tmdb.tmdbapi.get_movie(str(video_id), append_to_response="videos")["videos"]["results"]
+                for tmdb_video in tmdb_videos:
+                    if "YouTube" in tmdb_video["site"]:
+                        trailer_key = tmdb_video["key"]
+                        trailer     = f"https://www.youtube-nocookie.com/embed/{trailer_key}?start=0&autoplay=1";
+
+                if not trailer:
+                    raise Exception("No key found. Defering to none...")
+            except Exception as e:
+                print("No trailer found...")
+                trailer = None
+
+            if not os.path.isfile(background_pth):
+                r = requests.get(background_url, stream = True)
+
+                if r.status_code == 200:
+                    r.raw.decode_content = True
+                    with open(background_pth,'wb') as f:
+                        shutil.copyfileobj(r.raw, f)
+
+                    view.load_directory()
+                    print('Cover Background Image sucessfully retreived...')
+                else:
+                    print('Cover Background Image Couldn\'t be retreived...')
+
+
         files    = view.get_files_formatted()
         fave     = db.session.query(Favorites).filter_by(link = sub_path).first()
         in_fave  = "true" if fave else "false"
+
         files.update({'in_fave': in_fave})
+        files.update({'trailer': trailer})
         return files
     else:
         msg = "Can't manage the request type..."
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)
+
+@app.route('/api/get-posters', methods=['GET', 'POST'])
+def getPosters():
+    if request.method == 'POST':
+        view   = get_window_controller().get_window(1).get_view(0)
+        videos = view.get_videos()
+        return videos
+    else:
+        msg = "Can't manage the request type..."
+        return msgHandler.create_JSON_message("danger", msg)
 
 @app.route('/api/file-manager-action/<_type>/<_hash>', methods=['GET', 'POST'])
 def fileManagerAction(_type, _hash = None):
@@ -98,7 +176,7 @@ def fileManagerAction(_type, _hash = None):
     if _type == "reset-path" and _hash == "None":
         view.set_to_home()
         msg = "Returning to home directory..."
-        return msgHandler.createMessageJSON("success", msg)
+        return msgHandler.create_JSON_message("success", msg)
 
     folder = view.get_current_directory()
     file   = view.get_path_part_from_hash(_hash)
@@ -106,33 +184,38 @@ def fileManagerAction(_type, _hash = None):
     logger.debug(fpath)
 
     if _type == "files":
-        return send_from_directory(folder, file)
+        logger.debug(f"Downloading:\n\tDirectory: {folder}\n\tFile: {file}")
+        return send_from_directory(directory=folder, filename=file)
     if _type == "remux":
         # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
         # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
         # I.E....this is stupid but for now works better than nothing
-        good_result = view.remuxVideo(_hash, fpath)
+        good_result = view.remux_video(_hash, fpath)
         if good_result:
             return '{"path":"static/remuxs/' + _hash + '.mp4"}'
         else:
             msg = "Remuxing: Remux failed or took too long; please, refresh the page and try again..."
-            return msgHandler.createMessageJSON("success", msg)
-    if _type == "run-locally":
-        msg = "Opened media..."
-        view.openFilelocally(fpath)
-        return msgHandler.createMessageJSON("success", msg)
+            return msgHandler.create_JSON_message("success", msg)
+
+    if _type == "remux":
+        stream_target = view.remux_video(_hash, fpath)
 
 
     # NOTE: Positionally protecting actions further down that are privlidged
     #       Be aware of ordering!
     msg = "Log in with an Admin privlidged user to do this action!"
     if not oidc.user_loggedin:
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)
     elif oidc.user_loggedin:
         isAdmin = oidc.user_getfield("isAdmin")
         if isAdmin != "yes" :
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
 
+
+    if _type == "run-locally":
+        msg = "Opened media..."
+        view.open_file_locally(fpath)
+        return msgHandler.create_JSON_message("success", msg)
 
     if _type == "delete":
         try:
@@ -141,10 +224,10 @@ def fileManagerAction(_type, _hash = None):
                 os.unlink(fpath)
             else:
                 shutil.rmtree(fpath)
-            return msgHandler.createMessageJSON("success", msg)
+            return msgHandler.create_JSON_message("success", msg)
         except Exception as e:
             msg = "[Error] Unable to delete the file/folder...."
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
 
 
 @app.route('/api/list-favorites', methods=['GET', 'POST'])
@@ -158,7 +241,7 @@ def listFavorites():
         return '{"faves_list":' + json.dumps(faves) + '}'
     else:
         msg = "Can't manage the request type..."
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)
 
 @app.route('/api/load-favorite/<_id>', methods=['GET', 'POST'])
 def loadFavorite(_id):
@@ -172,10 +255,10 @@ def loadFavorite(_id):
         except Exception as e:
             print(repr(e))
             msg = "Incorrect Favorites ID..."
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
     else:
         msg = "Can't manage the request type..."
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)
 
 
 @app.route('/api/manage-favorites/<_action>', methods=['GET', 'POST'])
@@ -195,13 +278,13 @@ def manageFavorites(_action):
             msg  = "Deleted from Favorites successfully..."
         else:
             msg  = "Couldn't handle action for favorites item..."
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
 
         db.session.commit()
-        return msgHandler.createMessageJSON("success", msg)
+        return msgHandler.create_JSON_message("success", msg)
     else:
         msg = "Can't manage the request type..."
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)
 
 
 @app.route('/api/create/<_type>', methods=['GET', 'POST'])
@@ -209,42 +292,42 @@ def create_item(_type = None):
     if request.method == 'POST':
         msg = "Log in with an Admin privlidged user to upload files!"
         if not oidc.user_loggedin:
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
         elif oidc.user_loggedin:
             isAdmin = oidc.user_getfield("isAdmin")
             if isAdmin != "yes" :
-                return msgHandler.createMessageJSON("danger", msg)
+                return msgHandler.create_JSON_message("danger", msg)
 
         TYPE  = _type.strip()
         FNAME = str(request.values['fname']).strip()
 
         if not re.fullmatch(valid_fname_pat, FNAME):
             msg  = "A new item name can only contain alphanumeric, -, _, |, [], (), or spaces and must be minimum of 4 and max of 20 characters..."
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
 
         view     = get_window_controller().get_window(1).get_view(0)
         folder   = view.get_current_directory()
-        new_item = folder + '/' + FNAME
+        new_item = f"{folder}/{FNAME}"
 
         try:
             if TYPE == "dir":
                 os.mkdir(new_item)
             elif TYPE == "file":
-                open(new_item + ".txt", 'a').close()
+                open(f"{new_item}.txt", 'a').close()
             else:
                 msg  = "Couldn't handle action type for api create..."
-                return msgHandler.createMessageJSON("danger", msg)
+                return msgHandler.create_JSON_message("danger", msg)
         except Exception as e:
             print(repr(e))
             msg  = "Couldn't create file/folder. An unexpected error occured..."
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
 
 
         msg = "[Success] created the file/dir..."
-        return msgHandler.createMessageJSON("success", msg)
+        return msgHandler.create_JSON_message("success", msg)
     else:
         msg = "Can't manage the request type..."
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -252,15 +335,15 @@ def upload():
     if request.method == 'POST' and len(request.files) > 0:
         msg = "Log in with an Admin privlidged user to upload files!"
         if not oidc.user_loggedin:
-            return msgHandler.createMessageJSON("danger", msg)
+            return msgHandler.create_JSON_message("danger", msg)
         elif oidc.user_loggedin:
             isAdmin = oidc.user_getfield("isAdmin")
             if isAdmin != "yes" :
-                return msgHandler.createMessageJSON("danger", msg)
+                return msgHandler.create_JSON_message("danger", msg)
 
         view         = get_window_controller().get_window(1).get_view(0)
         folder       = view.get_current_directory()
-        UPLOADS_PTH  = folder + '/'
+        UPLOADS_PTH  = f'{folder}/'
         files        = UploadSet('files', ALL, default_dest=lambda x: UPLOADS_PTH)
         configure_uploads(app, files)
 
@@ -270,10 +353,10 @@ def upload():
             except Exception as e:
                 print(repr(e))
                 msg = "[Error] Failed to upload some or all of the file(s)..."
-                return msgHandler.createMessageJSON("danger", msg)
+                return msgHandler.create_JSON_message("danger", msg)
 
         msg = "[Success] Uploaded file(s)..."
-        return msgHandler.createMessageJSON("success", msg)
+        return msgHandler.create_JSON_message("success", msg)
     else:
         msg = "Can't manage the request type..."
-        return msgHandler.createMessageJSON("danger", msg)
+        return msgHandler.create_JSON_message("danger", msg)

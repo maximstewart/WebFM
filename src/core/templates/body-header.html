@@ -7,12 +7,12 @@
 
     <div id="navbarTogglerHeader" class="row collapse navbar-collapse">
         {% if current_directory %}
-            <div class="col">
+            <div class="col col-auto">
                 <!-- Left menues -->
                 <ul class="navbar-nav">
                     <li class="nav-item" data-bs-toggle="modal" data-bs-target="#file-view-modal">
-                        <i class="nav-link" aria-hidden="true" title="File viewer..." >
-                            🖼
+                        <i class="nav-link bi bi-projector-fill" aria-label="File viewer" title="File viewer..." >
+                            Media Viewer
                         </i>
                     </li>
                     <li class="nav-item">
@@ -20,48 +20,64 @@
                             <input id="search-files-field" type="text" class="form-control"
                                     aria-label="Search..." placeholder="Search..." style="max-width: 260px">
                             <div class="input-group-prepend">
-                                <span id="clear-search-btn" class="input-group-text" title="Clears search...">X</span>
+                                <button id="clear-search-btn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Clears search..."></button>
                             </div>
                         </div>
                     </li>
                     <li class="nav-item" data-bs-toggle="modal" data-bs-target="#favorites-modal">
-                        <i class="nav-link" aria-hidden="true" title="Faves list..." >
+                        <i class="nav-link" aria-label="Faves list" title="Faves list..." >
                             Faves List
                         </i>
                     </li>
                     <li class="nav-item">
-                        <i id="scroll-files-to-top-btn" class="nav-link" aria-hidden="true" title="Scroll to top..." >
+                        <i id="scroll-files-to-top-btn" class="nav-link" aria-label="Scroll to top" title="Scroll to top..." >
                             Scroll To Top
                         </i>
+                    </li>
+                    <li class="nav-item">
+                        <div class="ml-2 mt-2 form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="playlist-mode-btn">
+                            <label class="form-check-label" for="playlist-mode-btn">
+                                Playlist Mode
+                            </label>
+                        </div>
                     </li>
                 </ul>
             </div>
         {% endif %}
+
+        <div class="col">
+            <li class="nav-item mx-3">
+                <a id="trailer-link" href="#">
+                    <span id="trailer-btn" class="btn btn-info btn-sm" style="display: none;" title="Trailer..." >Trailer</span>
+                </a>
+            </li>
+        </div>
 
         <div class="col col-auto">
             <!-- Right menues -->
             <ul class="navbar-nav">
                 {% if current_directory %}
                     <li class="nav-item">
-                        <i id="back-btn" class="fa fa-arrow-left nav-link" aria-hidden="true" title="Back..." hash="{{dot_dots[1][1]}}">
+                        <i id="back-btn" class="nav-link bi bi-arrow-left-square" aria-hidden="true" title="Back..." hash="{{dot_dots[1][1]}}">
                             Back
                         </i>
                     </li>
                     <li class="nav-item">
-                        <i id="refresh-btn" class="fa fa-refresh nav-link" aria-hidden="true" title="Refresh..." hash="{{dot_dots[0][1]}}">
+                        <i id="refresh-btn" class="nav-link bi bi-arrow-clockwise" aria-hidden="true" title="Refresh..." hash="{{dot_dots[0][1]}}">
                             Refresh
                         </i>
                     </li>
                 {% endif %}
                 <li class="nav-item" data-bs-toggle="modal" data-bs-target="#options-modal">
-                    <i class="nav-link fa fa-gear" aria-hidden="true" title="Other options..." >
+                    <i class="nav-link bi bi-gear-wide-connected" aria-hidden="true" title="Other options..." >
                         Settings
                     </i>
                 </li>
                 {% if current_user.is_authenticated or oidc_loggedin() %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                            <i class="bi bi-box-arrow-left"></i> Logout
                         </a>
                     </li>
                 {% endif %}
@@ -72,10 +88,10 @@
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{ url_for('login') }}">
-                                <i title="Login" class="fas fa-user"></i>&nbsp;&nbsp;Login
+                                <i title="Login" class="bi bi-person-circle"></i>&nbsp;&nbsp;Login
                             </a>
                             <a class="dropdown-item" href="{{ url_for('register') }}">
-                                <i title="Register A User..." class="fas fa-user-plus"></i>&nbsp;&nbsp;Register
+                                <i title="Register A User..." class="bi bi-person-plus-fill"></i>&nbsp;&nbsp;Register
                             </a>
                         </div>
                     </li>

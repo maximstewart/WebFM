@@ -4,8 +4,11 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>File Viewer:</h3> <span id="selectedFile"></span>
-                <button onclick="closeFile()" type="button" data-bs-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+                <h3>File Viewer:</h3>
+                <button id="previousVideoInPlaylist" class="btn btn-dark btn-sm">Previous</button>
+                <span id="selectedFile"></span>
+                <button id="nextVideoInPlaylist" class="btn btn-dark btn-sm">Next</button>
+                <button id="close-file-modal-btn" class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal">Close</button>
             </div>
 
             <div class="modal-body text-center justify-content-center">
@@ -14,61 +17,97 @@
                         <!-- For video -->
                         <div id="video-container">
                             <video id="video" class="viewer"
-                                loop
                                 src=""
                                 autoplay=""
                                 volume="0.75"
                                 poster="{{ url_for('static', filename='imgs/icons/loading.gif')}}"
-                                onmousemove="showControls()">
+                                >
                             </video>
 
-                            <div id="video-controls">
-                                <div class="row pl-5 pr-5">
-                                    <div class="col-md-8">
-                                        <input id="seek-slider" class="form-control-range" style="width: inherit;" type="range" min="0" value="0" max="100" step="1"/>
+                            <iframe id="trailerPlayer"
+                                width="560" height="315"
+                                style="display: none;"
+                                src=""
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen="allowfullscreen"
+                                mozallowfullscreen="mozallowfullscreen"
+                                msallowfullscreen="msallowfullscreen"
+                                oallowfullscreen="oallowfullscreen"
+                                webkitallowfullscreen="webkitallowfullscreen">
+                            </iframe>
+
+                            <!-- For image -->
+                            <img id="image-viewer" class="card-img-top viewer"
+                                style="display: none;"
+                                src="" alt="" />
+
+                            <!-- For pdf -->
+                            <iframe id="pdf-viewer" class="card-img-top viewer"
+                                src=""
+                                style="display: none;"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen="allowfullscreen"
+                                mozallowfullscreen="mozallowfullscreen"
+                                msallowfullscreen="msallowfullscreen"
+                                oallowfullscreen="oallowfullscreen"
+                                webkitallowfullscreen="webkitallowfullscreen">
+                            </iframe>
+
+                            <!-- For text -->
+                            <pre id="text-viewer" class="card-img-top viewer"
+                                style="display: none;">
+                            </pre>
+
+                            <!-- For GBA JS Emulator -->
+                            <div  id="gbajs-viewer" class="card-img-top viewer"
+                                style="display: none;">
+                                <canvas id="screen" width="720" height="480"></canvas>
+                                <section id="controls">
+                                    <div id="preload">
+                                        <button class="bigbutton" id="select" onclick="document.getElementById('loader').click()">SELECT</button>
+                                        <input id="loader" type="file" accept=".gba" onchange="run(this.files[0]);">
+                                        <button onclick="document.getElementById('saveloader').click()">Upload Savegame</button>
+                                        <input id="saveloader" type="file" onchange="uploadSavedataPending(this.files[0]);">
                                     </div>
-                                    <div class="col-md-3">
-                                        <span id="videoCurrentTime"></span>
-                                        /
-                                        <span id="videoDuration"></span>
+                                    <div id="ingame" class="hidden">
+                                        <button id="pause" class="bigbutton" onclick="togglePause()">PAUSE</button>
+                                        <button class="bigbutton" onclick="reset()">RESET</button>
+                                        <button onclick="gba.downloadSavedata()">Download Savegame</button>
+                                        <button onclick="screenshot()">Screenshot</button>
+                                        <label id="pixelated">
+                                            <input type="checkbox" onchange="setPixelated(this.checked)">
+                                            <p>Pixelated</p>
+                                        </label>
+                                        <div id="sound">
+                                            <input type="checkbox" checked onchange="gba.audio.masterEnable = this.checked">
+                                            <p>Sound</p>
+                                            <input type="range" min="0" max="1" value="1" step="any" onchange="setVolume(this.value)" oninput="setVolume(this.value)">
+                                        </div>
+                                        <p id="openDebug" onclick="enableDebug()">Debugger</p>
                                     </div>
-                                    <div class="col-md-1">
-                                        <span id="volumeIcon" onclick="toggleVolumeControl()">&#128264;</span>
-                                        <input id="volume-slider" class="form-control-range volume-control-positioner" style="display: none;"
-                                        type="range" orient="vertical" min="0.0" max="1.0" value="0.75" step="0.05" />
-                                    </div>
-                                </div>
+                                </section>
                             </div>
-                        </div>
-
-                        <!-- For image -->
-                        <img id="image-viewer" class="card-img-top viewer"
-                            style="display: none;"
-                            src="" alt="" />
-
-                        <!-- For pdf -->
-                        <iframe id="pdf-viewer" class="card-img-top viewer"
-                            src=""
-                            style="display: none;"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen="allowfullscreen"
-                            mozallowfullscreen="mozallowfullscreen"
-                            msallowfullscreen="msallowfullscreen"
-                            oallowfullscreen="oallowfullscreen"
-                            webkitallowfullscreen="webkitallowfullscreen">
-                        </iframe>
-
-                        <!-- For text -->
-                        <pre id="text-viewer" class="card-img-top viewer"
-                            style="display: none;">
-                        </pre>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="modal-footer">
+        <div id="video-controls" class="modal-footer">
+            <div class="col-md-8">
+                <input id="seek-slider" class="form-control-range" style="width: inherit;" type="range" min="0" value="0" max="100" step="1"/>
+            </div>
+            <div class="col-md-3">
+                <span id="videoCurrentTime"></span>
+                /
+                <span id="videoDuration"></span>
+            </div>
+            <div class="col-md-auto">
+                <span id="volumeIcon" onclick="toggleVolumeControl()">&#128264;</span>
+                <input id="volume-slider" class="form-control-range volume-control-positioner" style="display: none;"
+                type="range" orient="vertical" min="0.0" max="1.0" value="0.75" step="0.05" />
             </div>
         </div>
+
     </div>
 </div>
 {% endblock file_modal %}

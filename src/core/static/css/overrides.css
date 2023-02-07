@@ -47,19 +47,18 @@ input[type=range][orient=vertical] {
 
 
 
-
-.modal-content {
-    background-color: #32383e74;
-    border-color: #f8940674;
+.modal-header,
+.modal-footer {
+    background-color: rgba(0, 0, 0, 0.64);
 }
 
-.sticky-top,
-.card {
-    background-color: rgba(50, 56, 62, 0.84);
+.modal-content {
+    background-color: rgba(50, 56, 62, 0.74);
+    border-color: rgba(249, 148, 6, 0.74);
 }
 
 .card-body {
-	min-height: 326px;
+    min-height: 326px;
 	font-size: x-large;
 	vertical-align: middle !important;
 	align-items: center;
@@ -71,11 +70,11 @@ input[type=range][orient=vertical] {
 	  object-fit: contain;
 }
 
-.list-group-item {
-    color: rgba(255, 255, 255, 1) !important;
-}
-
 .label-as-badge {
     border-radius: 1em;
     cursor: pointer;
+}
+
+.list-group-item {
+    min-height: 2em;
 }

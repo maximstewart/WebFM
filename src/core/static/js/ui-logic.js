@@ -10,7 +10,14 @@ const downloadItem = (eve) => {
 }
 
 const deleteItem = (eve) => {
-    let elm     = active_card.querySelector('[hash]'); // With attribute named "hash"
+    if (active_card == null) {
+        let text = "No card hovered over to delete!";
+        let type = "danger";
+        displayMessage(text, type, 3);
+        return ;
+    }
+
+    let elm     = active_card.querySelector('[hash]');  // With attribute named "hash"
     let elm2    = active_card.querySelector('[title]'); // With attribute named "title"
     const hash  = elm.getAttribute("hash");
     const title = elm2.getAttribute("title");
@@ -43,48 +50,65 @@ const scrollFilesToTop = () => {
 
 
 const closeFile = () => {
-    const video = document.getElementById("video");
-    let title   = document.getElementById("selectedFile");
+    const video         = document.getElementById("video");
+    const trailerPlayer = document.getElementById("trailerPlayer")
+    let title           = document.getElementById("selectedFile");
 
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
-    document.getElementById("video-controls").style.display = "none";
 
     title.innerText     = "";
     video.style.display = "none";
     video.style.cursor  = '';
     video.pause();
+
+    trailerPlayer.src           = "#";
+    trailerPlayer.style.display = "none";
+    clearSelectedActiveMedia();
+    clearModalFades();
 }
 
-const showFile = async (title, hash, extension, type) => {
+const showFile = async (title, hash, extension, type, target=null) => {
     document.getElementById("image-viewer").style.display   = "none";
     document.getElementById("text-viewer").style.display    = "none";
     document.getElementById("pdf-viewer").style.display     = "none";
     document.getElementById("video").style.display          = "none";
-    document.getElementById("video-controls").style.display = "none";
+    document.getElementById("trailerPlayer").style.display  = "none";
 
-    let titleElm          = document.getElementById("selectedFile");
-    titleElm.innerText    = title;
+    let titleElm       = document.getElementById("selectedFile");
+    titleElm.innerText = title;
 
     if (type === "video") {
         setupVideo(hash, extension);
+        setSelectedActiveMedia(target);
     }
-     if (type === "file") {
+    if (type === "file") {
         setupFile(hash, extension);
+    }
+     if (type === "trailer") {
+        launchTrailer(hash);
     }
 }
 
+const launchTrailer = (link) => {
+    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
+    let trailerPlayer   = document.getElementById("trailerPlayer");
+    trailerPlayer.style.display = "";
+    trailerPlayer.src           = link;
+
+    modal.show();
+}
+
 const setupVideo = async (hash, extension) => {
+    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
     let video           = document.getElementById("video");
-    let controls        = document.getElementById("video-controls");
     video.poster        = "static/imgs/icons/loading.gif";
     video.style.display = "";
     video.src           = "#"
     video_path          = "api/file-manager-action/files/" + hash;
-    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
 
-
+    clearSelectedActiveMedia();
     try {
         if ((/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)$/i).test(extension)) {
             if ((/\.(avi|mkv|wmv|flv|f4v)$/i).test(extension)) {
@@ -92,19 +116,18 @@ const setupVideo = async (hash, extension) => {
                 if ( data.hasOwnProperty('path') ) {
                     video_path = data.path;
                 } else {
-                    displayMessage(data.message.text, data.message.type, 3);
-                    return ;
+                    displayMessage(data.message.text, data.message.type);
+                    return;
                 }
             } else if ((/\.(flv|mov|m4v|mpg|mpeg)$/i).test(extension)) {
                 modal.hide();
                 openWithLocalProgram(hash, extension);
-                return ;
+                return;
             }
         }
 
+        video.src = video_path;
         modal.show();
-        controls.style.display = "none";
-        video.src              = video_path;
     } catch (e) {
         video.style.display = "none";
         console.log(e);
@@ -192,15 +215,8 @@ const clearSearch = () => {
 
 const updateBackground = (srcLink, isvideo = true) => {
     try {
-        let elm = document.getElementById("bg");
-        if (isvideo) {
-            if (elm.getAttribute('src') === "") {
-                elm.src = srcLink;
-            }
-        } else {
-            elm.src = "";
-            elm.setAttribute("poster", srcLink);
-        }
+        const elm = document.getElementById("bg");
+        setBackgroundElement(elm, srcLink);
     } catch (e) { }
 }
 
@@ -264,6 +280,39 @@ const clearChildNodes = (parent) => {
     }
 }
 
+const clearModalFades = (elm) => {
+    let elms = document.getElementsByClassName('modal-backdrop fade show');
+    for (var i = 0; i < elms.length; i++) {
+        elms[i].remove();
+    }
+}
+
+const clearPlaylistMode = () => {
+    const playListState = document.getElementById("playlist-mode-btn");
+    if (playListState.checked) { playListState.click(); }
+}
+
+const setSelectedActiveMedia = (elm) => {
+    clearSelectedActiveMedia();
+
+    let card = elm;
+    while (card.parentElement) {
+        if (!card.classList.contains("card")) {
+            card = card.parentElement;
+            continue;
+        }
+
+        break
+    }
+    card.classList.add("selected-active-media");
+}
+
+const clearSelectedActiveMedia = () => {
+    try {
+        const elm = document.getElementsByClassName('selected-active-media')[0];
+        elm.classList.remove("selected-active-media");
+    } catch (e) {}
+}
 
 // Cache Buster
 const clearCache = () => {

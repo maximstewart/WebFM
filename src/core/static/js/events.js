@@ -16,11 +16,11 @@ document.body.onload = (eve) => {
     }
 
     setTimeout(function () {
+        loadBackground();
         getFavesAjax();
         reloadDirectory();
     }, 400);
 }
-
 
 const loadFavePath = (e) => {
     const target = e.target;
@@ -42,7 +42,7 @@ const openFile = (eve) => {
     if (ftype === "dir") {
         listFilesAjax(hash);
     } else if (ftype === "video") {
-        showFile(title, hash, extension, "video");
+        showFile(title, hash, extension, "video", target);
     } else {
         showFile(title, hash, extension, "file");
     }
@@ -55,28 +55,47 @@ const openFileLocally = (eve) => {
 }
 
 
+// Background control events
+$( "#background-selection" ).bind( "click", async function(eve) {
+    const target = eve.target;
+    if (target.className === "bg-imgs") {
+        const path = (!target.src.endsWith("/")) ? target.src : target.poster;
+        setBackgroundCookie(path);
+    }
+});
 
+$( "#load-bglist-btn" ).bind( "click", async function(eve) {
+    getBackgrounds();
+});
 
-$( "#search-files-field" ).bind( "keyup", async function(eve) {
+$( "#search-files-field").bind( "keyup", async function(eve) {
     searchPage();
 });
 
-$( "#clear-search-btn" ).bind( "click", async function(eve) {
+$( "#clear-search-btn").bind( "click", async function(eve) {
     clearSearch();
 });
 
-$( "#refresh-btn" ).bind( "click", async function(eve) {
+$( "#refresh-btn").bind( "click", async function(eve) {
     reloadDirectory();
 });
 
-$( "#back-btn" ).bind( "click", async function(eve) {
+$( "#back-btn").bind( "click", async function(eve) {
     goUpADirectory();
 });
 
-$( "#tggl-faves-btn" ).bind( "click", async function(eve) {
+$( "#tggl-faves-btn").bind( "click", async function(eve) {
     manageFavorites(eve.target);
 });
 
-$( "#scroll-files-to-top-btn" ).bind( "click", async function(eve) {
+$( "#scroll-files-to-top-btn").bind( "click", async function(eve) {
     scrollFilesToTop();
+});
+
+$( "#playlist-mode-btn").bind( "click", async function(eve) {
+    togglePlaylistMode(eve.target);
+});
+
+$( "#close-file-modal-btn").bind( "click", async function(eve) {
+    closeFile();
 });

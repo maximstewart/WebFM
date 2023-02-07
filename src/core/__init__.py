@@ -15,6 +15,7 @@ from flask_login import current_user, login_user, logout_user, LoginManager
 from core.utils import Logger
 
 
+ROOT_FILE_PTH = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
 app.config.from_object("core.config.ProductionConfig")
 # app.config.from_object("core.config.DevelopmentConfig")

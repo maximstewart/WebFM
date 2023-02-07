@@ -25,10 +25,17 @@
 
 
 {% block body_scripts_additional %}
+    <!-- App JS -->
     <script type="text/jsx" src="{{ url_for('static', filename='js/react-ui-logic.js')}}"></script>
     <script src="{{ url_for('static', filename='js/ui-logic.js')}}"></script>
     <script src="{{ url_for('static', filename='js/post-ajax.js')}}"></script>
     <script src="{{ url_for('static', filename='js/ajax.js')}}"></script>
     <script src="{{ url_for('static', filename='js/video-events.js')}}"></script>
+
+    {% if oidc_loggedin() and oidc_isAdmin() %}
+        <script src="{{ url_for('static', filename='js/privileged-logic.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/events-privileged.js')}}"></script>
+    {% endif %}
+
     <script src="{{ url_for('static', filename='js/events.js')}}"></script>
 {% endblock body_scripts_additional %}

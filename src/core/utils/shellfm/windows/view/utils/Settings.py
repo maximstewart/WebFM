@@ -14,21 +14,21 @@ class Settings:
     logger            = None
 
     USER_HOME         = path.expanduser('~')
-    CONFIG_PATH       = USER_HOME   + "/.config/webfm"
-    CONFIG_FILE       = CONFIG_PATH + "/settings.json"
+    CONFIG_PATH       = f"{USER_HOME}/.config/webfm"
+    CONFIG_FILE       = f"{CONFIG_PATH}/settings.json"
     HIDE_HIDDEN_FILES = True
 
     GTK_ORIENTATION   = 1      # HORIZONTAL (0) VERTICAL (1)
-    DEFAULT_ICONS     = CONFIG_PATH   + "/icons"
-    DEFAULT_ICON      = DEFAULT_ICONS + "/text.png"
-    FFMPG_THUMBNLR    = CONFIG_PATH   + "/ffmpegthumbnailer"   # Thumbnail generator binary
-    REMUX_FOLDER      = USER_HOME     + "/.remuxs"             # Remuxed files folder
+    DEFAULT_ICONS     = f"{CONFIG_PATH}/icons"
+    DEFAULT_ICON      = f"{DEFAULT_ICONS}/text.png"
+    FFMPG_THUMBNLR    = f"{CONFIG_PATH}/ffmpegthumbnailer" # Thumbnail generator binary
+    REMUX_FOLDER      = f"{USER_HOME}/.remuxs"             # Remuxed files folder
 
     STEAM_BASE_URL    = "https://steamcdn-a.akamaihd.net/steam/apps/"
-    ICON_DIRS         = ["/usr/share/pixmaps", "/usr/share/icons", USER_HOME + "/.icons" ,]
-    BASE_THUMBS_PTH   = USER_HOME       + "/.thumbnails"       # Used for thumbnail generation
-    ABS_THUMBS_PTH    = BASE_THUMBS_PTH + "/normal"            # Used for thumbnail generation
-    STEAM_ICONS_PTH   = BASE_THUMBS_PTH + "/steam_icons"
+    ICON_DIRS         = ["/usr/share/pixmaps", "/usr/share/icons", f"{USER_HOME}/.icons" ,]
+    BASE_THUMBS_PTH   = f"{USER_HOME}/.thumbnails"         # Used for thumbnail generation
+    ABS_THUMBS_PTH    = f"{BASE_THUMBS_PTH}/normal"        # Used for thumbnail generation
+    STEAM_ICONS_PTH   = f"{BASE_THUMBS_PTH}/steam_icons"
     CONTAINER_ICON_WH = [128, 128]
     VIDEO_ICON_WH     = [128, 64]
     SYS_ICON_WH       = [56, 56]
@@ -57,6 +57,7 @@ class Settings:
 
             subpath           = settings["base_of_home"]
             HIDE_HIDDEN_FILES = True if settings["hide_hidden_files"] == "true" else False
+            FFMPG_THUMBNLR    = FFMPG_THUMBNLR if settings["thumbnailer_path"] == "" else settings["thumbnailer_path"]
             go_past_home      = True if settings["go_past_home"] == "true" else False
             lock_folder       = True if settings["lock_folder"] == "true" else False
             locked_folders    = settings["locked_folders"].split("::::")
@@ -73,7 +74,7 @@ class Settings:
     # Filters
     fvideos = ('.mkv', '.avi', '.flv', '.mov', '.m4v', '.mpg', '.wmv', '.mpeg', '.mp4', '.webm')
     foffice = ('.doc', '.docx', '.xls', '.xlsx', '.xlt', '.xltx', '.xlm', '.ppt', 'pptx', '.pps', '.ppsx', '.odt', '.rtf')
-    fimages = ('.png', '.jpg', '.jpeg', '.gif', '.ico', '.tga')
+    fimages = ('.png', '.jpg', '.jpeg', '.gif', '.ico', '.tga', '.webp')
     ftext   = ('.txt', '.text', '.sh', '.cfg', '.conf')
     fmusic  = ('.psf', '.mp3', '.ogg', '.flac', '.m4a')
     fpdf    = ('.pdf')

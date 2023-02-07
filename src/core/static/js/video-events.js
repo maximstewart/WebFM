@@ -2,8 +2,8 @@ let fullScreenState = 0;
 let clicktapwait    = 200;
 let shouldPlay      = null;
 let controlsTimeout = null;
-let canHideControls = true;
-
+let playListMode    = false;
+let videoPlaylist   = [];
 
 const getTimeFormatted = (duration = null) => {
     if (duration == null) { return "00:00"; }
@@ -19,62 +19,41 @@ const getTimeFormatted = (duration = null) => {
 
 const togglePlay = (video) => {
     shouldPlay = setTimeout(function () {
-        let controls = document.getElementById("video-controls");
-        shouldPlay   = null;
+        shouldPlay = null;
         if (video.paused) {
-            video.style.cursor     = 'none';
-            controls.style.display = "none";
+            video.style.cursor = 'none';
             video.play();
         } else {
-            video.style.cursor     = '';
-            controls.style.display = "";
+            video.style.cursor = '';
             video.pause();
         }
     }, 300);
 }
 
-const showControls = () => {
-    const video    = document.getElementById("video");
-    const controls = document.getElementById("video-controls");
-
-    video.style.cursor     = '';
-    controls.style.display = "";
-    if (controlsTimeout) {
-        clearTimeout(controlsTimeout);
-    }
-
-    controlsTimeout = setTimeout(function () {
-        if (!video.paused) {
-            if (canHideControls) {
-                video.style.cursor     = 'none';
-                controls.style.display = "none";
-                controlsTimeout        = null;
-            } else {
-                showControls();
-            }
-        }
-    }, 3000);
-}
-
-
-
 
 const setFullscreenSettings = (parentElm, video) => {
     parentElm.requestFullscreen();
     video.classList.remove("viewer");
-    video.style.cursor = 'none';
-    video.style.height = 'inherit';
+    video.style.cursor    = 'none';
+    video.style.height    = 'inherit';
+    video.style.width     = 'inherit';
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        video.style.transform = 'rotate(90deg)';
+    }
 }
 
 const unsetFullscreenSettings = (video) => {
     video.classList.add("viewer");
-    video.style.cursor = '';
-    video.style.height = '';
+    video.style.transform = '';
+    video.style.cursor    = '';
+    video.style.height    = '';
+    video.style.width     = '';
 }
 
 const toggleFullscreen = (video) => {
-    containerElm = document.getElementById("video-container");
-    parentElm    = video.parentElement;
+    let containerElm = document.getElementById("video-container");
+    let parentElm    = video.parentElement;
 
     if (video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen) {
         setFullscreenSettings(parentElm, video);
@@ -92,7 +71,7 @@ const toggleFullscreen = (video) => {
             unsetFullscreenSettings(video);
         }
 
-        fullScreenState = 0;
+        fullScreenState   = 0;
     }
 
     fullScreenState += 1;
@@ -100,10 +79,35 @@ const toggleFullscreen = (video) => {
 
 const toggleVolumeControl = () => {
     const volume = document.getElementById("volume-slider");
-    if (volume.style.display === "none") {
-        volume.style.display = "";
-    } else {
-        volume.style.display = "none";
+    volume.style.display = (volume.style.display === "none") ? "" : "none";
+}
+
+
+const togglePlaylistMode = (elm) => {
+    playListMode = elm.checked;
+}
+
+const previousMedia = () => {
+    const current_title = document.getElementById('selectedFile').innerText;
+    for (let i = videoPlaylist.length - 1; i >= 0; i--) {
+        if (videoPlaylist[i].title === current_title) {
+            const index = (i === 0) ? videoPlaylist.length - 1 : i-=1;
+            clearModalFades();
+            videoPlaylist[index].click();
+            break
+        }
+    }
+}
+
+const nextMedia = () => {
+    const current_title = document.getElementById('selectedFile').innerText;
+    for (let i = 0; i < videoPlaylist.length; i++) {
+        if (videoPlaylist[i].title === current_title) {
+            const index = (i === videoPlaylist.length) ? 0 : i+=1;
+            clearModalFades();
+            videoPlaylist[index].click();
+            break
+        }
     }
 }
 
@@ -117,13 +121,12 @@ $("#video").on("loadedmetadata", function(eve){
 });
 
 
-$("#video").on("keyup", function(eve) {
+$("#video").on("keydown", function(eve) {
+    event.preventDefault();
     const key   = eve.keyCode;
     const video = eve.target;
 
-    if (key === 32 || key === 80) { // Spacebar for pausing
-        togglePlay(video);
-    } else if (key === 37) {        // Left key for back tracking 5 sec
+    if (key === 37) {               // Left key for back tracking 5 sec
         video.currentTime -= 5;
     } else if (key === 39) {        // Right key for fast forward 5 sec
         video.currentTime += 5;
@@ -135,6 +138,17 @@ $("#video").on("keyup", function(eve) {
         if (video.volume >= 0.0) {
             video.volume -= 0.05;
         }
+    }
+
+});
+
+
+$("#video").on("keyup", function(eve) {
+    const key   = eve.keyCode;
+    const video = eve.target;
+
+    if (key === 32 || key === 80) { // Spacebar for pausing
+        togglePlay(video);
     } else if (key === 70) {        // f key for toggling full screen
         toggleFullscreen(video);
     } else if (key === 76) {        // l key for toggling loop
@@ -185,7 +199,7 @@ $("#video").on("touchend", function(eve){
     eve.preventDefault();
 });
 
-$( "#video" ).bind( "timeupdate", async function(eve) {
+$( "#video").bind( "timeupdate", async function(eve) {
     let videoDuration = document.getElementById("videoCurrentTime");
     const video       = eve.target;
     const seekto      = document.getElementById("seek-slider");
@@ -195,30 +209,45 @@ $( "#video" ).bind( "timeupdate", async function(eve) {
     videoDuration.innerText = getTimeFormatted(video.currentTime);
 });
 
-// $( "#video" ).bind( "ended", async function(eve) {
-//     alert("Hello...")
-//     // let videoDuration = document.getElementById("videoCurrentTime");
-//     // const video       = eve.target;
-//     // const seekto      = document.getElementById("seek-slider");
-//     // const vt          = video.currentTime * (100 / video.duration);
-//     //
-//     // seekto.value            = vt;
-//     // videoDuration.innerText = getTimeFormatted(video.currentTime);
-// });
+$( "#video").bind( "stalled", async function(eve) {
+    console.log("Stalled load...");
+});
 
-$( "#seek-slider" ).bind( "change", async function(eve) {
+$( "#seek-slider").bind( "change", async function(eve) {
     const slider = eve.target;
     let video    = document.getElementById("video");
     let seekto   = video.duration * (slider.value / 100);
     video.currentTime = seekto;
 });
 
-$( "#volume-slider" ).bind( "change", async function(eve) {
+$( "#volume-slider").bind( "change", async function(eve) {
     const slider = eve.target;
     let video    = document.getElementById("video");
     let volumeto = slider.value;
     video.volume = volumeto;
 });
 
-$( "#video-controls" ).bind( "mouseenter", async function(eve) { canHideControls = false; });
-$( "#video-controls" ).bind( "mouseleave", async function(eve) { canHideControls = true; });
+
+$( "#video").bind( "ended", async function(eve) {
+    if (!playListMode) {
+        const video       = eve.target;
+        const seekto      = document.getElementById("seek-slider");
+        const vt          = video.currentTime * (100 / video.duration);
+
+        seekto.value            = 0;
+        videoDuration.innerText = getTimeFormatted(video.currentTime);
+        video.play();
+    } else {
+        nextMedia();
+    }
+});
+
+
+$( "#previousVideoInPlaylist").bind( "click", async function(eve) {
+    previousMedia();
+});
+
+
+$( "#nextVideoInPlaylist").bind( "click", async function(eve) {
+    nextMedia();
+});
