@@ -36,6 +36,12 @@
     overflow-y: auto;
 }
 
+#uploadListTitlesContainer {
+    min-height: 286px;
+    max-height: 286px;
+    overflow: hidden auto;
+}
+
 
 /* CLASSES */
 .scroller {
