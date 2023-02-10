@@ -5,9 +5,14 @@ const goHomeAjax = async (hash) => {
     doAjax("api/file-manager-action/reset-path/None", data, "reset-path");
 }
 
+const createItemAjax = async (type, fname) => {
+    const data = "fname=" + fname;
+    doAjax("api/create/" + type, data, "create-file");
+}
+
 const deleteItemAjax = async (hash) => {
     const data = "empty=NULL";
-    doAjax("api/file-manager-action/delete/" + hash, data, "delete-file");
+    doAjax("api/delete/" + hash, data, "delete-file");
 }
 
 const listFilesAjax = async (hash) => {

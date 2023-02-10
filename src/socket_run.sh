@@ -15,7 +15,7 @@ function main() {
     TIMEOUT=120
 
     # <module>:<app>   IE <file>:<flask app variable>
-    gunicorn wsgi:app -p app.pid -b unix:/tmp/app.sock \
+    gunicorn wsgi:app -p app.pid -b unix:/tmp/apps/webfm.sock \
                                 -k eventlet \
                                 -w $WORKER_COUNT \
                                 --timeout $TIMEOUT \
