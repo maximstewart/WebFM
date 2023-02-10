@@ -1,6 +1,4 @@
 # Python imports
-import os
-
 
 # Lib imports
 from flask import Flask
@@ -10,20 +8,18 @@ from flask_oidc import OpenIDConnect
 from flask_bcrypt import Bcrypt
 from flask_login import current_user, login_user, logout_user, LoginManager
 
-
-# Apoplication imports
-from core.utils import Logger
-
-
-ROOT_FILE_PTH = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
 app.config.from_object("core.config.ProductionConfig")
 # app.config.from_object("core.config.DevelopmentConfig")
 
+# Apoplication imports
+from .__builtins__ import *
+
+
+
 oidc          = OpenIDConnect(app)
 login_manager = LoginManager(app)
 bcrypt        = Bcrypt(app)
-logger        = Logger().get_logger()
 
 def oidc_loggedin():
     return oidc.user_loggedin

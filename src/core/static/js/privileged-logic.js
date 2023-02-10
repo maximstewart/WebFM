@@ -42,12 +42,12 @@ const uploadFiles = (files = null) => {
             file = files[i];
             name = file.name;
             data = createFormDataFiles([file]);
-            doAjaxUpload('upload', data, name, "upload-file");
+            doAjaxUpload('api/upload', data, name, "upload-file");
         }
     } else { // Single upload...
         data = createFormDataFiles(files);
         name = files[0].name;
-        doAjaxUpload('upload', data, name, "upload-file");
+        doAjaxUpload('api/upload', data, name, "upload-file");
     }
 }
 

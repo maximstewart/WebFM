@@ -69,7 +69,7 @@ class FilesList extends React.Component {
             if (filetype === "video") {
                 card_header = name;
                 card_body   = <React.Fragment>
-                                <img class="card-img-top" src={"static/imgs/thumbnails/" + hash + ".jpg?d=" + Date.now()} alt={name} />
+                                <img class="card-img-top card-image" src="" alt={name} />
                                 <span class="float-right">{fsize}</span>
                             </React.Fragment>;
             } else if (filetype === "image") {
@@ -163,6 +163,7 @@ const renderFilesList = (data = null) => {
         React.createElement(FilesList, data),
         filesListElm
     )
+
     videoPlaylist = document.body.querySelectorAll('[ftype="video"][value="Open"]'); // With attributes ftype and value
 }
 

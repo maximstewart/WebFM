@@ -1,4 +1,7 @@
+from . import Images
+from . import CRUD
 from . import Routes
+from . import Favorites
 from .pages import Flask_Login
 from .pages import Flask_Register
 from .pages import OIDC_Login

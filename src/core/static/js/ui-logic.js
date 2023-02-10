@@ -212,6 +212,38 @@ const clearSearch = () => {
     }
 }
 
+const loadThumbnails = () => {
+    fetchData("api/get-thumbnails").then((data) => {
+        const cards_imgs = document.body.querySelectorAll('.card-image');
+        const thumbnails = data["thumbnails"]
+        for (var i = 0; i < cards_imgs.length; i++) {
+            cards_imgs[i].src = "static/imgs/thumbnails/" + thumbnails[i][0] + ".jpg?d=" + Date.now();
+        }
+    });
+
+}
+
+const loadBackgroundPoster = () => {
+    fetchData("api/get-background-poster-trailer").then((data) => {
+        if (data.hasOwnProperty("trailer")) {
+            let trailerBttn = document.getElementById("trailer-btn");
+            let trailerLink = document.getElementById("trailer-link");
+            if (data.trailer !== null) {
+                trailerBttn.style.display     = "";
+                trailerLink.href = `javascript: showFile( "Trailer", "${data.trailer}", "", "trailer" )`;
+            } else {
+                trailerBttn.style.display     = "none";
+                trailerLink.href = "#";
+            }
+
+            if (data.poster !== null) {
+                background_image = "api/file-manager-action/files/000.jpg?d=" + Date.now();
+                updateBackground(background_image, false);
+            }
+        }
+    });
+}
+
 
 const updateBackground = (srcLink, isvideo = true) => {
     try {

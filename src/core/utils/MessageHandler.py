@@ -1,6 +1,7 @@
-# Gtk imports
-
 # Python imports
+import json
+
+# Lib imports
 
 # Application imports
 
@@ -10,5 +11,14 @@ class MessageHandler:
         print("MessageHandler initialized...")
 
 
-    def create_JSON_message(self, type, text):
+    def create(self, type, text):
         return '{"message": { "type": "' + type +  '", "text": "' + text + '" } }'
+
+    def backgrounds(self, files):
+        return '{ "backgrounds": ' + json.dumps(files) + '}'
+
+    def thumbnails(self, files):
+        return '{ "thumbnails": ' + json.dumps(files) + '}'
+
+    def faves_list(self, faves):
+        return '{"faves_list":' + json.dumps(faves) + '}'

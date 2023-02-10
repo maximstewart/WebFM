@@ -51,18 +51,6 @@ const updateHTMLDirList = async (data) => {
     let isInFaves        = data.in_fave;
     let background_image = (images[0]) ? images[0][0] : "";
 
-    if (data.hasOwnProperty("trailer")) {
-        let trailerBttn = document.getElementById("trailer-btn");
-        let trailerLink = document.getElementById("trailer-link");
-        if (data.trailer !== null) {
-            trailerBttn.style.display     = "";
-            trailerLink.href = `javascript: showFile( "Trailer", "${data.trailer}", "", "trailer" )`;
-        } else {
-            trailerBttn.style.display     = "none";
-            trailerLink.href = "#";
-        }
-    }
-
     document.getElementById("path").innerText = data.path_head;
     // Setup background if there is a 000.* in selection
     if (background_image.match(/000\.(jpg|png|gif)\b/) != null) {
@@ -80,5 +68,8 @@ const updateHTMLDirList = async (data) => {
     else
         tggl_faves_btn.classList.remove("btn-info");
 
+
     renderFilesList(data.list);
+    loadBackgroundPoster();
+    loadThumbnails();
 }
