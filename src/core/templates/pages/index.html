@@ -14,6 +14,7 @@
 {% endblock body_header_additional %}
 
 {% block body_content_additional %}
+    <span id="VAPID_PUBLIC_KEY" class="hidden">{{VAPID_PUBLIC_KEY}}</span>
     <div id="files" class="row">
     </div>
     {% block favorites_modal %}
@@ -26,16 +27,16 @@
 
 {% block body_scripts_additional %}
     <!-- App JS -->
-    <script type="text/jsx" src="{{ url_for('static', filename='js/react-ui-logic.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/ui-logic.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/post-ajax.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/ajax.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/video-events.js')}}"></script>
+    <script type="text/jsx" src="{{ url_for('static', filename='js/webfm/react-ui-logic.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/webfm/ui-logic.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/webfm/post-ajax.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/webfm/ajax.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/webfm/video-events.js')}}"></script>
 
     {% if oidc_loggedin() and oidc_isAdmin() %}
-        <script src="{{ url_for('static', filename='js/privileged-logic.js')}}"></script>
-        <script src="{{ url_for('static', filename='js/events-privileged.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/webfm/privileged-logic.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/webfm/events-privileged.js')}}"></script>
     {% endif %}
 
-    <script src="{{ url_for('static', filename='js/events.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/webfm/events.js')}}"></script>
 {% endblock body_scripts_additional %}

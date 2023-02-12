@@ -15,11 +15,13 @@ const setPosition = ({ top, left }) => {
 };
 
 
-window.addEventListener("click", e => {
+document.body.addEventListener("click", e => {
     if(menuVisible) toggleMenu("hide");
 });
 
-window.addEventListener("contextmenu", e => {
+document.body.addEventListener("contextmenu", e => {
+    e.preventDefault();
+
     let target = e.target;
     let elm    = target;
     while (elm.nodeName != "BODY") {
@@ -50,6 +52,7 @@ window.addEventListener("contextmenu", e => {
         left: posX,
         top: posY
     };
+
     setPosition(origin);
     return false;
 });

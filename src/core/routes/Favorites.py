@@ -7,10 +7,6 @@ from flask import request
 from core import app
 from core import db
 from core import Favorites             # Get from __init__
-from core.utils import MessageHandler  # Get simple message processor
-
-
-json_message = MessageHandler()
 
 
 

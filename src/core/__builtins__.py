@@ -11,6 +11,7 @@ from flask import session
 # Application imports
 from core import app
 from core.utils import Logger
+from core.utils import MessageHandler       # Get simple message processor
 
 
 
@@ -51,7 +52,7 @@ builtins.BG_IMGS_PATH      = ROOT_FILE_PTH + "/static/imgs/backgrounds/"
 builtins.BG_FILE_TYPE      = (".webm", ".mp4", ".gif", ".jpg", ".png", ".webp")
 builtins.valid_fname_pat   = re.compile(r"[a-z0-9A-Z-_\[\]\(\)\| ]{4,20}")
 builtins.logger            = Logger().get_logger()
-
+builtins.json_message      = MessageHandler()
 
 
 # NOTE: Need threads defined befor instantiating

@@ -9,17 +9,12 @@ from flask_uploads import ALL
 from flask_uploads import configure_uploads
 from flask_uploads import UploadSet
 
-
 # App imports
                                             # Get from __init__
 from core import app
 from core import db
 from core import Favorites
 from core import oidc
-
-from core.utils import MessageHandler       # Get simple message processor
-
-json_message = MessageHandler()
 
 
 

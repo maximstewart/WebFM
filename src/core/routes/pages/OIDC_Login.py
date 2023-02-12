@@ -1,17 +1,19 @@
 # Python imports
 
 # Lib imports
-from flask import request, redirect, flash
-
+from flask import request
+from flask import redirect
+from flask import flash
 
 # App imports
-from ... import app, oidc
+from ... import app
+from ... import oidc
+
 
 
 @app.route('/oidc-login', methods=['GET', 'POST'])
 @oidc.require_login
 def oidc_login():
-    print(request)
     return redirect("/")
 
 

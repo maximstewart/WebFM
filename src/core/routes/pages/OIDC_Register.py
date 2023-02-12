@@ -1,14 +1,18 @@
 # Python imports
 
 # Lib imports
-from flask import request, render_template, url_for, redirect, flash
+from flask import request
+from flask import render_template
+from flask import url_for
+from flask import redirect
+from flask import flash
 
 # App imports
-from ... import app, oidc, db   # Get from __init__
-from ...utils import MessageHandler   # Get simple message processor
+        # Get from __init__
+from ... import app
+from ... import oidc
+from ... import db
 
-
-msgHandler = MessageHandler()
 
 
 @app.route('/oidc-register', methods=['GET', 'POST'])

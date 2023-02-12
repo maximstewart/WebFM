@@ -5,20 +5,15 @@ import os
 from flask import redirect
 from flask import request
 from flask import render_template
+from flask import session
 from flask import send_from_directory
 
 # App imports
-                                            # Get from __init__
+                            # Get from __init__
 from core import app
 from core import db
 from core import Favorites
 from core import oidc
-
-from core.utils import MessageHandler       # Get simple message processor
-
-
-
-json_message = MessageHandler()
 
 
 
@@ -32,7 +27,6 @@ def home():
 
     return render_template('error.html', title = 'Error!',
                             message = 'Must use GET request type...')
-
 
 
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
@@ -73,7 +67,6 @@ def listFiles(_hash = None):
     else:
         msg = "Can't manage the request type..."
         return json_message.create("danger", msg)
-
 
 
 @app.route('/api/file-manager-action/<_type>/<_hash>', methods=['GET', 'POST'])

@@ -6,7 +6,11 @@ from flask import Flask
 from flask_oidc import OpenIDConnect
     # Flask Login Path
 from flask_bcrypt import Bcrypt
-from flask_login import current_user, login_user, logout_user, LoginManager
+from flask_login import current_user
+from flask_login import login_user
+from flask_login import logout_user
+from flask_login import LoginManager
+
 
 app = Flask(__name__)
 app.config.from_object("core.config.ProductionConfig")
@@ -36,10 +40,14 @@ app.jinja_env.globals['oidc_isAdmin']  = oidc_isAdmin
 app.jinja_env.globals['TITLE']         = app.config["TITLE"]
 
 
-from core.models import db, User, Favorites
+from core.models import db
+from core.models import User
+from core.models import Favorites
+
 db.init_app(app)
 with app.app_context():
     db.create_all()
 
-from core.forms import RegisterForm, LoginForm
+from core.forms import RegisterForm
+from core.forms import LoginForm
 from core import routes

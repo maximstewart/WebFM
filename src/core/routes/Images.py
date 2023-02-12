@@ -6,17 +6,15 @@ import shutil
 # Lib imports
 from flask import request
 
-
 # App imports
                                             # Get from __init__
 from core import app
-
-from core.utils import MessageHandler       # Get simple message processor
 from core.utils.tmdbscraper import scraper  # Get media art scraper
 
 
-json_message = MessageHandler()
-tmdb         = scraper.get_tmdb_scraper()
+
+tmdb = scraper.get_tmdb_scraper()
+
 
 
 @app.route('/api/get-background-poster-trailer', methods=['GET', 'POST'])

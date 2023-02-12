@@ -1,11 +1,12 @@
 # System imports
 
 # Lib imports
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
 # App imports
-from . import app, login_manager
-from flask_login import UserMixin
+from . import app
+from . import login_manager
 
 
 db = SQLAlchemy(app)

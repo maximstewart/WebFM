@@ -1,15 +1,24 @@
 # Python imports
 
 # Lib imports
-from flask import request, render_template, flash, redirect, url_for
-from flask_login import current_user, login_user, logout_user
+from flask import request
+from flask import render_template
+from flask import flash
+from flask import redirect
+from flask import url_for
+
+from flask_login import current_user
+from flask_login import login_user
+from flask_login import logout_user
 
 # App imports
-from core import app, bcrypt, db, User, LoginForm
-from core.utils import MessageHandler   # Get simple message processor
+from core import app
+from core import bcrypt
+from core import db
+from core import User
+from core import LoginForm
 
 
-msgHandler = MessageHandler()
 
 @app.route('/app-login', methods=['GET', 'POST'])
 def app_login():

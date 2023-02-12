@@ -1,12 +1,12 @@
 # System import
-import os, secrets
+import os
+import secrets
 from datetime import timedelta
-
 
 # Lib imports
 
-
 # Apoplication imports
+
 
 
 # Configs
@@ -44,8 +44,8 @@ class Config(object):
     # We are overiding some of the the shellmen view settings with these to make it all work with flask.
     # These are passed along to the shellmen view from the Routes file upon the window controller creation.
     ABS_THUMBS_PTH = f"{STATIC_FPTH}/imgs/thumbnails"    # Used for thumbnail generation
-    REMUX_FOLDER   = f"{STATIC_FPTH}/remuxs"             # Remuxed files folder
-    FFMPG_THUMBNLR = f"{STATIC_FPTH}/ffmpegthumbnailer"  # Thumbnail generator binary
+    REMUX_FOLDER   = f"{STATIC_FPTH}/remuxs"               # Remuxed files folder
+    FFMPG_THUMBNLR = f"{STATIC_FPTH}/ffmpegthumbnailer"    # Thumbnail generator binary
 
 
 

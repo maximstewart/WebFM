@@ -53,9 +53,7 @@ class FilesList extends React.Component {
 
         for (let file of files) {
             const name    = file[0];
-            if (name == "000.jpg") {
-                continue
-            }
+            if (name == "000.jpg") { continue }
 
             const hash    = file[1];
             const fsize   = file[2];
