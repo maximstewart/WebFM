@@ -29,6 +29,8 @@ const loadBackground = () => {
         setCookie('bgSlug', path);
         setBackgroundElement(bgElm, path);
     } else {
+        // NOTE: Probably in IFRAME and unloaded the background...
+        if (!bgElm) return ;
         setBackgroundElement(bgElm, bgPath);
     }
 }

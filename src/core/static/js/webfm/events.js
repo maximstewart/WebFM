@@ -41,10 +41,10 @@ const openFile = (eve) => {
 
     if (ftype === "dir") {
         listFilesAjax(hash);
-    } else if (ftype === "video") {
-        showFile(title, hash, extension, "video", target);
+    } else if (ftype === "video" || ftype === "stream") {
+        showFile(title, hash, extension, ftype, target);
     } else {
-        showFile(title, hash, extension, "file");
+        showFile(title, hash, extension, ftype);
     }
 }
 

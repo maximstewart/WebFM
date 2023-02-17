@@ -41,6 +41,8 @@ def delete_item(_hash = None):
             msg = "[Error] Unable to delete the file/folder...."
             return json_message.create("danger", msg)
 
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)
 
 
 @app.route('/api/create/<_type>', methods=['GET', 'POST'])
@@ -77,9 +79,9 @@ def create_item(_type = None):
 
         msg = "[Success] created the file/dir..."
         return json_message.create("success", msg)
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)
 
 
 @app.route('/api/upload', methods=['GET', 'POST'])
@@ -109,6 +111,6 @@ def upload():
 
         msg = "[Success] Uploaded file(s)..."
         return json_message.create("success", msg)
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)

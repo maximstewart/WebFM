@@ -11,7 +11,7 @@ from core import Favorites             # Get from __init__
 
 
 @app.route('/api/list-favorites', methods=['GET', 'POST'])
-def listFavorites():
+def list_favorites():
     if request.method == 'POST':
         list  = db.session.query(Favorites).all()
         faves = []
@@ -19,12 +19,12 @@ def listFavorites():
             faves.append([fave.link, fave.id])
 
         return json_message.faves_list(faves)
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)
 
 @app.route('/api/load-favorite/<_id>', methods=['GET', 'POST'])
-def loadFavorite(_id):
+def load_favorite(_id):
     if request.method == 'POST':
         try:
             ID   = int(_id)
@@ -36,13 +36,13 @@ def loadFavorite(_id):
             print(repr(e))
             msg = "Incorrect Favorites ID..."
             return json_message.create("danger", msg)
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)
 
 
 @app.route('/api/manage-favorites/<_action>', methods=['GET', 'POST'])
-def manageFavorites(_action):
+def manage_favorites(_action):
     if request.method == 'POST':
         ACTION   = _action.strip()
         view     = get_view()
@@ -62,6 +62,6 @@ def manageFavorites(_action):
 
         db.session.commit()
         return json_message.create("success", msg)
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)

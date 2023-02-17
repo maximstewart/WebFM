@@ -1,5 +1,7 @@
 # Python imports
 import os
+# import subprocess
+import uuid
 
 # Lib imports
 from flask import redirect
@@ -30,7 +32,7 @@ def home():
 
 
 @app.route('/api/list-files/<_hash>', methods=['GET', 'POST'])
-def listFiles(_hash = None):
+def list_files(_hash = None):
     if request.method == 'POST':
         view     = get_view()
         dot_dots = view.get_dot_dots()
@@ -64,13 +66,13 @@ def listFiles(_hash = None):
         in_fave  = "true" if fave else "false"
         files.update({'in_fave': in_fave})
         return files
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)
 
 
 @app.route('/api/file-manager-action/<_type>/<_hash>', methods=['GET', 'POST'])
-def fileManagerAction(_type, _hash = None):
+def file_manager_action(_type, _hash = None):
     view = get_view()
 
     if _type == "reset-path" and _hash == "None":
@@ -86,20 +88,39 @@ def fileManagerAction(_type, _hash = None):
     if _type == "files":
         logger.debug(f"Downloading:\n\tDirectory: {folder}\n\tFile: {file}")
         return send_from_directory(directory=folder, filename=file)
+
     if _type == "remux":
         # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
         # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
         # I.E....this is stupid but for now works better than nothing
         good_result = view.remux_video(_hash, fpath)
-        if good_result:
-            return '{"path":"static/remuxs/' + _hash + '.mp4"}'
-        else:
+        if not good_result:
             msg = "Remuxing: Remux failed or took too long; please, refresh the page and try again..."
-            return json_message.create("success", msg)
+            return json_message.create("warning", msg)
 
-    if _type == "remux":
-        stream_target = view.remux_video(_hash, fpath)
+        return '{"path":"static/remuxs/' + _hash + '.mp4"}'
 
+    if _type == "stream":
+        process = get_stream()
+        if process:
+            if not kill_stream(process):
+                msg = "Couldn't stop an existing stream!"
+                return json_message.create("danger", msg)
+
+        _sub_uuid      = uuid.uuid4().hex
+        _video_path    = fpath
+        _stub          = f"{_hash}{_sub_uuid}"
+        _rtsp_path     = f"rtsp://www.{app_name.lower()}.com:8554/{_stub}"
+        _webrtc_path   = f"http://www.{app_name.lower()}.com:8889/{_stub}/"
+        _stream_target = _rtsp_path
+
+        stream = get_stream(_video_path, _stream_target)
+        if stream.poll():
+            msg = "Streaming: Setting up stream failed! Please try again..."
+            return json_message.create("danger", msg)
+
+        _stream_target = _webrtc_path
+        return {"stream": _stream_target}
 
     # NOTE: Positionally protecting actions further down that are privlidged
     #       Be aware of ordering!
@@ -116,3 +137,20 @@ def fileManagerAction(_type, _hash = None):
         msg = "Opened media..."
         view.open_file_locally(fpath)
         return json_message.create("success", msg)
+
+
+@app.route('/api/stop-current-stream', methods=['GET', 'POST'])
+def stop_current_stream():
+    type    = "success"
+    msg     = "Stopped found stream process..."
+    process = get_stream()
+
+    if process:
+        if not kill_stream(process):
+            type = "danger"
+            msg  = "Couldn't stop an existing stream!"
+    else:
+        type = "warning"
+        msg  = "No stream process found. Nothing to stop..."
+
+    return json_message.create(type, msg)

@@ -63,11 +63,13 @@ const updateHTMLDirList = async (data) => {
 
     // Set faves state
     let tggl_faves_btn = document.getElementById("tggl-faves-btn");
-    if (isInFaves == "true")
-        tggl_faves_btn.classList.add("btn-info");
-    else
-        tggl_faves_btn.classList.remove("btn-info");
-
+    if (isInFaves == "true") {
+        tggl_faves_btn.classList.remove("btn-secondary");
+        tggl_faves_btn.classList.add("btn-warning");
+    } else {
+        tggl_faves_btn.classList.add("btn-secondary");
+        tggl_faves_btn.classList.remove("btn-warning");
+    }
 
     renderFilesList(data.list);
     loadBackgroundPoster();

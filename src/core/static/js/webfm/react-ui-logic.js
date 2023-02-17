@@ -55,14 +55,16 @@ class FilesList extends React.Component {
             const name    = file[0];
             if (name == "000.jpg") { continue }
 
-            const hash    = file[1];
-            const fsize   = file[2];
-            let extension = re.exec( name.toLowerCase() )[1] ? name : "file.dir";
-            let data      = setFileIconType(extension);
-            let icon      = data[0];
-            let filetype  = data[1];
+            const hash      = file[1];
+            const fsize     = file[2];
+            let extension   = re.exec( name.toLowerCase() )[1] ? name : "file.dir";
+            let data        = setFileIconType(extension);
+            let icon        = data[0];
+            let filetype    = data[1];
             let card_header = null;
             let card_body   = null;
+            let download_button = null;
+            let stream_button   = null;
 
             if (filetype === "video") {
                 card_header = name;
@@ -70,6 +72,10 @@ class FilesList extends React.Component {
                                 <img class="card-img-top card-image" src="" alt={name} />
                                 <span class="float-right">{fsize}</span>
                             </React.Fragment>;
+                stream_button =  <React.Fragment>
+                                    <input hash={hash} onClick={this.openThis} ftype="stream" class="btn btn-dark btn-sm float-end" title={name} type="button"  value="Stream"/>
+                                </React.Fragment>;
+
             } else if (filetype === "image") {
                 card_header = name;
                 card_body   = <React.Fragment>
@@ -82,7 +88,11 @@ class FilesList extends React.Component {
                                 {name}
                                 <span>{fsize}</span>
                             </React.Fragment>;
-
+            }
+            if (filetype !== "dir") {
+                download_button = <React.Fragment>
+                                    <a href={"api/file-manager-action/files/" + hash} download class="btn btn-dark btn-sm float-start">Download</a>
+                                </React.Fragment>;
             }
 
             final.push(
@@ -95,9 +105,10 @@ class FilesList extends React.Component {
                             {card_body}
                         </div>
                         <div class="card-footer">
-                            <a href={"api/file-manager-action/files/" + hash} download class="btn btn-dark btn-sm float-start">Download</a>
+                            {download_button}
                             <input hash={hash} onClick={this.openThisLocally} ftype={filetype} class="btn btn-dark btn-sm float-start" type="button" value="Open Locally"/>
                             <input hash={hash} onClick={this.openThis} ftype={filetype} class="btn btn-dark btn-sm float-end" title={name} type="button" value="Open"/>
+                            {stream_button}
                         </div>
                     </div>
                 </li>

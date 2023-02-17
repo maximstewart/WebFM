@@ -18,7 +18,7 @@ tmdb = scraper.get_tmdb_scraper()
 
 
 @app.route('/api/get-background-poster-trailer', methods=['GET', 'POST'])
-def getPosterTrailer():
+def get_poster_trailer():
     if request.method == 'GET':
         info     = {}
         view     = get_view()
@@ -69,6 +69,8 @@ def getPosterTrailer():
 
         return info
 
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)
 
 @app.route('/backgrounds', methods=['GET', 'POST'])
 def backgrounds():
@@ -81,10 +83,10 @@ def backgrounds():
     return json_message.backgrounds(files)
 
 @app.route('/api/get-thumbnails', methods=['GET', 'POST'])
-def getThumbnails():
+def get_thumbnails():
     if request.method == 'GET':
         view   = get_view()
         return json_message.thumbnails( view.get_video_icons() )
-    else:
-        msg = "Can't manage the request type..."
-        return json_message.create("danger", msg)
+
+    msg = "Can't manage the request type..."
+    return json_message.create("danger", msg)

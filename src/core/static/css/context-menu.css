@@ -1,3 +1,8 @@
+#ctxDownload,
+#img2Tab {
+    display: none;
+}
+
 .menu {
     width: 165px;
     z-index: 999;
@@ -7,15 +12,17 @@
     display: none;
     transition: 0.2s display ease-in;
 }
+
 .menu .menu-options {
     list-style: none;
-    padding: 10px 0;
     z-index: 1;
+    padding: unset !important;
+    margin: unset !important;
 }
+
 .menu .menu-options .menu-option {
     font-weight: 500;
-    z-index: 1;
-    padding: 10px 40px 10px 20px;
+    padding: 10px 20px 10px 20px;
     cursor: pointer;
 }
 
@@ -28,9 +35,11 @@ button {
     background: grey;
     border: none;
 }
+
 button .next {
     color: green;
 }
+
 button[disabled="false"]:hover .next {
     color: red;
     animation: move 0.5s;

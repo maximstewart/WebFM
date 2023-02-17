@@ -1,4 +1,6 @@
 # Python imports
+import os
+import subprocess
 
 # Lib imports
 from flask import Flask
@@ -10,7 +12,6 @@ from flask_login import current_user
 from flask_login import login_user
 from flask_login import logout_user
 from flask_login import LoginManager
-
 
 app = Flask(__name__)
 app.config.from_object("core.config.ProductionConfig")
@@ -38,6 +39,7 @@ def oidc_isAdmin():
 app.jinja_env.globals['oidc_loggedin'] = oidc_loggedin
 app.jinja_env.globals['oidc_isAdmin']  = oidc_isAdmin
 app.jinja_env.globals['TITLE']         = app.config["TITLE"]
+
 
 
 from core.models import db

@@ -49,7 +49,7 @@ const scrollFilesToTop = () => {
 }
 
 
-const closeFile = () => {
+const closeFile = async () => {
     const video         = document.getElementById("video");
     const trailerPlayer = document.getElementById("trailerPlayer")
     let title           = document.getElementById("selectedFile");
@@ -65,6 +65,9 @@ const closeFile = () => {
 
     trailerPlayer.src           = "#";
     trailerPlayer.style.display = "none";
+
+    // FIXME: Yes, a wasted call every time there is no stream.
+    await fetchData("api/stop-current-stream");
     clearSelectedActiveMedia();
     clearModalFades();
 }
@@ -79,15 +82,16 @@ const showFile = async (title, hash, extension, type, target=null) => {
     let titleElm       = document.getElementById("selectedFile");
     titleElm.innerText = title;
 
-    if (type === "video") {
-        setupVideo(hash, extension);
+    // FIXME: Yes, a wasted call every time there is no stream.
+    await fetchData("api/stop-current-stream");
+    if (type === "video" || type === "stream") {
+        isStream = (type === "stream")
+        setupVideo(hash, extension, isStream);
         setSelectedActiveMedia(target);
-    }
-    if (type === "file") {
-        setupFile(hash, extension);
-    }
-     if (type === "trailer") {
+    } else if (type === "trailer") {
         launchTrailer(hash);
+    } else {
+        setupFile(hash, extension);
     }
 }
 
@@ -100,7 +104,7 @@ const launchTrailer = (link) => {
     modal.show();
 }
 
-const setupVideo = async (hash, extension) => {
+const setupVideo = async (hash, extension, isStream=false) => {
     let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
     let video           = document.getElementById("video");
     video.poster        = "static/imgs/icons/loading.gif";
@@ -109,13 +113,23 @@ const setupVideo = async (hash, extension) => {
     video_path          = "api/file-manager-action/files/" + hash;
 
     clearSelectedActiveMedia();
-    try {
+     try {
         if ((/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)$/i).test(extension)) {
             if ((/\.(avi|mkv|wmv|flv|f4v)$/i).test(extension)) {
-                data = await fetchData( "api/file-manager-action/remux/" + hash );
-                if ( data.hasOwnProperty('path') ) {
-                    video_path = data.path;
+                if (isStream) {
+                    data = await fetchData( "api/file-manager-action/stream/" + hash );
+                    if (data.hasOwnProperty('stream')) {
+                        video_path = data.stream;
+                    }
                 } else {
+                    data = await fetchData( "api/file-manager-action/remux/" + hash );
+                    if (data.hasOwnProperty('path')) {
+                        video_path = data.path;
+                    }
+                }
+
+                if (data.hasOwnProperty('path') === null &&
+                data.hasOwnProperty('stream') === null) {
                     displayMessage(data.message.text, data.message.type);
                     return;
                 }
@@ -254,14 +268,16 @@ const updateBackground = (srcLink, isvideo = true) => {
 
 
 const manageFavorites = (elm) => {
-    const classType = "btn-info";
+    const classType = "btn-warning";
     const hasClass  = elm.classList.contains(classType);
     if (hasClass) {
-        elm.classList.remove(classType);
         action = "delete";
+        elm.classList.remove(classType);
+        elm.classList.add("btn-secondary");
     } else {
-        elm.classList.add(classType);
         action = "add";
+        elm.classList.add(classType);
+        elm.classList.remove("btn-secondary");
     }
 
     manageFavoritesAjax(action);

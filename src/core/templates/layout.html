@@ -40,15 +40,7 @@
 {% endblock %}
 <body>
     <video id="bg" src="" poster="" autoplay loop> </video>
-
-    <div class="menu">
-        <ul class="menu-options">
-            <li class="menu-option" onclick="goUpADirectory()">Back</li>
-            <li class="menu-option" onclick="goHome()">Home Directory</li>
-            <li class="menu-option" onclick="downloadItem()">Download</li>
-            <li class="menu-option" onclick="deleteItem()">Delete</li>
-        </ul>
-    </div>
+    {% include "context-menu.html" %}
 
     {% block body_header %}
         {% include "body-header.html" %}
