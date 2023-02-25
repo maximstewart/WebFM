@@ -9,10 +9,14 @@ document.body.onload = (eve) => {
 
         // Stylesheet for iframe views
         let  link = document.createElement("link");
-        link.href = "static/css/iframe.css";
+        link.href = "static/css/webfm/iframe.css";
         link.type = "text/css";
         link.rel  = "stylesheet";
         document.getElementsByTagName("head")[0].appendChild(link);
+    }
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("On mobile...");
     }
 
     setTimeout(function () {

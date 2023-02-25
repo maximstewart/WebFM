@@ -68,7 +68,7 @@ rtspDisable: no
 # UDP-multicast allows to save bandwidth when clients are all in the same LAN.
 # TCP is the most versatile, and does support encryption.
 # The handshake is always performed with TCP.
-protocols: [udp, multicast, tcp]
+protocols: [tcp, multicast, udp]
 # Encrypt handshakes and TCP streams with TLS (RTSPS).
 # Available values are "no", "strict", "optional".
 encryption: "no"
@@ -100,7 +100,7 @@ authMethods: [basic, digest]
 # RTMP parameters
 
 # Disable support for the RTMP protocol.
-rtmpDisable: yes
+rtmpDisable: no
 # Address of the RTMP listener. This is needed only when encryption is "no" or "optional".
 rtmpAddress: :1935
 # Encrypt connections with TLS (RTMPS).
@@ -120,12 +120,12 @@ rtmpServerCert: server.crt
 # HLS parameters
 
 # Disable support for the HLS protocol.
-hlsDisable: yes
+hlsDisable: no
 # Address of the HLS listener.
 hlsAddress: :8888
 # Enable TLS/HTTPS on the HLS server.
 # This is required for Low-Latency HLS.
-hlsEncryption: no
+hlsEncryption: yes
 # Path to the server key. This is needed only when encryption is yes.
 # This can be generated with:
 # openssl genrsa -out server.key 2048
@@ -135,12 +135,12 @@ hlsServerKey: server.key
 hlsServerCert: server.crt
 # By default, HLS is generated only when requested by a user.
 # This option allows to generate it always, avoiding the delay between request and generation.
-hlsAlwaysRemux: no
+hlsAlwaysRemux: yes
 # Variant of the HLS protocol to use. Available options are:
 # * mpegts - uses MPEG-TS segments, for maximum compatibility.
 # * fmp4 - uses fragmented MP4 segments, more efficient.
 # * lowLatency - uses Low-Latency HLS.
-hlsVariant: mpegts
+hlsVariant: lowLatency
 # Number of HLS segments to keep on the server.
 # Segments allow to seek through the stream.
 # Their number doesn't influence latency.
@@ -172,7 +172,7 @@ hlsTrustedProxies: []
 # WebRTC parameters
 
 # Disable support for the WebRTC protocol.
-webrtcDisable: no
+webrtcDisable: yes
 # Address of the WebRTC listener.
 webrtcAddress: :8889
 # Enable TLS/HTTPS on the WebRTC server.
@@ -197,7 +197,7 @@ webrtcTrustedProxies: []
 # TURN/TURNS servers are used as relay when a direct connection between server and clients is not possible.
 # if user is "AUTH_SECRET", then authentication is secret based.
 # the secret must be inserted into the pass field.
-webrtcICEServers: [stun:stun.l.google.com:19302]
+webrtcICEServers: [stun:stun.l.google.com:19302, stun:stun.services.mozilla.com]
 # List of public IP addresses that are to be used as a host.
 # This is used typically for servers that are behind 1:1 D-NAT.
 webrtcICEHostNAT1To1IPs: []

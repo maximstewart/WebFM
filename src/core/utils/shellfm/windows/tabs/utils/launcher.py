@@ -56,7 +56,7 @@ class Launcher:
         app_info.launch_uris_async(uris)
 
     def remux_video(self, hash, file):
-        remux_vid_pth = self.REMUX_FOLDER + "/" + hash + ".mp4"
+        remux_vid_pth = f"{self.REMUX_FOLDER}/{hash}.mp4"
         self.logger.debug(remux_vid_pth)
 
         if not os.path.isfile(remux_vid_pth):
@@ -77,7 +77,6 @@ class Launcher:
                 proc = subprocess.Popen(command)
                 proc.wait()
             except Exception as e:
-                self.logger.debug(message)
                 self.logger.debug(e)
                 return False
 

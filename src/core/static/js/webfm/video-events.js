@@ -1,91 +1,108 @@
-let fullScreenState = 0;
-let clicktapwait    = 200;
-let shouldPlay      = null;
-let controlsTimeout = null;
+let player          = null;
 let playListMode    = false;
 let videoPlaylist   = [];
-
-const getTimeFormatted = (duration = null) => {
-    if (duration == null) { return "00:00"; }
-
-    const hours   = (duration / 3600).toFixed(2).split(".")[0];
-    const minutes = (duration / 60).toFixed(2).split(".")[0];
-    const time    = (duration / 60).toFixed(2)
-    const seconds = Math.floor( (time - Math.floor(time) ) * 60);
-
-    return hours + ":" + minutes + ":" + seconds;
-}
+let clicktapwait    = 200;
+let shouldPlay      = null;
 
 
-const togglePlay = (video) => {
-    shouldPlay = setTimeout(function () {
-        shouldPlay = null;
-        if (video.paused) {
-            video.style.cursor = 'none';
-            video.play();
+let jplayerOptions  = {
+    solution: "html,aurora,flash",
+    supplied: "m4v, ogv",
+    cssSelectorAncestor: "#video-container",
+    swfPath: "static/js/libs/jplayer/jquery.jplayer.swf",
+    useStateClassSkin: true,
+    loop: true,
+    autoBlur: false,
+    smoothPlayBar: true,
+    remainingDuration: true,
+    toggleDuration: true,
+    ended: function() {
+        if (!playListMode) {
+            $(this).jPlayer("play");
         } else {
-            video.style.cursor = '';
-            video.pause();
+            nextMedia();
         }
-    }, 300);
-}
-
-
-const setFullscreenSettings = (parentElm, video) => {
-    parentElm.requestFullscreen();
-    video.classList.remove("viewer");
-    video.style.cursor    = 'none';
-    video.style.height    = 'inherit';
-    video.style.width     = 'inherit';
-
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-        video.style.transform = 'rotate(90deg)';
+    },
+    keyEnabled: true,
+    keyBindings: {
+        play: {
+            key: 32, // p
+            fn: function(f) {
+                if(f.status.paused) {
+                    f.play();
+                } else {
+                    f.pause();
+                }
+            }
+        },
+        play2: {
+            key: 80, // p
+            fn: function(f) {
+                if(f.status.paused) {
+                    f.play();
+                } else {
+                    f.pause();
+                }
+            }
+        },
+        fullScreen: {
+            key: 70, // f
+            fn: function(f) {
+                if(f.status.video || f.options.audioFullScreen) {
+                    f._setOption("fullScreen", !f.options.fullScreen);
+                }
+            }
+        },
+        muted: {
+            key: 77, // m
+            fn: function(f) {
+                f._muted(!f.options.muted);
+            }
+        },
+        volumeUp: {
+            key: 38, // UP Arrow
+            fn: function(f) {
+                f.volume(f.options.volume + 0.1);
+            }
+        },
+        volumeDown: {
+            key: 40, // DOWN Arrow
+            fn: function(f) {
+                f.volume(f.options.volume - 0.1);
+            }
+        },
+        loop: {
+            key: 76, // l
+            fn: function(f) {
+                f._loop(!f.options.loop);
+            }
+        },
+        seekForward: {
+            key: 39, // Right arrow
+            fn: function(f) {
+                f.playHead((f.status.currentPercentRelative + 5));
+            }
+        },
+        seekBackward: {
+            key: 37, // Left arrow
+            fn: function(f) {
+                f.playHead((f.status.currentPercentRelative - 5));
+            }
+        },
     }
+
 }
 
-const unsetFullscreenSettings = (video) => {
-    video.classList.add("viewer");
-    video.style.transform = '';
-    video.style.cursor    = '';
-    video.style.height    = '';
-    video.style.width     = '';
-}
+if(/Android/i.test(navigator.userAgent)) {
+    console.log("Using patched player for Android.");
+    player = $("#video").jPlayerAndroidFix(jplayerOptions);
+} else {
+    console.log("Using regular player.");
+    player = $("#video").jPlayer(jplayerOptions);
 
-const toggleFullscreen = (video) => {
-    let containerElm = document.getElementById("video-container");
-    let parentElm    = video.parentElement;
-
-    if (video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen) {
-        setFullscreenSettings(parentElm, video);
-    }
-
-    if (fullScreenState == 2) {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-            unsetFullscreenSettings(video);
-        } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-            unsetFullscreenSettings(video);
-        } else if (document.msExitFullscreen) {     /* IE11 */
-            document.msExitFullscreen();
-            unsetFullscreenSettings(video);
-        }
-
-        fullScreenState   = 0;
-    }
-
-    fullScreenState += 1;
-}
-
-const toggleVolumeControl = () => {
-    const volume = document.getElementById("volume-slider");
-    volume.style.display = (volume.style.display === "none") ? "" : "none";
 }
 
 
-const togglePlaylistMode = (elm) => {
-    playListMode = elm.checked;
-}
 
 const previousMedia = () => {
     const current_title = document.getElementById('selectedFile').innerText;
@@ -111,142 +128,65 @@ const nextMedia = () => {
     }
 }
 
+const togglePlaylistMode = (elm) => {
+    playListMode = elm.checked;
+    document.getElementsByClassName("jp-repeat")[0].click();
+}
 
-
-
-$("#video").on("loadedmetadata", function(eve){
-    const video             = eve.target;
-    let videoDuration       = document.getElementById("videoDuration");
-    videoDuration.innerText = getTimeFormatted(video.duration);
-});
-
-
-$("#video").on("keydown", function(eve) {
-    event.preventDefault();
-    const key   = eve.keyCode;
-    const video = eve.target;
-
-    if (key === 37) {               // Left key for back tracking 5 sec
-        video.currentTime -= 5;
-    } else if (key === 39) {        // Right key for fast forward 5 sec
-        video.currentTime += 5;
-    } else if (key === 38) {        // Up key for volume up
-        if (video.volume <= 1.0) {
-            video.volume += 0.05;
-        }
-    } else if (key === 40) {        // Down key for volume down
-        if (video.volume >= 0.0) {
-            video.volume -= 0.05;
-        }
+const loadMediaToPlayer = (title = "", video_path = "") => {
+    if(/Android/i.test(navigator.userAgent)) {
+        player.setMedia(video_path).play()
+    } else {
+        player.jPlayer("setMedia", {
+            webmv: video_path,
+            m4v: video_path,
+            wav: video_path,
+            ogv: video_path,
+            rtmp: video_path,
+            m3u8: video_path,
+            webma: video_path,
+            mp3: video_path,
+            m4a: video_path,
+            oga: video_path,
+            fla: video_path,
+            flv: video_path,
+            title: title,
+            poster: "static/imgs/icons/loading.gif"
+        }).jPlayer("play");
     }
+}
 
-});
-
-
-$("#video").on("keyup", function(eve) {
-    const key   = eve.keyCode;
-    const video = eve.target;
-
-    if (key === 32 || key === 80) { // Spacebar for pausing
-        togglePlay(video);
-    } else if (key === 70) {        // f key for toggling full screen
-        toggleFullscreen(video);
-    } else if (key === 76) {        // l key for toggling loop
-        if (myVideo.loop) {
-            myVideo.loop = false;
+const doPlayOrFullscreen = (node) => {
+    if (node.nodeName === "VIDEO") {
+        if(!shouldPlay) {
+            shouldPlay = setTimeout( function() {
+                shouldPlay = null;
+                document.getElementsByClassName("jp-play")[0].click();
+            }, clicktapwait);
         } else {
-            myVideo.loop = true;
-        }
-    } else if (key === 77) {        // m key for toggling sound
-        if (video.muted) {
-            video.muted = false;
-        } else {
-            video.muted = true;
+            clearTimeout(shouldPlay); // Stop single tap callback
+            shouldPlay = null;
+            document.getElementsByClassName("jp-full-screen")[0].click();
         }
     }
+}
+
+
+
+player.on("click", function(eve){
+    const node = eve.target;
+    doPlayOrFullscreen(node);
+
 });
 
-
-$("#video").on("click", function(eve){
-    const video = eve.target;
-
-    if(!shouldPlay) {
-        shouldPlay = setTimeout( function() {
-            shouldPlay = null;
-            togglePlay(video);
-        }, clicktapwait);
-    } else {
-        clearTimeout(shouldPlay); // Stop single tap callback
-        shouldPlay = null;
-        toggleFullscreen(video);
-    }
-    eve.preventDefault();
+player.on("touched", function(eve){
+    const node = eve.target;
+    doPlayOrFullscreen(node);
 });
-
-$("#video").on("touchend", function(eve){
-    const video = eve.target;
-
-    if(!shouldPlay) {
-        shouldPlay = setTimeout( function() {
-            shouldPlay = null;
-            togglePlay(video);
-        }, clicktapwait);
-    } else {
-        clearTimeout(shouldPlay); // Stop single tap callback
-        shouldPlay = null;
-        toggleFullscreen(video);
-    }
-    eve.preventDefault();
-});
-
-$( "#video").bind( "timeupdate", async function(eve) {
-    let videoDuration = document.getElementById("videoCurrentTime");
-    const video       = eve.target;
-    const seekto      = document.getElementById("seek-slider");
-    const vt          = video.currentTime * (100 / video.duration);
-
-    seekto.value            = vt;
-    videoDuration.innerText = getTimeFormatted(video.currentTime);
-});
-
-$( "#video").bind( "stalled", async function(eve) {
-    console.log("Stalled load...");
-});
-
-$( "#seek-slider").bind( "change", async function(eve) {
-    const slider = eve.target;
-    let video    = document.getElementById("video");
-    let seekto   = video.duration * (slider.value / 100);
-    video.currentTime = seekto;
-});
-
-$( "#volume-slider").bind( "change", async function(eve) {
-    const slider = eve.target;
-    let video    = document.getElementById("video");
-    let volumeto = slider.value;
-    video.volume = volumeto;
-});
-
-
-$( "#video").bind( "ended", async function(eve) {
-    if (!playListMode) {
-        const video       = eve.target;
-        const seekto      = document.getElementById("seek-slider");
-        const vt          = video.currentTime * (100 / video.duration);
-
-        seekto.value            = 0;
-        videoDuration.innerText = getTimeFormatted(video.currentTime);
-        video.play();
-    } else {
-        nextMedia();
-    }
-});
-
 
 $( "#previousVideoInPlaylist").bind( "click", async function(eve) {
     previousMedia();
 });
-
 
 $( "#nextVideoInPlaylist").bind( "click", async function(eve) {
     nextMedia();

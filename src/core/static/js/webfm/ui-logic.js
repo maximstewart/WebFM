@@ -50,19 +50,16 @@ const scrollFilesToTop = () => {
 
 
 const closeFile = async () => {
-    const video         = document.getElementById("video");
     const trailerPlayer = document.getElementById("trailerPlayer")
     let title           = document.getElementById("selectedFile");
 
-    document.getElementById("image-viewer").style.display   = "none";
-    document.getElementById("text-viewer").style.display    = "none";
-    document.getElementById("pdf-viewer").style.display     = "none";
+    document.getElementById("video_container").style.display = "node";
+    document.getElementById("image-viewer").style.display    = "none";
+    document.getElementById("text-viewer").style.display     = "none";
+    document.getElementById("pdf-viewer").style.display      = "none";
+    player.jPlayer("pause")
 
-    title.innerText     = "";
-    video.style.display = "none";
-    video.style.cursor  = '';
-    video.pause();
-
+    title.innerText             = "";
     trailerPlayer.src           = "#";
     trailerPlayer.style.display = "none";
 
@@ -73,17 +70,18 @@ const closeFile = async () => {
 }
 
 const showFile = async (title, hash, extension, type, target=null) => {
-    document.getElementById("image-viewer").style.display   = "none";
-    document.getElementById("text-viewer").style.display    = "none";
-    document.getElementById("pdf-viewer").style.display     = "none";
-    document.getElementById("video").style.display          = "none";
-    document.getElementById("trailerPlayer").style.display  = "none";
+    document.getElementById("image-viewer").style.display    = "none";
+    document.getElementById("text-viewer").style.display     = "none";
+    document.getElementById("pdf-viewer").style.display      = "none";
+    document.getElementById("video_container").style.display = "none";
+    document.getElementById("trailerPlayer").style.display   = "none";
 
     let titleElm       = document.getElementById("selectedFile");
     titleElm.innerText = title;
 
     // FIXME: Yes, a wasted call every time there is no stream.
     await fetchData("api/stop-current-stream");
+
     if (type === "video" || type === "stream") {
         isStream = (type === "stream")
         setupVideo(hash, extension, isStream);
@@ -96,8 +94,8 @@ const showFile = async (title, hash, extension, type, target=null) => {
 }
 
 const launchTrailer = (link) => {
-    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
-    let trailerPlayer   = document.getElementById("trailerPlayer");
+    let modal                   = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
+    let trailerPlayer           = document.getElementById("trailerPlayer");
     trailerPlayer.style.display = "";
     trailerPlayer.src           = link;
 
@@ -105,12 +103,11 @@ const launchTrailer = (link) => {
 }
 
 const setupVideo = async (hash, extension, isStream=false) => {
-    let modal           = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
-    let video           = document.getElementById("video");
-    video.poster        = "static/imgs/icons/loading.gif";
-    video.style.display = "";
-    video.src           = "#"
-    video_path          = "api/file-manager-action/files/" + hash;
+    document.getElementById("video_container").style.display = "";
+    const title = document.getElementById("selectedFile").innerText;
+    let modal   = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
+    video_path  = "api/file-manager-action/files/" + hash;
+    console.log("Using default path...");
 
     clearSelectedActiveMedia();
      try {
@@ -119,19 +116,21 @@ const setupVideo = async (hash, extension, isStream=false) => {
                 if (isStream) {
                     data = await fetchData( "api/file-manager-action/stream/" + hash );
                     if (data.hasOwnProperty('stream')) {
+                        console.log("Transfering to stream path...");
                         video_path = data.stream;
                     }
                 } else {
                     data = await fetchData( "api/file-manager-action/remux/" + hash );
                     if (data.hasOwnProperty('path')) {
+                        console.log("Transfering to remux path...");
                         video_path = data.path;
                     }
                 }
 
                 if (data.hasOwnProperty('path') === null &&
-                data.hasOwnProperty('stream') === null) {
-                    displayMessage(data.message.text, data.message.type);
-                    return;
+                    data.hasOwnProperty('stream') === null) {
+                        displayMessage(data.message.text, data.message.type);
+                        return;
                 }
             } else if ((/\.(flv|mov|m4v|mpg|mpeg)$/i).test(extension)) {
                 modal.hide();
@@ -140,7 +139,9 @@ const setupVideo = async (hash, extension, isStream=false) => {
             }
         }
 
-        video.src = video_path;
+
+        const fTitle = document.getElementById("selectedFile").innerText;
+        loadMediaToPlayer(title, video_path);
         modal.show();
     } catch (e) {
         video.style.display = "none";

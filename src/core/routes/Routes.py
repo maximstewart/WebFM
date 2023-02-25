@@ -111,7 +111,10 @@ def file_manager_action(_type, _hash = None):
         _video_path    = fpath
         _stub          = f"{_hash}{_sub_uuid}"
         _rtsp_path     = f"rtsp://www.{app_name.lower()}.com:8554/{_stub}"
+        _rtmp_path     = f"rtmp://www.{app_name.lower()}.com:1935/{_stub}"
+        _hls_path      = f"http://www.{app_name.lower()}.com:8888/{_stub}/"
         _webrtc_path   = f"http://www.{app_name.lower()}.com:8889/{_stub}/"
+
         _stream_target = _rtsp_path
 
         stream = get_stream(_video_path, _stream_target)
@@ -119,7 +122,7 @@ def file_manager_action(_type, _hash = None):
             msg = "Streaming: Setting up stream failed! Please try again..."
             return json_message.create("danger", msg)
 
-        _stream_target = _webrtc_path
+        _stream_target = _rtmp_path
         return {"stream": _stream_target}
 
     # NOTE: Positionally protecting actions further down that are privlidged

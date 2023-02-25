@@ -62,31 +62,50 @@ builtins.json_message    = MessageHandler()
 
 # NOTE: Need threads defined before instantiating
 
-def _start_rtsp_server():
-    PATH    = f"{ROOT_FILE_PTH}/utils/rtsp-server"
-    RAMFS   = "/dev/shm/webfm"
-    SYMLINK = f"{PATH}/m3u8_stream_files"
+def _start_rtsp_and_ntfy_server():
+    PATH      = f"{ROOT_FILE_PTH}/utils"
+    RTSP_PATH = f"{PATH}/rtsp-server"
+    NTFY_PATH = f"{PATH}/ntfy"
 
-    if not os.path.exists(PATH) or not os.path.exists(f"{PATH}/rtsp-simple-server"):
+    RAMFS     = "/dev/shm/webfm"
+    SYMLINK   = app.config['REMUX_FOLDER']
+
+    if not os.path.exists(RTSP_PATH) or not os.path.exists(f"{RTSP_PATH}/rtsp-simple-server"):
         msg = f"\n\nAlert: Reference --> https://github.com/aler9/rtsp-simple-server/releases" + \
-                f"\nPlease insure {PATH} exists and rtsp-simple-server binary is there.\n\n"
+                f"\nPlease insure {RTSP_PATH} exists and rtsp-simple-server binary is there.\n\n"
+        raise BuiltinsException(msg)
+
+    if not os.path.exists(NTFY_PATH) or not os.path.exists(f"{NTFY_PATH}/ntfy"):
+        msg = f"\n\nAlert: Reference --> https://ntfy.sh/" + \
+                f"\nPlease insure {NTFY_PATH} exists and ntfy binary is there.\n\n"
         raise BuiltinsException(msg)
 
     if not os.path.exists(RAMFS):
         os.mkdir(RAMFS)
-    if not os.path.exists(f"{PATH}/m3u8_stream_files"):
+
+    if not os.path.exists(SYMLINK):
         os.symlink(RAMFS, SYMLINK)
 
     @daemon_threaded
     def _start_rtsp_server_threaded():
-        os.chdir(PATH)
+        os.chdir(RTSP_PATH)
         command = ["./rtsp-simple-server", "./rtsp-simple-server.yml"]
         process = subprocess.Popen(command)
         process.wait()
 
+    @daemon_threaded
+    def _start_ntfy_server_threaded():
+        os.chdir(NTFY_PATH)
+        command = ["./ntfy", "serve", "--behind-proxy",  "--listen-http", ":7777"]
+        process = subprocess.Popen(command)
+        process.wait()
+
+
+    _start_ntfy_server_threaded()
     _start_rtsp_server_threaded()
 
-_start_rtsp_server()
+
+_start_rtsp_and_ntfy_server()
 
 
 
@@ -140,9 +159,10 @@ def _get_stream(video_path=None, stream_target=None):
             #       Yes, the process probably should give us info we can process when failure occures.
             command = [
                 "ffmpeg", "-nostdin", "-fflags", "+genpts", "-hwaccel", "cuda",
+                # --preset ultrafast --threads 1
                 "-stream_loop", "1", "-i", video_path, "-strict", "experimental",
                 "-vcodec", "copy", "-acodec", "copy", "-f", "rtsp",
-                "-rtsp_transport", "udp", stream_target
+                "-rtsp_transport", "tcp", stream_target
             ]
 
             # command = [
