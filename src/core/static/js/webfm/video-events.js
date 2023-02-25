@@ -134,6 +134,8 @@ const togglePlaylistMode = (elm) => {
 }
 
 const loadMediaToPlayer = (title = "", video_path = "") => {
+    const modal = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
+
     if(/Android/i.test(navigator.userAgent)) {
         player.setMedia(video_path).play()
     } else {
@@ -154,6 +156,8 @@ const loadMediaToPlayer = (title = "", video_path = "") => {
             poster: "static/imgs/icons/loading.gif"
         }).jPlayer("play");
     }
+
+    modal.show();
 }
 
 const doPlayOrFullscreen = (node) => {

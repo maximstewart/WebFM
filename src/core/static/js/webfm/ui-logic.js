@@ -83,8 +83,9 @@ const showFile = async (title, hash, extension, type, target=null) => {
     await fetchData("api/stop-current-stream");
 
     if (type === "video" || type === "stream") {
-        isStream = (type === "stream")
-        setupVideo(hash, extension, isStream);
+        isStream = (type === "stream") ? true : false;
+        target   = (type === "stream") ? "stream" : "remux";
+        setupVideo(hash, extension, isStream, target);
         setSelectedActiveMedia(target);
     } else if (type === "trailer") {
         launchTrailer(hash);
@@ -102,51 +103,34 @@ const launchTrailer = (link) => {
     modal.show();
 }
 
-const setupVideo = async (hash, extension, isStream=false) => {
+const setupVideo = async (hash, extension, isStream, target="remux") => {
     document.getElementById("video_container").style.display = "";
-    const title = document.getElementById("selectedFile").innerText;
-    let modal   = new bootstrap.Modal(document.getElementById('file-view-modal'), { keyboard: false });
-    video_path  = "api/file-manager-action/files/" + hash;
-    console.log("Using default path...");
+    video_path = `api/file-manager-action/files/${hash}`;
 
     clearSelectedActiveMedia();
      try {
-        if ((/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg|mp4|webm|mp3|flac|ogg)$/i).test(extension)) {
-            if ((/\.(avi|mkv|wmv|flv|f4v)$/i).test(extension)) {
-                if (isStream) {
-                    data = await fetchData( "api/file-manager-action/stream/" + hash );
-                    if (data.hasOwnProperty('stream')) {
-                        console.log("Transfering to stream path...");
-                        video_path = data.stream;
-                    }
-                } else {
-                    data = await fetchData( "api/file-manager-action/remux/" + hash );
-                    if (data.hasOwnProperty('path')) {
-                        console.log("Transfering to remux path...");
-                        video_path = data.path;
-                    }
-                }
-
-                if (data.hasOwnProperty('path') === null &&
-                    data.hasOwnProperty('stream') === null) {
-                        displayMessage(data.message.text, data.message.type);
-                        return;
-                }
-            } else if ((/\.(flv|mov|m4v|mpg|mpeg)$/i).test(extension)) {
-                modal.hide();
-                openWithLocalProgram(hash, extension);
-                return;
-            }
+        if (!isStream && !(/\.(avi|mkv|wmv|flv|f4v|mov|m4v|mpg|mpeg)$/i).test(extension)) {
+            handleMedia(video_path);
+            return;
         }
 
+        if (!isStream && (/\.(mov|m4v|mpg|mpeg)$/i).test(extension)) {
+            const msg = "Media Error: Please open mov|m4v|mpg|mpeg media locally or try streaming it..."
+            displayMessage(msg, "warning", 5);
+            return;
+        }
 
-        const fTitle = document.getElementById("selectedFile").innerText;
-        loadMediaToPlayer(title, video_path);
-        modal.show();
+        const data = await fetchData(`api/file-manager-action/${target}/${hash}`);
+        displayMessage(data.message.text, data.message.type, 5);
     } catch (e) {
         video.style.display = "none";
         console.log(e);
     }
+}
+
+const handleMedia = async (video_path) => {
+    const title = document.getElementById("selectedFile").innerText;
+    loadMediaToPlayer(title, video_path);
 }
 
 const setupFile = async (hash, extension) => {

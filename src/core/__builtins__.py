@@ -113,6 +113,9 @@ from core.utils.shellfm.windows.controller import WindowController    # Get file
 window_controllers = {}
 processes = {}
 
+def _get_sse_id():
+    return session["win_controller_id"]
+
 def _get_view():
     controller = None
     try:
@@ -200,5 +203,6 @@ def _kill_stream(process):
 
 
 builtins.get_view    = _get_view
+builtins.get_sse_id  = _get_sse_id
 builtins.get_stream  = _get_stream
 builtins.kill_stream = _kill_stream

@@ -1,9 +1,10 @@
 # Python imports
 import os
-# import subprocess
+import requests
 import uuid
 
 # Lib imports
+from flask import make_response
 from flask import redirect
 from flask import request
 from flask import render_template
@@ -23,9 +24,19 @@ from core import oidc
 def home():
     if request.method == 'GET':
         view               = get_view()
+        sse_id             = get_sse_id()
         _dot_dots          = view.get_dot_dots()
         _current_directory = view.get_current_directory()
-        return render_template('pages/index.html', current_directory = _current_directory, dot_dots = _dot_dots)
+
+        response = make_response(
+            render_template(
+                'pages/index.html',
+                current_directory = _current_directory,
+                dot_dots = _dot_dots
+            )
+        )
+        response.set_cookie('sse_id', sse_id, secure=True, httponly = False)
+        return response
 
     return render_template('error.html', title = 'Error!',
                             message = 'Must use GET request type...')
@@ -90,40 +101,15 @@ def file_manager_action(_type, _hash = None):
         return send_from_directory(directory=folder, filename=file)
 
     if _type == "remux":
-        # NOTE: Need to actually implimint a websocket to communicate back to client that remux has completed.
-        # As is, the remux thread hangs until completion and client tries waiting until server reaches connection timeout.
-        # I.E....this is stupid but for now works better than nothing
-        good_result = view.remux_video(_hash, fpath)
-        if not good_result:
-            msg = "Remuxing: Remux failed or took too long; please, refresh the page and try again..."
-            return json_message.create("warning", msg)
-
-        return '{"path":"static/remuxs/' + _hash + '.mp4"}'
+        remux_video(get_sse_id(), _hash, fpath, view)
+        msg = "Remuxing: Remux process has started..."
+        return json_message.create("success", msg)
 
     if _type == "stream":
-        process = get_stream()
-        if process:
-            if not kill_stream(process):
-                msg = "Couldn't stop an existing stream!"
-                return json_message.create("danger", msg)
+        setup_stream(get_sse_id(), _hash, fpath)
+        msg = "Streaming: Streaming process is being setup..."
+        return json_message.create("success", msg)
 
-        _sub_uuid      = uuid.uuid4().hex
-        _video_path    = fpath
-        _stub          = f"{_hash}{_sub_uuid}"
-        _rtsp_path     = f"rtsp://www.{app_name.lower()}.com:8554/{_stub}"
-        _rtmp_path     = f"rtmp://www.{app_name.lower()}.com:1935/{_stub}"
-        _hls_path      = f"http://www.{app_name.lower()}.com:8888/{_stub}/"
-        _webrtc_path   = f"http://www.{app_name.lower()}.com:8889/{_stub}/"
-
-        _stream_target = _rtsp_path
-
-        stream = get_stream(_video_path, _stream_target)
-        if stream.poll():
-            msg = "Streaming: Setting up stream failed! Please try again..."
-            return json_message.create("danger", msg)
-
-        _stream_target = _rtmp_path
-        return {"stream": _stream_target}
 
     # NOTE: Positionally protecting actions further down that are privlidged
     #       Be aware of ordering!
@@ -140,6 +126,50 @@ def file_manager_action(_type, _hash = None):
         msg = "Opened media..."
         view.open_file_locally(fpath)
         return json_message.create("success", msg)
+
+
+@daemon_threaded
+def remux_video(sse_id, hash, path, view):
+    link = f"https://www.webfm.com/sse/{sse_id}"
+    body = '{"path":"static/remuxs/' + hash + '.mp4"}'
+
+    good_result = view.remux_video(hash, path)
+    if not good_result:
+        body = json_message.create("warning", "Remuxing: Remux failed...")
+
+    requests.post(link, data=body, timeout=10)
+
+
+# @daemon_threaded
+def setup_stream(sse_id, hash, path):
+    link           = f"https://www.webfm.com/sse/{sse_id}"
+    _sub_uuid      = uuid.uuid4().hex
+    _video_path    = path
+    _stub          = f"{hash}{_sub_uuid}"
+    _rtsp_path     = f"rtsp://www.{app_name.lower()}.com:8554/{_stub}"
+    _rtmp_path     = f"rtmp://www.{app_name.lower()}.com:1935/{_stub}"
+    _hls_path      = f"http://www.{app_name.lower()}.com:8888/{_stub}/"
+    _webrtc_path   = f"http://www.{app_name.lower()}.com:8889/{_stub}/"
+    _stream_target = _rtsp_path
+    body           = '{"stream":"' + _stream_target + '"}'
+
+    process = get_stream()
+    if process:
+        if not kill_stream(process):
+            msg  = "Couldn't stop an existing stream!"
+            body = json_message.create("danger", msg)
+            requests.post(link, data=body, timeout=10)
+            return
+
+    stream = get_stream(_video_path, _stream_target)
+    if stream.poll():
+        msg  = "Streaming: Setting up stream failed! Please try again..."
+        body = json_message.create("danger", msg)
+        requests.post(link, data=body, timeout=10)
+        return
+
+    requests.post(link, data=body, timeout=10)
+
 
 
 @app.route('/api/stop-current-stream', methods=['GET', 'POST'])
