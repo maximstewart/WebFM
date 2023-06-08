@@ -53,7 +53,7 @@ const closeFile = async () => {
     const trailerPlayer = document.getElementById("trailerPlayer")
     let title           = document.getElementById("selectedFile");
 
-    document.getElementById("video_container").style.display = "node";
+    document.getElementById("video-container").style.display = "node";
     document.getElementById("image-viewer").style.display    = "none";
     document.getElementById("text-viewer").style.display     = "none";
     document.getElementById("pdf-viewer").style.display      = "none";
@@ -74,7 +74,7 @@ const showFile = async (title, hash, extension, type, target=null) => {
     document.getElementById("image-viewer").style.display    = "none";
     document.getElementById("text-viewer").style.display     = "none";
     document.getElementById("pdf-viewer").style.display      = "none";
-    document.getElementById("video_container").style.display = "none";
+    document.getElementById("video-container").style.display = "none";
     document.getElementById("trailerPlayer").style.display   = "none";
 
 
@@ -103,7 +103,7 @@ const launchTrailer = (link) => {
 }
 
 const setupVideo = async (hash, extension, isStream, action="remux") => {
-    document.getElementById("video_container").style.display = "";
+    document.getElementById("video-container").style.display = "";
     video_path = `api/file-manager-action/files/${hash}`;
 
     clearSelectedActiveMedia();
