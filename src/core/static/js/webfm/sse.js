@@ -19,6 +19,7 @@ eventSource.onmessage = (eve) => {
     try {
         const data    = JSON.parse(eve.data);
         const sse_msg = JSON.parse(data.message);
+
         if (sse_msg.hasOwnProperty('path') || sse_msg.hasOwnProperty('stream')) {
             const target = (sse_msg.path) ? sse_msg.path : sse_msg.stream;
             handleMedia(target);

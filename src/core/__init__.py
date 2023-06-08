@@ -1,6 +1,5 @@
 # Python imports
 import os
-import subprocess
 
 # Lib imports
 from flask import Flask

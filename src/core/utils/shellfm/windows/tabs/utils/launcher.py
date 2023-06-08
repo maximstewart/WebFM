@@ -8,6 +8,9 @@ import shlex
 # Apoplication imports
 
 
+class ShellFMLauncherException(Exception):
+    ...
+
 
 
 class Launcher:
@@ -76,7 +79,24 @@ class Launcher:
             try:
                 proc = subprocess.Popen(command)
                 proc.wait()
-            except Exception as e:
+            except ShellFMLauncherException as e:
+                self.logger.debug(e)
+                return False
+
+        return True
+
+    def handbrake_remux_video(self, hash, file):
+        remux_vid_pth = f"{self.REMUX_FOLDER}/{hash}.mp4"
+        self.logger.debug(remux_vid_pth)
+
+        if not os.path.isfile(remux_vid_pth):
+            self.check_remux_space()
+
+            command = ["HandBrakeCLI", "-i", file, "-e", "nvenc_h264", "-f", "av_mp4", "-O", "-o", remux_vid_pth]
+            try:
+                proc = subprocess.Popen(command)
+                proc.wait()
+            except ShellFMLauncherException as e:
                 self.logger.debug(e)
                 return False
 
@@ -86,7 +106,7 @@ class Launcher:
         limit = self.remux_folder_max_disk_usage
         try:
             limit = int(limit)
-        except Exception as e:
+        except ShellFMLauncherException as e:
             self.logger.debug(e)
             return
 

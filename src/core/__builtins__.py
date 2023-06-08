@@ -162,17 +162,10 @@ def _get_stream(video_path=None, stream_target=None):
             #       Yes, the process probably should give us info we can process when failure occures.
             command = [
                 "ffmpeg", "-nostdin", "-fflags", "+genpts", "-hwaccel", "cuda",
-                # --preset ultrafast --threads 1
-                "-stream_loop", "1", "-i", video_path, "-strict", "experimental",
+                "-stream_loop", "-1", "-i", video_path, "-strict", "experimental",
                 "-vcodec", "copy", "-acodec", "copy", "-f", "rtsp",
                 "-rtsp_transport", "tcp", stream_target
             ]
-
-            # command = [
-            #     "ffmpeg", "-nostdin", "-fflags", "+genpts", "-i", video_path,
-            #     "-strict", "experimental", "-f",
-            #     "rtsp", "-rtsp_transport", "udp", stream_target
-            # ]
 
             proc   = subprocess.Popen(command, shell=False, stdin=None, stdout=None, stderr=None)
             window = window_controllers[ session["win_controller_id"]  ].get_window_by_index(0)

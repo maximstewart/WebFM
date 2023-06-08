@@ -133,25 +133,22 @@ def remux_video(sse_id, hash, path, view):
     link = f"https://www.webfm.com/sse/{sse_id}"
     body = '{"path":"static/remuxs/' + hash + '.mp4"}'
 
-    good_result = view.remux_video(hash, path)
+    # good_result = view.remux_video(hash, path)
+    good_result = view.handbrake_remux_video(hash, path)
     if not good_result:
         body = json_message.create("warning", "Remuxing: Remux failed...")
 
     requests.post(link, data=body, timeout=10)
 
 
-# @daemon_threaded
 def setup_stream(sse_id, hash, path):
     link           = f"https://www.webfm.com/sse/{sse_id}"
     _sub_uuid      = uuid.uuid4().hex
     _video_path    = path
     _stub          = f"{hash}{_sub_uuid}"
-    _rtsp_path     = f"rtsp://www.{app_name.lower()}.com:8554/{_stub}"
-    _rtmp_path     = f"rtmp://www.{app_name.lower()}.com:1935/{_stub}"
-    _hls_path      = f"http://www.{app_name.lower()}.com:8888/{_stub}/"
+    _rtsp_path     = f"rtsp://127.0.0.1:8554/{_stub}"
     _webrtc_path   = f"http://www.{app_name.lower()}.com:8889/{_stub}/"
     _stream_target = _rtsp_path
-    body           = '{"stream":"' + _stream_target + '"}'
 
     process = get_stream()
     if process:
@@ -168,6 +165,8 @@ def setup_stream(sse_id, hash, path):
         requests.post(link, data=body, timeout=10)
         return
 
+    _stream_target = _webrtc_path
+    body           = '{"stream":"' + _stream_target + '"}'
     requests.post(link, data=body, timeout=10)
 
 

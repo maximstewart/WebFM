@@ -70,22 +70,21 @@ const closeFile = async () => {
 }
 
 const showFile = async (title, hash, extension, type, target=null) => {
+    document.getElementById("selectedFile").innerText        = title;
     document.getElementById("image-viewer").style.display    = "none";
     document.getElementById("text-viewer").style.display     = "none";
     document.getElementById("pdf-viewer").style.display      = "none";
     document.getElementById("video_container").style.display = "none";
     document.getElementById("trailerPlayer").style.display   = "none";
 
-    let titleElm       = document.getElementById("selectedFile");
-    titleElm.innerText = title;
 
     // FIXME: Yes, a wasted call every time there is no stream.
     await fetchData("api/stop-current-stream");
 
     if (type === "video" || type === "stream") {
         isStream = (type === "stream") ? true : false;
-        target   = (type === "stream") ? "stream" : "remux";
-        setupVideo(hash, extension, isStream, target);
+        action   = (type === "stream") ? "stream" : "remux";
+        setupVideo(hash, extension, isStream, action);
         setSelectedActiveMedia(target);
     } else if (type === "trailer") {
         launchTrailer(hash);
@@ -103,7 +102,7 @@ const launchTrailer = (link) => {
     modal.show();
 }
 
-const setupVideo = async (hash, extension, isStream, target="remux") => {
+const setupVideo = async (hash, extension, isStream, action="remux") => {
     document.getElementById("video_container").style.display = "";
     video_path = `api/file-manager-action/files/${hash}`;
 
@@ -120,7 +119,7 @@ const setupVideo = async (hash, extension, isStream, target="remux") => {
             return;
         }
 
-        const data = await fetchData(`api/file-manager-action/${target}/${hash}`);
+        const data = await fetchData(`api/file-manager-action/${action}/${hash}`);
         displayMessage(data.message.text, data.message.type, 5);
     } catch (e) {
         video.style.display = "none";
@@ -236,8 +235,10 @@ const loadBackgroundPoster = () => {
             }
 
             if (data.poster !== null) {
-                background_image = "api/file-manager-action/files/000.jpg?d=" + Date.now();
-                updateBackground(background_image, false);
+                getSHA256Hash("000.jpg").then((_hash) => {
+                    background_image = "api/file-manager-action/files/" + _hash + "?d=" + Date.now();
+                    updateBackground(background_image, false);
+                })
             }
         }
     });
@@ -377,3 +378,12 @@ const clearCache = () => {
         }
     }
 }
+
+const getSHA256Hash = async (input) => {
+  const textAsBuffer = new TextEncoder().encode(input);
+  const hashBuffer   = await window.crypto.subtle.digest("SHA-256", textAsBuffer);
+  const hashArray    = Array.from(new Uint8Array(hashBuffer));
+  const hash         = hashArray.map((item) => item.toString(16).padStart(2, "0")).join("");
+
+  return hash.substring(0, 18);
+};
